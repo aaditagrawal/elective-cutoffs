@@ -5,17 +5,17 @@ import "./globals.css";
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-serif"
+  variable: "--font-instrument-serif"
 });
 
 const instrumentSans = Instrument_Sans({
-  variable: "--font-sans",
+  variable: "--font-instrument-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-mono",
+  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
 });

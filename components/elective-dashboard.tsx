@@ -11,6 +11,7 @@ import {
     getDepartments,
     getStats,
     getDifficultyLevel,
+    getCoursePageUrl,
     type Elective
 } from "@/lib/electives";
 import {
@@ -26,7 +27,9 @@ import {
     Layers,
     BarChart3,
     Command,
-    X
+    X,
+    ExternalLink,
+    Info
 } from "lucide-react";
 
 // Command Search Modal
@@ -165,16 +168,42 @@ function CommandSearch({
                                         <div className="shrink-0 mt-0.5">
                                             <GraduationCap className="h-5 w-5 text-neutral-500" />
                                         </div>
-                                        <div className="flex-1 min-w-0">
+                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2">
                                                 <span className="text-xs font-mono text-neutral-500">{elective.code}</span>
+                                                {(() => {
+                                                    const courseUrl = getCoursePageUrl(elective.code);
+                                                    return courseUrl ? (
+                                                        <ExternalLink className="h-3 w-3 text-emerald-400" />
+                                                    ) : (
+                                                        <Info className="h-3 w-3 text-neutral-600" />
+                                                    );
+                                                })()}
                                                 <span className="text-xs font-mono text-neutral-300 bg-neutral-700 px-1.5 py-0.5 rounded">
                                                     {elective.type}
                                                 </span>
                                             </div>
-                                            <div className="text-white font-medium truncate mt-0.5">
-                                                {elective.name}
-                                            </div>
+                                            {(() => {
+                                                const courseUrl = getCoursePageUrl(elective.code);
+                                                if (courseUrl) {
+                                                    return (
+                                                        <a
+                                                            href={courseUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className="text-white font-medium truncate mt-0.5 hover:text-neutral-200 hover:underline block"
+                                                        >
+                                                            {elective.name}
+                                                        </a>
+                                                    );
+                                                }
+                                                return (
+                                                    <div className="text-neutral-400 font-medium truncate mt-0.5">
+                                                        {elective.name}
+                                                    </div>
+                                                );
+                                            })()}
                                             <div className="text-xs text-neutral-500 mt-0.5">
                                                 {elective.department} • Min CGPA: <span className={`font-mono ${difficulty.color}`}>{elective.lowestCGPA.toFixed(2)}</span>
                                             </div>
@@ -239,6 +268,7 @@ function StatCard({
 // Elective Card Component
 function ElectiveCard({ elective, isHighlighted }: { elective: Elective; isHighlighted?: boolean }) {
     const difficulty = getDifficultyLevel(elective.lowestCGPA);
+    const courseUrl = getCoursePageUrl(elective.code);
 
     return (
         <Card
@@ -254,13 +284,41 @@ function ElectiveCard({ elective, isHighlighted }: { elective: Elective; isHighl
                     >
                         {elective.type}
                     </Badge>
-                    <Badge variant="outline" className="text-xs font-mono border-neutral-700 text-neutral-400">
-                        {elective.code}
-                    </Badge>
+                    {courseUrl ? (
+                        <a
+                            href={courseUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:opacity-80 transition-opacity"
+                        >
+                            <Badge variant="outline" className="text-xs font-mono border-neutral-700 text-neutral-400 hover:border-neutral-500 hover:text-neutral-300 cursor-pointer">
+                                {elective.code}
+                                <ExternalLink className="ml-1 h-3 w-3" />
+                            </Badge>
+                        </a>
+                    ) : (
+                        <Badge variant="outline" className="text-xs font-mono border-neutral-700 text-neutral-400">
+                            {elective.code}
+                            <Info className="ml-1 h-3 w-3" />
+                        </Badge>
+                    )}
                 </div>
-                <CardTitle className="text-base font-semibold leading-tight mt-2 line-clamp-2 text-white">
-                    {elective.name}
-                </CardTitle>
+                {courseUrl ? (
+                    <a
+                        href={courseUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-neutral-200 transition-colors"
+                    >
+                        <CardTitle className="text-base font-semibold leading-tight mt-2 line-clamp-2 text-white hover:underline">
+                            {elective.name}
+                        </CardTitle>
+                    </a>
+                ) : (
+                    <CardTitle className="text-base font-semibold leading-tight mt-2 line-clamp-2 text-neutral-400">
+                        {elective.name}
+                    </CardTitle>
+                )}
                 <CardDescription className="text-xs text-neutral-500">
                     Department: {elective.department}
                 </CardDescription>
@@ -564,6 +622,9 @@ export default function ElectiveDashboard() {
             <footer className="border-t border-white/5 py-8 text-center text-sm text-neutral-500">
                 <p>Data based on actual student allocations. Cutoffs may vary each semester.</p>
                 <p className="mt-1">Use this as a reference, not a guarantee.</p>
+                <p className="mt-4">
+                    Made by <a href="https://lverma.com" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors">Lakshit Verma</a> and <a href="https://aadit.cc" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors">Aadit Agrawal</a>
+                </p>
             </footer>
         </div>
     );
