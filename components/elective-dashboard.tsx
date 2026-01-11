@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -24,8 +24,191 @@ import {
     ChevronDown,
     BookOpen,
     Layers,
-    BarChart3
+    BarChart3,
+    Command,
+    X
 } from "lucide-react";
+
+// Command Search Modal
+function CommandSearch({
+    isOpen,
+    onClose,
+    onSelect
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+    onSelect: (elective: Elective) => void;
+}) {
+    const [query, setQuery] = useState("");
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const listRef = useRef<HTMLDivElement>(null);
+
+    const results = query.length > 0
+        ? electiveData.filter(e =>
+            e.name.toLowerCase().includes(query.toLowerCase()) ||
+            e.code.toLowerCase().includes(query.toLowerCase()) ||
+            e.department.toLowerCase().includes(query.toLowerCase())
+        ).slice(0, 8)
+        : electiveData.slice(0, 8);
+
+    useEffect(() => {
+        if (isOpen) {
+            inputRef.current?.focus();
+            setQuery("");
+            setSelectedIndex(0);
+        }
+    }, [isOpen]);
+
+    // Global escape key handler
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                e.preventDefault();
+                onClose();
+            }
+        };
+
+        document.addEventListener("keydown", handleEscape);
+        return () => document.removeEventListener("keydown", handleEscape);
+    }, [isOpen, onClose]);
+
+    useEffect(() => {
+        setSelectedIndex(0);
+    }, [query]);
+
+    // Scroll selected item into view
+    useEffect(() => {
+        if (listRef.current) {
+            const selectedEl = listRef.current.querySelector(`[data-index="${selectedIndex}"]`);
+            selectedEl?.scrollIntoView({ block: "nearest" });
+        }
+    }, [selectedIndex]);
+
+    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+        switch (e.key) {
+            case "ArrowDown":
+                e.preventDefault();
+                setSelectedIndex(prev => Math.min(prev + 1, results.length - 1));
+                break;
+            case "ArrowUp":
+                e.preventDefault();
+                setSelectedIndex(prev => Math.max(prev - 1, 0));
+                break;
+            case "Enter":
+                e.preventDefault();
+                if (results[selectedIndex]) {
+                    onSelect(results[selectedIndex]);
+                    onClose();
+                }
+                break;
+            case "Escape":
+                onClose();
+                break;
+        }
+    }, [results, selectedIndex, onSelect, onClose]);
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-50" onClick={onClose}>
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+            {/* Modal */}
+            <div
+                className="relative max-w-2xl mx-auto mt-[15vh]"
+                onClick={e => e.stopPropagation()}
+            >
+                <div className="bg-neutral-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden">
+                    {/* Search Input */}
+                    <div className="flex items-center border-b border-white/10 px-4">
+                        <Search className="h-5 w-5 text-neutral-500 shrink-0" />
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            placeholder="Search electives..."
+                            className="flex-1 bg-transparent py-4 px-3 text-white placeholder:text-neutral-500 outline-none text-lg"
+                        />
+                        <button
+                            onClick={onClose}
+                            className="p-1 rounded hover:bg-white/10 transition-colors"
+                        >
+                            <X className="h-4 w-4 text-neutral-500" />
+                        </button>
+                    </div>
+
+                    {/* Results */}
+                    <div ref={listRef} className="max-h-[50vh] overflow-y-auto py-2">
+                        {results.length === 0 ? (
+                            <div className="px-4 py-8 text-center text-neutral-500">
+                                No electives found for "{query}"
+                            </div>
+                        ) : (
+                            results.map((elective, idx) => {
+                                const difficulty = getDifficultyLevel(elective.lowestCGPA);
+                                return (
+                                    <button
+                                        key={`${elective.code}-${elective.type}-${idx}`}
+                                        data-index={idx}
+                                        onClick={() => { onSelect(elective); onClose(); }}
+                                        className={`w-full px-4 py-3 flex items-start gap-3 text-left transition-colors ${idx === selectedIndex
+                                            ? "bg-white/10"
+                                            : "hover:bg-white/5"
+                                            }`}
+                                    >
+                                        <div className="shrink-0 mt-0.5">
+                                            <GraduationCap className="h-5 w-5 text-neutral-500" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs font-mono text-neutral-500">{elective.code}</span>
+                                                <span className="text-xs font-mono text-neutral-300 bg-neutral-700 px-1.5 py-0.5 rounded">
+                                                    {elective.type}
+                                                </span>
+                                            </div>
+                                            <div className="text-white font-medium truncate mt-0.5">
+                                                {elective.name}
+                                            </div>
+                                            <div className="text-xs text-neutral-500 mt-0.5">
+                                                {elective.department} • Min CGPA: <span className={`font-mono ${difficulty.color}`}>{elective.lowestCGPA.toFixed(2)}</span>
+                                            </div>
+                                        </div>
+                                        <div className={`text-xs font-medium shrink-0 ${difficulty.color}`}>
+                                            {difficulty.level}
+                                        </div>
+                                    </button>
+                                );
+                            })
+                        )}
+                    </div>
+
+                    {/* Footer */}
+                    <div className="border-t border-white/10 px-4 py-2 flex items-center gap-4 text-xs text-neutral-500">
+                        <span className="flex items-center gap-1">
+                            <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">↑</kbd>
+                            <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">↓</kbd>
+                            Navigate
+                        </span>
+                        <span className="flex items-center gap-1">
+                            <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">↵</kbd>
+                            Select
+                        </span>
+                        <span className="flex items-center gap-1">
+                            <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">esc</kbd>
+                            Close
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 // Stats Card Component
 function StatCard({
@@ -54,11 +237,15 @@ function StatCard({
 }
 
 // Elective Card Component
-function ElectiveCard({ elective }: { elective: Elective }) {
+function ElectiveCard({ elective, isHighlighted }: { elective: Elective; isHighlighted?: boolean }) {
     const difficulty = getDifficultyLevel(elective.lowestCGPA);
 
     return (
-        <Card className="group relative overflow-hidden border-white/5 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-neutral-900/80">
+        <Card
+            id={`elective-${elective.code}-${elective.type}`}
+            className={`group relative overflow-hidden border-white/5 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-neutral-900/80 ${isHighlighted ? "ring-2 ring-white/30 border-white/30" : ""
+                }`}
+        >
             <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-2">
                     <Badge
@@ -131,6 +318,8 @@ export default function ElectiveDashboard() {
     const [deptFilter, setDeptFilter] = useState("all");
     const [sortBy, setSortBy] = useState<"name" | "cutoff" | "students">("cutoff");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+    const [commandOpen, setCommandOpen] = useState(false);
+    const [highlightedElective, setHighlightedElective] = useState<string | null>(null);
 
     const stats = useMemo(() => getStats(), []);
     const departments = useMemo(() => getDepartments(), []);
@@ -145,6 +334,39 @@ export default function ElectiveDashboard() {
         );
     }, [typeFilter, deptFilter, search, sortBy, sortOrder]);
 
+    // Keyboard shortcut for Ctrl+K (toggle)
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+                e.preventDefault();
+                setCommandOpen(prev => !prev);
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, []);
+
+    const handleSelectElective = useCallback((elective: Elective) => {
+        // Clear filters to show the elective
+        setSearch("");
+        setTypeFilter("all");
+        setDeptFilter("all");
+
+        // Highlight and scroll to the elective
+        const id = `elective-${elective.code}-${elective.type}`;
+        setHighlightedElective(id);
+
+        // Wait for render then scroll
+        setTimeout(() => {
+            const element = document.getElementById(id);
+            element?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+            // Remove highlight after animation
+            setTimeout(() => setHighlightedElective(null), 2000);
+        }, 100);
+    }, []);
+
     const toggleSort = (newSortBy: typeof sortBy) => {
         if (sortBy === newSortBy) {
             setSortOrder(prev => prev === "asc" ? "desc" : "asc");
@@ -156,6 +378,13 @@ export default function ElectiveDashboard() {
 
     return (
         <div className="min-h-screen bg-neutral-950">
+            {/* Command Search Modal */}
+            <CommandSearch
+                isOpen={commandOpen}
+                onClose={() => setCommandOpen(false)}
+                onSelect={handleSelectElective}
+            />
+
             {/* Hero Section */}
             <div className="relative overflow-hidden border-b border-white/5">
                 <div className="absolute inset-0 bg-gradient-to-br from-neutral-900 via-neutral-950 to-black" />
@@ -168,6 +397,18 @@ export default function ElectiveDashboard() {
                             Explore CGPA cutoffs for Open Electives (OE) and Program Electives (PE I & PE II)
                             to make informed course selection decisions.
                         </p>
+
+                        {/* Quick Search Button */}
+                        <button
+                            onClick={() => setCommandOpen(true)}
+                            className="mt-6 inline-flex items-center gap-3 px-4 py-2.5 bg-neutral-900 border border-white/10 rounded-lg text-neutral-400 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
+                        >
+                            <Search className="h-4 w-4" />
+                            <span>Quick search...</span>
+                            <kbd className="ml-2 px-1.5 py-0.5 bg-neutral-800 rounded text-xs font-mono text-neutral-500 flex items-center gap-0.5">
+                                <Command className="h-3 w-3" />K
+                            </kbd>
+                        </button>
                     </div>
 
                     {/* Stats Grid */}
@@ -248,8 +489,8 @@ export default function ElectiveDashboard() {
                             <button
                                 onClick={() => toggleSort("cutoff")}
                                 className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "cutoff"
-                                        ? "bg-white/10 text-white"
-                                        : "bg-neutral-900/50 text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-300"
+                                    ? "bg-white/10 text-white"
+                                    : "bg-neutral-900/50 text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-300"
                                     }`}
                             >
                                 <BarChart3 className="h-4 w-4" />
@@ -259,8 +500,8 @@ export default function ElectiveDashboard() {
                             <button
                                 onClick={() => toggleSort("students")}
                                 className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "students"
-                                        ? "bg-white/10 text-white"
-                                        : "bg-neutral-900/50 text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-300"
+                                    ? "bg-white/10 text-white"
+                                    : "bg-neutral-900/50 text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-300"
                                     }`}
                             >
                                 <Users className="h-4 w-4" />
@@ -270,8 +511,8 @@ export default function ElectiveDashboard() {
                             <button
                                 onClick={() => toggleSort("name")}
                                 className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "name"
-                                        ? "bg-white/10 text-white"
-                                        : "bg-neutral-900/50 text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-300"
+                                    ? "bg-white/10 text-white"
+                                    : "bg-neutral-900/50 text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-300"
                                     }`}
                             >
                                 <GraduationCap className="h-4 w-4" />
@@ -302,7 +543,11 @@ export default function ElectiveDashboard() {
                 {/* Electives Grid */}
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {filteredElectives.map((elective, idx) => (
-                        <ElectiveCard key={`${elective.code}-${elective.type}-${idx}`} elective={elective} />
+                        <ElectiveCard
+                            key={`${elective.code}-${elective.type}-${idx}`}
+                            elective={elective}
+                            isHighlighted={highlightedElective === `elective-${elective.code}-${elective.type}`}
+                        />
                     ))}
                 </div>
 
