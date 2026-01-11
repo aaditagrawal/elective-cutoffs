@@ -39,6 +39,15 @@ export default function RootLayout({
       <body
         className="font-sans antialiased"
       >
+        <header className="border-b border-white/5 bg-neutral-950 z-50">
+          <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+            <a href="/" className="text-xl font-serif text-white">Elective Cutoffs</a>
+            <div className="flex gap-6">
+              <a href="/" className="text-neutral-400 hover:text-white transition-colors">Dashboard</a>
+              <a href="/faq" className="text-neutral-400 hover:text-white transition-colors">FAQ</a>
+            </div>
+          </nav>
+        </header>
         {children}
       </body>
     </html>

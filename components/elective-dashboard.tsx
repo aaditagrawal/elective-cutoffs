@@ -21,15 +21,11 @@ import {
     TrendingUp,
     TrendingDown,
     Building2,
-    ChevronUp,
-    ChevronDown,
-    BookOpen,
-    Layers,
-    BarChart3,
-    Command,
-    X,
     ExternalLink,
-    Info
+    Info,
+    BookOpen,
+    X,
+    Command
 } from "lucide-react";
 
 // Command Search Modal
@@ -319,9 +315,6 @@ function ElectiveCard({ elective, isHighlighted }: { elective: Elective; isHighl
                         {elective.name}
                     </CardTitle>
                 )}
-                <CardDescription className="text-xs text-neutral-500">
-                    Department: {elective.department}
-                </CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-3 gap-3 text-center">
@@ -459,12 +452,12 @@ export default function ElectiveDashboard() {
                         {/* Quick Search Button */}
                         <button
                             onClick={() => setCommandOpen(true)}
-                            className="mt-6 inline-flex items-center gap-3 px-4 py-2.5 bg-neutral-900 border border-white/10 rounded-lg text-neutral-400 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
+                            className="mt-5 inline-flex items-center gap-2 px-3 py-2 bg-neutral-900 border border-white/10 rounded-lg text-neutral-400 hover:bg-neutral-800 hover:text-neutral-300 transition-colors text-sm"
                         >
                             <Search className="h-4 w-4" />
-                            <span>Quick search...</span>
-                            <kbd className="ml-2 px-1.5 py-0.5 bg-neutral-800 rounded text-xs font-mono text-neutral-500 flex items-center gap-0.5">
-                                <Command className="h-3 w-3" />K
+                            <span>Search...</span>
+                            <kbd className="ml-1 px-1.5 py-0.5 bg-neutral-800 rounded text-xs font-mono text-neutral-500 flex items-center gap-0.5">
+                                <Command className="h-2.5 w-2.5" />K
                             </kbd>
                         </button>
                     </div>
@@ -500,82 +493,74 @@ export default function ElectiveDashboard() {
             </div>
 
             {/* Filters Section */}
-            <div className="sticky top-0 z-40 bg-neutral-950/90 backdrop-blur-xl border-b border-white/5">
-                <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row gap-4">
+            <div className="sticky top-0 z-40 bg-neutral-950/95 backdrop-blur-xl border-b border-white/5 pt-2">
+                <div className="max-w-7xl mx-auto px-3 pb-2.5 sm:px-6 lg:px-8">
+                    <div className="flex flex-wrap gap-2">
                         {/* Search */}
-                        <div className="relative flex-1">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
+                        <div className="w-full sm:flex-1 sm:min-w-[200px]">
                             <Input
-                                placeholder="Search electives by name, code, or department..."
+                                placeholder="Search electives..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="pl-10 bg-neutral-900/50 border-white/10 text-white placeholder:text-neutral-500"
+                                className="h-9 bg-neutral-900/70 border-white/10 text-white placeholder:text-neutral-500"
                             />
                         </div>
 
-                        {/* Type Filter */}
-                        <Select value={typeFilter} onValueChange={setTypeFilter}>
-                            <SelectTrigger className="w-full md:w-40 bg-neutral-900/50 border-white/10 text-neutral-300">
-                                <Layers className="h-4 w-4 mr-2 text-neutral-500" />
-                                <SelectValue placeholder="Type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">All Types</SelectItem>
-                                <SelectItem value="OE">Open Elective</SelectItem>
-                                <SelectItem value="PE I">PE I</SelectItem>
-                                <SelectItem value="PE II">PE II</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        {/* Type and Department Filters - side by side on mobile */}
+                        <div className="flex w-full gap-2">
+                            <Select value={typeFilter} onValueChange={setTypeFilter}>
+                                <SelectTrigger className="h-9 flex-1 bg-neutral-900/70 border-white/10 text-neutral-300 text-xs">
+                                    <SelectValue placeholder="Type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">All Types</SelectItem>
+                                    <SelectItem value="OE">Open Elective</SelectItem>
+                                    <SelectItem value="PE I">PE I</SelectItem>
+                                    <SelectItem value="PE II">PE II</SelectItem>
+                                </SelectContent>
+                            </Select>
 
-                        {/* Department Filter */}
-                        <Select value={deptFilter} onValueChange={setDeptFilter}>
-                            <SelectTrigger className="w-full md:w-40 bg-neutral-900/50 border-white/10 text-neutral-300">
-                                <Building2 className="h-4 w-4 mr-2 text-neutral-500" />
-                                <SelectValue placeholder="Dept" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">All Depts</SelectItem>
-                                {departments.map(dept => (
-                                    <SelectItem key={dept} value={dept}>{dept}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                            <Select value={deptFilter} onValueChange={setDeptFilter}>
+                                <SelectTrigger className="h-9 flex-1 bg-neutral-900/70 border-white/10 text-neutral-300 text-xs">
+                                    <SelectValue placeholder="Department" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">All Depts</SelectItem>
+                                    {departments.map(dept => (
+                                        <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
 
                         {/* Sort Buttons */}
-                        <div className="flex gap-2">
+                        <div className="flex gap-1.5">
                             <button
                                 onClick={() => toggleSort("cutoff")}
-                                className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "cutoff"
-                                    ? "bg-white/10 text-white"
-                                    : "bg-neutral-900/50 text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-300"
+                                className={`h-9 px-3 rounded-md text-xs font-medium transition-colors ${sortBy === "cutoff"
+                                    ? "bg-white text-neutral-900"
+                                    : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
                                     }`}
                             >
-                                <BarChart3 className="h-4 w-4" />
-                                Cutoff
-                                {sortBy === "cutoff" && (sortOrder === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />)}
+                                Cutoff {sortBy === "cutoff" && (sortOrder === "asc" ? "↑" : "↓")}
                             </button>
                             <button
                                 onClick={() => toggleSort("students")}
-                                className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "students"
-                                    ? "bg-white/10 text-white"
-                                    : "bg-neutral-900/50 text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-300"
+                                className={`h-9 px-3 rounded-md text-xs font-medium transition-colors ${sortBy === "students"
+                                    ? "bg-white text-neutral-900"
+                                    : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
                                     }`}
                             >
-                                <Users className="h-4 w-4" />
-                                Students
-                                {sortBy === "students" && (sortOrder === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />)}
+                                Students {sortBy === "students" && (sortOrder === "asc" ? "↑" : "↓")}
                             </button>
                             <button
                                 onClick={() => toggleSort("name")}
-                                className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "name"
-                                    ? "bg-white/10 text-white"
-                                    : "bg-neutral-900/50 text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-300"
+                                className={`h-9 px-3 rounded-md text-xs font-medium transition-colors ${sortBy === "name"
+                                    ? "bg-white text-neutral-900"
+                                    : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
                                     }`}
                             >
-                                <GraduationCap className="h-4 w-4" />
-                                Name
-                                {sortBy === "name" && (sortOrder === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />)}
+                                Name {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
                             </button>
                         </div>
                     </div>
