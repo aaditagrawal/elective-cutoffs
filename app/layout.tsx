@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   title: "Elective Cutoff Analysis | MIT Manipal",
   description: "Explore CGPA cutoffs for Open Electives and Program Electives at MIT Manipal. Find the right courses based on your CGPA.",
   keywords: ["MIT Manipal", "electives", "cutoff", "CGPA", "PE", "OE", "course selection"],
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
