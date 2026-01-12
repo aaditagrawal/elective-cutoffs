@@ -269,7 +269,7 @@ function ElectiveCard({ elective, isHighlighted }: { elective: Elective; isHighl
     return (
         <Card
             id={`elective-${elective.code}-${elective.type}`}
-            className={`group relative overflow-hidden border-white/5 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-neutral-900/80 ${isHighlighted ? "ring-2 ring-white/30 border-white/30" : ""
+            className={`group relative overflow-hidden border-white/5 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-neutral-900/80 h-full ${isHighlighted ? "ring-2 ring-white/30 border-white/30" : ""
                 }`}
         >
             <CardHeader className="pb-3">
