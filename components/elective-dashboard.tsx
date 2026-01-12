@@ -339,7 +339,7 @@ function ElectiveCard({ elective, isHighlighted }: { elective: Elective; isHighl
                 </div>
                 <div className="mt-3 pt-3 border-t border-white/5">
                     <div className="flex items-center justify-between text-xs">
-                        <span className="text-neutral-500">Difficulty</span>
+                        <span className="text-neutral-500">Allocation Difficulty</span>
                         <span className={`font-medium ${difficulty.color}`}>{difficulty.level}</span>
                     </div>
                     {/* CGPA Range Bar */}

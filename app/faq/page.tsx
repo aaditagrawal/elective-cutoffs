@@ -1,19 +1,13 @@
 "use client";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 const faqs = [
   {
     id: "difficulty",
-    question: "What does 'Difficulty' mean?",
+    question: "What does 'Allocation Difficulty' mean?",
     answer:
-      'The "difficulty" rating indicates how competitive or challenging it is to get allocated into a subject based on historical allocation data. It reflects the difficulty of the allocation process itself, not the academic difficulty of the subject material. A higher difficulty means fewer students typically get into the course relative to demand.',
+      'The "allocation difficulty" rating indicates how competitive or challenging it is to get allocated into a subject based on historical allocation data. It reflects the difficulty of the allocation process itself, not the academic difficulty of the subject material. A higher allocation difficulty means fewer students typically get into the course relative to demand.',
   },
   {
     id: "allocation",
@@ -32,26 +26,16 @@ export default function FAQPage() {
           Frequently asked questions about the elective allocation system.
         </p>
 
-        <Card className="bg-neutral-900/50 border-neutral-800">
-          <CardContent className="pt-6">
-            <Accordion type="single" collapsible className="space-y-2">
-              {faqs.map((faq) => (
-                <AccordionItem
-                  key={faq.id}
-                  value={faq.id}
-                  className="border-neutral-800"
-                >
-                  <AccordionTrigger className="text-left hover:text-white pr-4">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-neutral-400">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </CardContent>
-        </Card>
+        <div className="space-y-4">
+          {faqs.map((faq) => (
+            <Card key={faq.id} className="bg-neutral-900/50 border-neutral-800">
+              <CardContent className="pt-6">
+                <h2 className="text-lg font-medium mb-2">{faq.question}</h2>
+                <p className="text-neutral-400">{faq.answer}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );
