@@ -1,0 +1,1400 @@
+{
+  "metadata": {
+    "title": "VI Semester Elective Allocations",
+    "academicYear": "2025–26",
+    "semester": "VI",
+    "source": "data/elective_cutoffs.csv from Git HEAD"
+  },
+  "electives": [
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "AAE 4311",
+      "name": "INTRODUCTION TO AEROSPACE ENGINEERING",
+      "department": "AAE",
+      "lowestCGPA": 6.75,
+      "highestCGPA": 8.98,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "AAE 4313",
+      "name": "Introduction to Automobile Engineering",
+      "department": "AAE",
+      "lowestCGPA": 6.33,
+      "highestCGPA": 9.07,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "BME 4315",
+      "name": "INTRODUCTION TO NANOTECHNOLOGY AND CHARACTERIZATION TECHNIQUES",
+      "department": "BME",
+      "lowestCGPA": 4.98,
+      "highestCGPA": 8.71,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "CHE 4311",
+      "name": "Industrial Pollution Control",
+      "department": "CHE",
+      "lowestCGPA": 5.88,
+      "highestCGPA": 8.4,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "CHE 4312",
+      "name": "Risk and Safety Management in Industries",
+      "department": "CHE",
+      "lowestCGPA": 6.34,
+      "highestCGPA": 7.73,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "CHM 4312",
+      "name": "SUSTAINABLE CHEMICAL PROCESSES AND PRODUCTS",
+      "department": "CHM",
+      "lowestCGPA": 4.23,
+      "highestCGPA": 8.46,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "CIE 4313",
+      "name": "ENVIRONMENTAL MANAGEMENT",
+      "department": "CIE",
+      "lowestCGPA": 6.55,
+      "highestCGPA": 8.96,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "CIE 4314",
+      "name": "GEOLOGY FOR ENGINEERS",
+      "department": "CIE",
+      "lowestCGPA": 5.75,
+      "highestCGPA": 9.56,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "CIE 4316",
+      "name": "STRENGTH OF MATERIALS",
+      "department": "CIE",
+      "lowestCGPA": 3.19,
+      "highestCGPA": 8.86,
+      "students": 43
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "CSE 4456",
+      "name": "IOS APPLICATION DEVELOPMENT",
+      "department": "CSE",
+      "lowestCGPA": 7.12,
+      "highestCGPA": 9.61,
+      "students": 24
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "ECE 4311",
+      "name": "Consumer Electronics",
+      "department": "ECE",
+      "lowestCGPA": 4.72,
+      "highestCGPA": 8.66,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "ECE 4323",
+      "name": "Vedic Mathematics and its Applications in Modern Technologies",
+      "department": "ECE",
+      "lowestCGPA": 4.54,
+      "highestCGPA": 8.75,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "ELE 4311",
+      "name": "MATLAB for Engineers",
+      "department": "ELE",
+      "lowestCGPA": 4.66,
+      "highestCGPA": 9.49,
+      "students": 139
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "ELE 4312",
+      "name": "Essentials of Energy Auditing",
+      "department": "ELE",
+      "lowestCGPA": 4.06,
+      "highestCGPA": 7.39,
+      "students": 27
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "HUM 4322",
+      "name": "FILM STUDIES",
+      "department": "HUM",
+      "lowestCGPA": 8.6,
+      "highestCGPA": 9.74,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "HUM 4323",
+      "name": "GERMAN FOR BEGINNERS",
+      "department": "HUM",
+      "lowestCGPA": 8.87,
+      "highestCGPA": 9.98,
+      "students": 30
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "HUM 4329",
+      "name": "CREATIVE COMMUNICATION: ART, MEDIA, CULTURE AND IDEAS",
+      "department": "HUM",
+      "lowestCGPA": 7.16,
+      "highestCGPA": 9.38,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "HUM 4337",
+      "name": "INTRODUCTION TO ENTERPRISE RISK MANAGEMENT",
+      "department": "HUM",
+      "lowestCGPA": 7.42,
+      "highestCGPA": 9.01,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "ICE 4314",
+      "name": "Sensor Technology",
+      "department": "ICE",
+      "lowestCGPA": 5.14,
+      "highestCGPA": 8.93,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "ICE 4316",
+      "name": "Virtual Instrumentation",
+      "department": "ICE",
+      "lowestCGPA": 4.28,
+      "highestCGPA": 8.84,
+      "students": 28
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "ICE 4318",
+      "name": "Outdoor Leadership",
+      "department": "ICE",
+      "lowestCGPA": 7.18,
+      "highestCGPA": 9.02,
+      "students": 25
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "ICE 4319",
+      "name": "HIMALAYAN OUTDOOR LEADERSHIP",
+      "department": "ICE",
+      "lowestCGPA": 7.2,
+      "highestCGPA": 8.73,
+      "students": 20
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "ICE 4320",
+      "name": "NATURE JOURNALING",
+      "department": "ICE",
+      "lowestCGPA": 7.86,
+      "highestCGPA": 9.47,
+      "students": 15
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "IIE 4310",
+      "name": "MEDICAL EMERGENCY AND FIRST AID",
+      "department": "IIE",
+      "lowestCGPA": 7.61,
+      "highestCGPA": 9.49,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "IIE 4315",
+      "name": "OPEN ELCTIVE - REPORTING AND WRITING",
+      "department": "IIE",
+      "lowestCGPA": 7.44,
+      "highestCGPA": 9.46,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "IIE 4318",
+      "name": "MEDIA PRODUCTION TECHNIQUES",
+      "department": "IIE",
+      "lowestCGPA": 7.79,
+      "highestCGPA": 9.55,
+      "students": 40
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "IIE 4324",
+      "name": "YOGA",
+      "department": "IIE",
+      "lowestCGPA": 8.13,
+      "highestCGPA": 9.78,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "IIE 4333",
+      "name": "MEDITATION AND CONSCIOUS LIVING COURSE",
+      "department": "IIE",
+      "lowestCGPA": 7.36,
+      "highestCGPA": 9.69,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "IIE 4334",
+      "name": "DISCERNING INDIA : LIVING CULTURES OF TULUNADU",
+      "department": "IIE",
+      "lowestCGPA": 7.53,
+      "highestCGPA": 9.27,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "IIE 4335",
+      "name": "INTRODUCTION TO FOREIGN LANGUAGE - FRENCH I",
+      "department": "IIE",
+      "lowestCGPA": 7.81,
+      "highestCGPA": 9.45,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "MAT 5301",
+      "name": "APPLIED GRAPH THEORY",
+      "department": "MAT",
+      "lowestCGPA": 4.93,
+      "highestCGPA": 9.33,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "MAT 5302",
+      "name": "APPLIED LINEAR ALGEBRA",
+      "department": "MAT",
+      "lowestCGPA": 5.45,
+      "highestCGPA": 9.49,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "MAT 5305",
+      "name": "OPTIMIZATION TECHNIQUES",
+      "department": "MAT",
+      "lowestCGPA": 4.45,
+      "highestCGPA": 9.08,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "MIE 4311",
+      "name": "INTRODUCTION TO COMPOSITE MATERIALS",
+      "department": "MIE",
+      "lowestCGPA": 4.13,
+      "highestCGPA": 8.34,
+      "students": 32
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "MIE 4312",
+      "name": "INTRODUCTION TO BIOMECHANICS",
+      "department": "MIE",
+      "lowestCGPA": 4.45,
+      "highestCGPA": 8.2,
+      "students": 32
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "MIE 4313",
+      "name": "INTRODUCTION TO OPERATIONS RESEARCH",
+      "department": "MIE",
+      "lowestCGPA": 5.13,
+      "highestCGPA": 8.93,
+      "students": 70
+    },
+    {
+      "type": "OE",
+      "typeLabel": "Open Elective",
+      "code": "MTE 4315",
+      "name": "Introduction to Industrial Robotics",
+      "department": "MTE",
+      "lowestCGPA": 6.4,
+      "highestCGPA": 9.75,
+      "students": 70
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "AAE 4401",
+      "name": "Applied Aerodynamics",
+      "department": "AAE",
+      "lowestCGPA": 5.72,
+      "highestCGPA": 9.78,
+      "students": 17
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "AAE 4405",
+      "name": "Unmanned Aircraft Systems, Sensors, and Instrumentation",
+      "department": "AAE",
+      "lowestCGPA": 4.28,
+      "highestCGPA": 8.91,
+      "students": 28
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "AAE 4413",
+      "name": "Engine Systems Design",
+      "department": "AAE",
+      "lowestCGPA": 4.56,
+      "highestCGPA": 8.47,
+      "students": 30
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "AAE 4417",
+      "name": "Electrical Vehicle System Engineering",
+      "department": "AAE",
+      "lowestCGPA": 4.6,
+      "highestCGPA": 9.38,
+      "students": 20
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "AAE 4421",
+      "name": "SPACEFLIGHT MECHANICS AND ATTITUDE DYNAMICS",
+      "department": "AAE",
+      "lowestCGPA": 5.2,
+      "highestCGPA": 8.39,
+      "students": 15
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "BIO 4402",
+      "name": "Biological Treatment of Wastewater",
+      "department": "BIO",
+      "lowestCGPA": 4.79,
+      "highestCGPA": 8.2,
+      "students": 7
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "BIO 4405",
+      "name": "Biomaterials & Drug Delivery Engineering Principles",
+      "department": "BIO",
+      "lowestCGPA": 6.45,
+      "highestCGPA": 9.46,
+      "students": 40
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "BME 4402",
+      "name": "Biomaterial Characterization Techniques",
+      "department": "BME",
+      "lowestCGPA": 4.64,
+      "highestCGPA": 7.6,
+      "students": 10
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "BME 4405",
+      "name": "Artificial Intelligence",
+      "department": "BME",
+      "lowestCGPA": 4.58,
+      "highestCGPA": 9.71,
+      "students": 17
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CHE 4401",
+      "name": "Oil and Gas Reservoir Engineering",
+      "department": "CHE",
+      "lowestCGPA": 5.72,
+      "highestCGPA": 9.49,
+      "students": 11
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CHE 4407",
+      "name": "Air Pollution Monitoring and Control",
+      "department": "CHE",
+      "lowestCGPA": 5.26,
+      "highestCGPA": 5.35,
+      "students": 3
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CHE 4409",
+      "name": "Renewable Energy",
+      "department": "CHE",
+      "lowestCGPA": 4.92,
+      "highestCGPA": 9.13,
+      "students": 11
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CIE 4401",
+      "name": "ADVANCES IN CONCRETE TECHNOLOGY",
+      "department": "CIE",
+      "lowestCGPA": 5.47,
+      "highestCGPA": 7.82,
+      "students": 14
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CIE 4409",
+      "name": "STRUCTURAL DYNAMICS",
+      "department": "CIE",
+      "lowestCGPA": 5.87,
+      "highestCGPA": 9.04,
+      "students": 10
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CIE 4417",
+      "name": "FORMWORK ENGINEERING PRACTICES",
+      "department": "CIE",
+      "lowestCGPA": 4.54,
+      "highestCGPA": 8.29,
+      "students": 11
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CRA 4401",
+      "name": "MARKETING IN A DIGITAL WORLD",
+      "department": "CRA",
+      "lowestCGPA": 6.25,
+      "highestCGPA": 9.44,
+      "students": 251
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CRA 4405",
+      "name": "BIG DATA MODELLING AND MANAGEMENT",
+      "department": "CRA",
+      "lowestCGPA": 7.58,
+      "highestCGPA": 9.98,
+      "students": 325
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CRA 4409",
+      "name": "DATA SCIENTISTS TOOLBOX AND R PROGRAMMING",
+      "department": "CRA",
+      "lowestCGPA": 4.72,
+      "highestCGPA": 8.35,
+      "students": 117
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CRA 4413",
+      "name": "INTRODUCTION TO INTERACTIVE PROGRAMMING IN PYTHON",
+      "department": "CRA",
+      "lowestCGPA": 6.16,
+      "highestCGPA": 8.49,
+      "students": 61
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CSE 4405",
+      "name": "ARTIFICIAL INTELLIGENCE",
+      "department": "CSE",
+      "lowestCGPA": 4.44,
+      "highestCGPA": 9.73,
+      "students": 97
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CSE 4417",
+      "name": "NETWORK SECURITY",
+      "department": "CSE",
+      "lowestCGPA": 3.19,
+      "highestCGPA": 9.35,
+      "students": 27
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CSE 4429",
+      "name": "NATURAL LANGUAGE PROCESSING",
+      "department": "CSE",
+      "lowestCGPA": 4.48,
+      "highestCGPA": 9.08,
+      "students": 38
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "CSF 4444",
+      "name": "Economics",
+      "department": "CSF",
+      "lowestCGPA": 5.11,
+      "highestCGPA": 9.35,
+      "students": 18
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "DSE 4401",
+      "name": "INFORMATIO RETRIEVAL",
+      "department": "DSE",
+      "lowestCGPA": 4.67,
+      "highestCGPA": 9.47,
+      "students": 26
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "DSE 4405",
+      "name": "Cloud Computing",
+      "department": "DSE",
+      "lowestCGPA": 4.34,
+      "highestCGPA": 8.71,
+      "students": 38
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "ECE 4406",
+      "name": "MOS Device Modelling",
+      "department": "ECE",
+      "lowestCGPA": 4.67,
+      "highestCGPA": 9.42,
+      "students": 64
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "ECE 4411",
+      "name": "Embedded System Design",
+      "department": "ECE",
+      "lowestCGPA": 6.02,
+      "highestCGPA": 9.59,
+      "students": 74
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "ECE 4421",
+      "name": "Machine Learning for VLSI Design Automation",
+      "department": "ECE",
+      "lowestCGPA": 5.51,
+      "highestCGPA": 8.64,
+      "students": 15
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "ECE 4423",
+      "name": "VLSI Architecture for IOT & EDGE Devices",
+      "department": "ECE",
+      "lowestCGPA": 5.53,
+      "highestCGPA": 8.53,
+      "students": 16
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "ELE 4409",
+      "name": "Artificial Intelligence",
+      "department": "ELE",
+      "lowestCGPA": 6.34,
+      "highestCGPA": 8.54,
+      "students": 61
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "ELE 4415",
+      "name": "EV Battery Technology and Power Train Development",
+      "department": "ELE",
+      "lowestCGPA": 5.06,
+      "highestCGPA": 9.39,
+      "students": 111
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "HUM 4401",
+      "name": "HUMAN RESOURCE MANAGEMENT",
+      "department": "HUM",
+      "lowestCGPA": 4.72,
+      "highestCGPA": 9.09,
+      "students": 59
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "HUM 4408",
+      "name": "FINTECH SERVICES",
+      "department": "HUM",
+      "lowestCGPA": 6.24,
+      "highestCGPA": 9.27,
+      "students": 60
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "HUM 4411",
+      "name": "ENTREPRENEURSHIP",
+      "department": "HUM",
+      "lowestCGPA": 5.06,
+      "highestCGPA": 8.54,
+      "students": 58
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "HUM 4420",
+      "name": "Technical and Business Writing",
+      "department": "HUM",
+      "lowestCGPA": 4.23,
+      "highestCGPA": 6.64,
+      "students": 29
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "HUM 4421",
+      "name": "Understanding Literature",
+      "department": "HUM",
+      "lowestCGPA": 4.58,
+      "highestCGPA": 8.73,
+      "students": 29
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "ICE 4401",
+      "name": "Modern Control Theory",
+      "department": "ICE",
+      "lowestCGPA": 4.06,
+      "highestCGPA": 9.01,
+      "students": 20
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "ICT 4401",
+      "name": "Artificial Intelligence",
+      "department": "ICT",
+      "lowestCGPA": 3.67,
+      "highestCGPA": 9.48,
+      "students": 101
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "ICT 4416",
+      "name": "Artificial Intelligence in Cyber security",
+      "department": "ICT",
+      "lowestCGPA": 4.39,
+      "highestCGPA": 9.46,
+      "students": 28
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "MAT 4055",
+      "name": "Introduction to Game Theory",
+      "department": "MAT",
+      "lowestCGPA": 4.91,
+      "highestCGPA": 9.74,
+      "students": 64
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "MAT 4405",
+      "name": "Linear Optimization",
+      "department": "MAT",
+      "lowestCGPA": 6.06,
+      "highestCGPA": 8.8,
+      "students": 14
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "MIE 4401",
+      "name": "DESIGN OF MECHANICAL SYSTEMS",
+      "department": "MIE",
+      "lowestCGPA": 4.42,
+      "highestCGPA": 8.98,
+      "students": 28
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "MIE 4406",
+      "name": "NON-TRADITIONAL MANUFACTURING TECHNIQUES",
+      "department": "MIE",
+      "lowestCGPA": 4.78,
+      "highestCGPA": 7.05,
+      "students": 10
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "MIE 4409",
+      "name": "CRYOGENICS",
+      "department": "MIE",
+      "lowestCGPA": 6.91,
+      "highestCGPA": 9.28,
+      "students": 14
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "MIE 4413",
+      "name": "PROCESSING OF POLYMERS AND POLYMER COMPOSITES",
+      "department": "MIE",
+      "lowestCGPA": 4.98,
+      "highestCGPA": 8.02,
+      "students": 11
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "MIE 4421",
+      "name": "ROBOTICS: MECHANICS AND CONTROL",
+      "department": "MIE",
+      "lowestCGPA": 5.58,
+      "highestCGPA": 9.51,
+      "students": 10
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "MIE 4427",
+      "name": "OPERATIONS RESEARCH",
+      "department": "MIE",
+      "lowestCGPA": 4.55,
+      "highestCGPA": 8.56,
+      "students": 13
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "MIE 4433",
+      "name": "INDUSTRY 4.0",
+      "department": "MIE",
+      "lowestCGPA": 5.23,
+      "highestCGPA": 8.33,
+      "students": 7
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "MTE 4405",
+      "name": "Database Management Systems",
+      "department": "MTE",
+      "lowestCGPA": 4.6,
+      "highestCGPA": 9.04,
+      "students": 14
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "MTE 4409",
+      "name": "Artificial Intelligence for Robotic Vision",
+      "department": "MTE",
+      "lowestCGPA": 4.45,
+      "highestCGPA": 9.52,
+      "students": 38
+    },
+    {
+      "type": "PE I",
+      "typeLabel": "Program Elective I",
+      "code": "PHY 4401",
+      "name": "FUNDAMENTALS OF ASTROPHYSICS",
+      "department": "PHY",
+      "lowestCGPA": 4.76,
+      "highestCGPA": 9.56,
+      "students": 29
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "AAE 4403",
+      "name": "Experimental Aerodynamics",
+      "department": "AAE",
+      "lowestCGPA": 5.72,
+      "highestCGPA": 9.78,
+      "students": 17
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "AAE 4406",
+      "name": "Antenna Design, Analysis, and its Applications",
+      "department": "AAE",
+      "lowestCGPA": 4.28,
+      "highestCGPA": 8.91,
+      "students": 28
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "AAE 4414",
+      "name": "Automotive Ergonomics",
+      "department": "AAE",
+      "lowestCGPA": 4.56,
+      "highestCGPA": 8.98,
+      "students": 33
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "AAE 4418",
+      "name": "Energy Storage System and Devices for Electric Vehicles",
+      "department": "AAE",
+      "lowestCGPA": 4.6,
+      "highestCGPA": 9.56,
+      "students": 21
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "AAE 4422",
+      "name": "SPACECRAFT SYSTEMS AND ENGINEERING",
+      "department": "AAE",
+      "lowestCGPA": 5.2,
+      "highestCGPA": 8.29,
+      "students": 14
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "BIO 4403",
+      "name": "Biofuels Engineering",
+      "department": "BIO",
+      "lowestCGPA": 4.79,
+      "highestCGPA": 8.86,
+      "students": 7
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "BIO 4407",
+      "name": "Biological Therapeutics",
+      "department": "BIO",
+      "lowestCGPA": 6.45,
+      "highestCGPA": 9.46,
+      "students": 42
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "BME 4404",
+      "name": "Drug Delivery",
+      "department": "BME",
+      "lowestCGPA": 4.64,
+      "highestCGPA": 7.6,
+      "students": 10
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "BME 4406",
+      "name": "Biomedical Signal Processing",
+      "department": "BME",
+      "lowestCGPA": 4.58,
+      "highestCGPA": 9.71,
+      "students": 16
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CHE 4402",
+      "name": "PETROLEUM REFINERY ENGINEERING",
+      "department": "CHE",
+      "lowestCGPA": 5.72,
+      "highestCGPA": 9.49,
+      "students": 13
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CHE 4406",
+      "name": "Solid and Hazardous Waste Management",
+      "department": "CHE",
+      "lowestCGPA": 5.34,
+      "highestCGPA": 9.13,
+      "students": 4
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CHE 4410",
+      "name": "Solar Energy",
+      "department": "CHE",
+      "lowestCGPA": 4.92,
+      "highestCGPA": 8.36,
+      "students": 8
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CIE 4402",
+      "name": "BUILDING CODES AND FUNCTIONAL SERVICES",
+      "department": "CIE",
+      "lowestCGPA": 4.54,
+      "highestCGPA": 7.82,
+      "students": 15
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CIE 4410",
+      "name": "DESIGN OF STEEL STRUCTURES",
+      "department": "CIE",
+      "lowestCGPA": 5.87,
+      "highestCGPA": 9.04,
+      "students": 10
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CIE 4418",
+      "name": "DEEP EXCAVATIONS, FOUNDATIONS & TUNNELS",
+      "department": "CIE",
+      "lowestCGPA": 4.73,
+      "highestCGPA": 8.29,
+      "students": 10
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CRA 4402",
+      "name": "DIGITAL ANALYTICS FOR MARKETING",
+      "department": "CRA",
+      "lowestCGPA": 6.25,
+      "highestCGPA": 9.44,
+      "students": 251
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CRA 4406",
+      "name": "BIG DATA INTEGRATION AND PROCESSING",
+      "department": "CRA",
+      "lowestCGPA": 7.58,
+      "highestCGPA": 9.98,
+      "students": 325
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CRA 4410",
+      "name": "INTRODUCTION TO DATA SCIENCE",
+      "department": "CRA",
+      "lowestCGPA": 4.72,
+      "highestCGPA": 8.35,
+      "students": 117
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CRA 4414",
+      "name": "MATHEMATICAL PROBLEM SOLVING USING PYTHON",
+      "department": "CRA",
+      "lowestCGPA": 6.16,
+      "highestCGPA": 8.49,
+      "students": 61
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CSE 4408",
+      "name": "MACHINE LEARNING",
+      "department": "CSE",
+      "lowestCGPA": 4.44,
+      "highestCGPA": 9.73,
+      "students": 101
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CSE 4418",
+      "name": "CYBER FORENSICS",
+      "department": "CSE",
+      "lowestCGPA": 3.19,
+      "highestCGPA": 9.35,
+      "students": 28
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CSE 4430",
+      "name": "SPEECH PROCESSING",
+      "department": "CSE",
+      "lowestCGPA": 4.48,
+      "highestCGPA": 9.08,
+      "students": 39
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "CSF 4445",
+      "name": "Financial Statement Analysis",
+      "department": "CSF",
+      "lowestCGPA": 5.11,
+      "highestCGPA": 9.35,
+      "students": 18
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "DSE 4402",
+      "name": "NATURAL LANGUAGE PROCESSING",
+      "department": "DSE",
+      "lowestCGPA": 4.67,
+      "highestCGPA": 9.47,
+      "students": 38
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "DSE 4406",
+      "name": "Internet of Things",
+      "department": "DSE",
+      "lowestCGPA": 4.34,
+      "highestCGPA": 8.65,
+      "students": 31
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "ECE 4405",
+      "name": "Low Power VLSI Design",
+      "department": "ECE",
+      "lowestCGPA": 4.71,
+      "highestCGPA": 9.4,
+      "students": 66
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "ECE 4409",
+      "name": "Machine Learning",
+      "department": "ECE",
+      "lowestCGPA": 4.56,
+      "highestCGPA": 8.81,
+      "students": 89
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "ECE 4416",
+      "name": "Compound Semiconductor Electronics",
+      "department": "ECE",
+      "lowestCGPA": 5.94,
+      "highestCGPA": 7.85,
+      "students": 3
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "ECE 4424",
+      "name": "Security Solutions In VLSI",
+      "department": "ECE",
+      "lowestCGPA": 5.53,
+      "highestCGPA": 8.64,
+      "students": 17
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "ELE 4411",
+      "name": "FPGA Based System Design",
+      "department": "ELE",
+      "lowestCGPA": 6.06,
+      "highestCGPA": 9.59,
+      "students": 67
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "ELE 4416",
+      "name": "EV Charging Infrastructure, Vehicle Testing & Homologation",
+      "department": "ELE",
+      "lowestCGPA": 5.06,
+      "highestCGPA": 9.39,
+      "students": 111
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "HUM 4402",
+      "name": "MARKETING MANAGEMENT",
+      "department": "HUM",
+      "lowestCGPA": 4.72,
+      "highestCGPA": 9.09,
+      "students": 59
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "HUM 4409",
+      "name": "INTRODUCTION TO BANKING AND PAYMENTS",
+      "department": "HUM",
+      "lowestCGPA": 6.24,
+      "highestCGPA": 9.27,
+      "students": 60
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "HUM 4412",
+      "name": "DESIGN THINKING",
+      "department": "HUM",
+      "lowestCGPA": 5.06,
+      "highestCGPA": 8.54,
+      "students": 58
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "HUM 4418",
+      "name": "Intercultural Communication",
+      "department": "HUM",
+      "lowestCGPA": 4.23,
+      "highestCGPA": 6.64,
+      "students": 29
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "HUM 4424",
+      "name": "Modern Indian Literature",
+      "department": "HUM",
+      "lowestCGPA": 4.58,
+      "highestCGPA": 8.73,
+      "students": 29
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "ICE 4402",
+      "name": "Nonlinear control theory",
+      "department": "ICE",
+      "lowestCGPA": 4.06,
+      "highestCGPA": 9.01,
+      "students": 15
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "ICT 4402",
+      "name": "Machine Learning",
+      "department": "ICT",
+      "lowestCGPA": 3.67,
+      "highestCGPA": 9.48,
+      "students": 97
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "ICT 4414",
+      "name": "Ethical hacking",
+      "department": "ICT",
+      "lowestCGPA": 4.39,
+      "highestCGPA": 9.46,
+      "students": 31
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "MAT 4056",
+      "name": "Time Series Analysis",
+      "department": "MAT",
+      "lowestCGPA": 4.91,
+      "highestCGPA": 9.74,
+      "students": 52
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "MAT 4407",
+      "name": "Combinatorics and Design of Experiments",
+      "department": "MAT",
+      "lowestCGPA": 6.06,
+      "highestCGPA": 8.8,
+      "students": 12
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "MIE 4402",
+      "name": "INTRODUCTION TO CONTINUUM MECHANICS FOR ENGINEERS",
+      "department": "MIE",
+      "lowestCGPA": 4.42,
+      "highestCGPA": 8.98,
+      "students": 27
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "MIE 4408",
+      "name": "MICRO MACHINING",
+      "department": "MIE",
+      "lowestCGPA": 4.89,
+      "highestCGPA": 9.51,
+      "students": 10
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "MIE 4410",
+      "name": "SOLAR THERMAL SYSTEMS",
+      "department": "MIE",
+      "lowestCGPA": 6.91,
+      "highestCGPA": 9.28,
+      "students": 14
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "MIE 4414",
+      "name": "METAL AND CERAMIC COMPOSITE MATERIALS",
+      "department": "MIE",
+      "lowestCGPA": 4.98,
+      "highestCGPA": 7.86,
+      "students": 10
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "MIE 4423",
+      "name": "FLUID DRIVES AND CONTROL",
+      "department": "MIE",
+      "lowestCGPA": 5.85,
+      "highestCGPA": 7.07,
+      "students": 5
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "MIE 4428",
+      "name": "TOTAL QUALITY MANAGEMENT",
+      "department": "MIE",
+      "lowestCGPA": 4.55,
+      "highestCGPA": 8.32,
+      "students": 14
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "MIE 4439",
+      "name": "PROGRAMMING USING PYTHON",
+      "department": "MIE",
+      "lowestCGPA": 5.23,
+      "highestCGPA": 8.33,
+      "students": 7
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "MTE 4406",
+      "name": "Cyber Security for Industrial AutomationMTE 4406 : Cyber Security for Industrial Automation",
+      "department": "MTE",
+      "lowestCGPA": 4.6,
+      "highestCGPA": 7.79,
+      "students": 14
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "MTE 4410",
+      "name": "Robot Dynamics and Control",
+      "department": "MTE",
+      "lowestCGPA": 4.45,
+      "highestCGPA": 9.52,
+      "students": 39
+    },
+    {
+      "type": "PE II",
+      "typeLabel": "Program Elective II",
+      "code": "PHY 4402",
+      "name": "ASTROPHYSICAL PROCESSES",
+      "department": "PHY",
+      "lowestCGPA": 4.28,
+      "highestCGPA": 8.84,
+      "students": 27
+    }
+  ]
+}

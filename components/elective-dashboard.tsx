@@ -6,12 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import {
-    electiveData,
+    semesterDatasets,
     filterElectives,
+    getElectiveTypes,
     getDepartments,
     getStats,
     getDifficultyLevel,
     getCoursePageUrl,
+    type SemesterId,
     type Elective
 } from "@/lib/electives";
 import {
@@ -32,11 +34,13 @@ import {
 function CommandSearch({
     isOpen,
     onClose,
-    onSelect
+    onSelect,
+    electives,
 }: {
     isOpen: boolean;
     onClose: () => void;
     onSelect: (elective: Elective) => void;
+    electives: Elective[];
 }) {
     const [query, setQuery] = useState("");
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -44,12 +48,12 @@ function CommandSearch({
     const listRef = useRef<HTMLDivElement>(null);
 
     const results = query.length > 0
-        ? electiveData.filter(e =>
+        ? electives.filter(e =>
             e.name.toLowerCase().includes(query.toLowerCase()) ||
             e.code.toLowerCase().includes(query.toLowerCase()) ||
             e.department.toLowerCase().includes(query.toLowerCase())
         ).slice(0, 8)
-        : electiveData.slice(0, 8);
+        : electives.slice(0, 8);
 
     useEffect(() => {
         if (isOpen) {
@@ -364,6 +368,7 @@ function ElectiveCard({ elective, isHighlighted }: { elective: Elective; isHighl
 }
 
 export default function ElectiveDashboard() {
+    const [semester, setSemester] = useState<SemesterId>("seventh");
     const [search, setSearch] = useState("");
     const [typeFilter, setTypeFilter] = useState("all");
     const [deptFilter, setDeptFilter] = useState("all");
@@ -372,18 +377,22 @@ export default function ElectiveDashboard() {
     const [commandOpen, setCommandOpen] = useState(false);
     const [highlightedElective, setHighlightedElective] = useState<string | null>(null);
 
-    const stats = useMemo(() => getStats(), []);
-    const departments = useMemo(() => getDepartments(), []);
+    const dataset = semesterDatasets[semester];
+    const electiveData = dataset.electives;
+    const electiveTypes = useMemo(() => getElectiveTypes(electiveData), [electiveData]);
+    const stats = useMemo(() => getStats(electiveData), [electiveData]);
+    const departments = useMemo(() => getDepartments(electiveData), [electiveData]);
 
     const filteredElectives = useMemo(() => {
         return filterElectives(
+            electiveData,
             typeFilter,
             deptFilter,
             search,
             sortBy,
             sortOrder
         );
-    }, [typeFilter, deptFilter, search, sortBy, sortOrder]);
+    }, [electiveData, typeFilter, deptFilter, search, sortBy, sortOrder]);
 
     // Keyboard shortcut for Ctrl+K (toggle)
     useEffect(() => {
@@ -418,6 +427,14 @@ export default function ElectiveDashboard() {
         }, 100);
     }, []);
 
+    const handleSemesterChange = (nextSemester: SemesterId) => {
+        setSemester(nextSemester);
+        setSearch("");
+        setTypeFilter("all");
+        setDeptFilter("all");
+        setHighlightedElective(null);
+    };
+
     const toggleSort = (newSortBy: typeof sortBy) => {
         if (sortBy === newSortBy) {
             setSortOrder(prev => prev === "asc" ? "desc" : "asc");
@@ -434,6 +451,7 @@ export default function ElectiveDashboard() {
                 isOpen={commandOpen}
                 onClose={() => setCommandOpen(false)}
                 onSelect={handleSelectElective}
+                electives={electiveData}
             />
 
             {/* Hero Section */}
@@ -445,14 +463,39 @@ export default function ElectiveDashboard() {
                             Elective Cutoff Analysis
                         </h1>
                         <p className="mt-3 text-lg text-neutral-400 max-w-2xl mx-auto">
-                            Explore CGPA cutoffs for Open Electives (OE) and Program Electives (PE I & PE II)
-                            to make informed course selection decisions.
+                            {semester === "sixth"
+                                ? "Explore VI semester CGPA cutoffs for Open Electives and Program Electives I–II."
+                                : "Explore VII semester CGPA cutoffs for Open Elective III and Program Electives III–VII."}
                         </p>
+                        <p className="mt-2 text-sm text-neutral-500">
+                            Academic Year {dataset.metadata.academicYear}
+                        </p>
+
+                        {/* Semester Toggle */}
+                        <div className="mt-5 inline-flex rounded-lg border border-white/10 bg-neutral-900 p-1">
+                            {([
+                                ["sixth", "6th Semester"],
+                                ["seventh", "7th Semester"],
+                            ] as const).map(([value, label]) => (
+                                <button
+                                    key={value}
+                                    onClick={() => handleSemesterChange(value)}
+                                    aria-pressed={semester === value}
+                                    className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                                        semester === value
+                                            ? "bg-white text-neutral-950"
+                                            : "text-neutral-400 hover:text-white"
+                                    }`}
+                                >
+                                    {label}
+                                </button>
+                            ))}
+                        </div>
 
                         {/* Quick Search Button */}
                         <button
                             onClick={() => setCommandOpen(true)}
-                            className="mt-5 inline-flex items-center gap-2 px-3 py-2 bg-neutral-900 border border-white/10 rounded-lg text-neutral-400 hover:bg-neutral-800 hover:text-neutral-300 transition-colors text-sm"
+                            className="mt-5 ml-2 inline-flex items-center gap-2 px-3 py-2 bg-neutral-900 border border-white/10 rounded-lg text-neutral-400 hover:bg-neutral-800 hover:text-neutral-300 transition-colors text-sm"
                         >
                             <Search className="h-4 w-4" />
                             <span>Search...</span>
@@ -467,7 +510,9 @@ export default function ElectiveDashboard() {
                         <StatCard
                             title="Total Electives"
                             value={stats.totalElectives}
-                            subtitle={`${stats.oeCount} OE • ${stats.pe1Count} PE I • ${stats.pe2Count} PE II`}
+                            subtitle={semester === "sixth"
+                                ? `${stats.oeCount} OE • ${stats.programElectiveCount} PE I–II`
+                                : `${stats.oeCount} OE III • ${stats.programElectiveCount} PE III–VII`}
                             icon={BookOpen}
                         />
                         <StatCard
@@ -514,9 +559,9 @@ export default function ElectiveDashboard() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="all">All Types</SelectItem>
-                                    <SelectItem value="OE">Open Elective</SelectItem>
-                                    <SelectItem value="PE I">PE I</SelectItem>
-                                    <SelectItem value="PE II">PE II</SelectItem>
+                                    {electiveTypes.map((type) => (
+                                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
 
@@ -605,7 +650,10 @@ export default function ElectiveDashboard() {
 
             {/* Footer */}
             <footer className="border-t border-white/5 py-8 text-center text-sm text-neutral-500">
-                <p>Data based on actual student allocations. Cutoffs may vary each semester.</p>
+                <p>
+                    Data based on actual {dataset.metadata.semester} semester allocations for Academic Year {dataset.metadata.academicYear}.
+                    Cutoffs may vary each semester.
+                </p>
                 <p className="mt-1">Use this as a reference, not a guarantee.</p>
                 <p className="mt-4">
                     Made by <a href="https://lverma.com" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors">Lakshit Verma</a> and <a href="https://aadit.cc" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors">Aadit Agrawal</a>

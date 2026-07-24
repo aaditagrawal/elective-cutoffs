@@ -13,7 +13,7 @@ const faqs = [
     id: "allocation",
     question: "How does the allocation process work?",
     answer:
-      "Students submit their subject preferences in a ranked order. These preferences are then allocated based on 4th semester CGPA (Cumulative Grade Point Average). The number of students who can be enrolled in each class is determined by the class capacity. Students are allocated subjects starting from their highest-ranked preference, with higher CGPA students getting priority. If a student's top preference is full, they move on to their second preference, and so on.",
+      "Students submit their subject preferences in ranked order. Allocation uses CGPA and the available capacity in each class, with higher-CGPA students receiving priority. If a student's highest available preference is full, allocation proceeds to the next preference. The cutoffs shown here are reconstructed from the supplied VII semester allocation and CGPA records.",
   },
 ];
 

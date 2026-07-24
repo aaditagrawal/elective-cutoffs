@@ -22,7 +22,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "Elective Cutoff Analysis | MIT Manipal",
-  description: "Explore CGPA cutoffs for Open Electives and Program Electives at MIT Manipal. Find the right courses based on your CGPA.",
+  description: "Compare MIT Manipal elective CGPA cutoffs across VI and VII semester allocation datasets.",
   keywords: ["MIT Manipal", "electives", "cutoff", "CGPA", "PE", "OE", "course selection"],
   icons: {
     icon: "/favicon.svg",

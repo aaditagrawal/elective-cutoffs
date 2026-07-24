@@ -1,11 +1,12 @@
 # Elective Cutoffs
 
-A web application for browsing and filtering elective course cutoffs (CGPA requirements) for MIT Manipal students for the dataset from the Academic Year 2025-2026. This tool helps students make informed decisions when selecting open electives (OE), program electives I (PE I), and program electives II (PE II).
+A web application for browsing and filtering elective course cutoffs for MIT Manipal students. A semester toggle switches between VI semester data from Academic Year 2025–26 and VII semester data from Academic Year 2026–27.
 
 ## Features
 
 - **Browse Electives**: View all available electives across different categories
-- **Filter by Type**: Separate views for Open Electives, PE I, and PE II
+- **Semester Toggle**: Switch between VI and VII semester allocation datasets
+- **Filter by Type**: Semester-specific OE and PE categories
 - **Filter by Department**: Filter electives by offering department
 - **Search**: Search by course code, name, or department
 - **Sort Options**: Sort by name, cutoff (CGPA), number of students, or difficulty
@@ -65,8 +66,8 @@ elective-cutoffs/
 │   ├── elective-dashboard.tsx  # Main dashboard component
 │   ├── example.tsx              # Component examples
 │   └── ui/                      # shadcn/ui components
-├── data/
-│   └── elective_cutoffs.csv     # Raw elective data
+├── .private-data/               # Gitignored source workbooks and student-level records
+├── data/                        # Public course-level aggregate datasets
 ├── lib/
 │   ├── electives.ts        # Elective data & utilities
 │   └── utils.ts            # Utility functions
@@ -77,30 +78,9 @@ elective-cutoffs/
 └── tailwind.config.ts
 ```
 
-## Data Format
+## Data
 
-Elective data is sourced from `data/elective_cutoffs.csv`. The CSV format is:
-
-```csv
-Elective Type,Course Name,Lowest CGPA (Cutoff),Highest CGPA,Number of Students
-Open Elective (OE),COURSE CODE : Course Name,6.75,8.98,70
-```
-
-After updating the CSV, regenerate the data in `lib/electives.ts` by running:
-
-```bash
-bun run scripts/generate-data
-```
-
-Or manually parse the CSV using the existing `parseCourseName` function pattern.
-
-## Customization
-
-### Adding New Electives
-
-1. Add the new course to `data/elective_cutoffs.csv`
-2. Update `lib/electives.ts` by adding a new entry to `electiveData` array
-3. The course will automatically appear in the dashboard
+Institutional source workbooks contain student records and must remain under the gitignored `.private-data/` directory. Only sanitized course-level aggregates—course details, cutoff range, and allocation count—are tracked under `data/` and sent to the browser. Do not expose the source workbooks or student-level records.
 
 ### UI Components
 
