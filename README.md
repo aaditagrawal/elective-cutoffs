@@ -119,6 +119,7 @@ This project is for educational purposes. The elective data is sourced from inst
 
 ## Authors
 
+- Aditya Mathpal
 - [Lakshit Verma](https://lverma.com)
 - [Aadit Agrawal](https://aadit.cc)
 

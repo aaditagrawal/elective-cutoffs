@@ -656,7 +656,7 @@ export default function ElectiveDashboard() {
                 </p>
                 <p className="mt-1">Use this as a reference, not a guarantee.</p>
                 <p className="mt-4">
-                    Made by <a href="https://lverma.com" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors">Lakshit Verma</a> and <a href="https://aadit.cc" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors">Aadit Agrawal</a>
+                    Made by <span className="text-neutral-400">Aditya Mathpal</span>, <a href="https://lverma.com" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors">Lakshit Verma</a>, and <a href="https://aadit.cc" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors">Aadit Agrawal</a>
                 </p>
             </footer>
         </div>
