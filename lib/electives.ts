@@ -41,7 +41,24 @@ export const semesterDatasets: Record<SemesterId, SemesterDataset> = {
 export type SortBy = "name" | "cutoff" | "students" | "difficulty";
 export type SortOrder = "asc" | "desc";
 
+/**
+ * Statistics for a dataset. Every field is `readonly` because `getStats` hands
+ * back the index's own memoized object rather than a fresh one — mutating it
+ * would corrupt every later read.
+ */
 export interface ElectiveStats {
+  readonly totalElectives: number;
+  readonly typeCounts: readonly Readonly<{ type: ElectiveType; count: number }>[];
+  readonly oeCount: number;
+  readonly programElectiveCount: number;
+  readonly lowestCutoff: number;
+  readonly highestCutoff: number;
+  readonly totalStudents: number;
+  readonly departments: number;
+}
+
+/** The mutable shape used while building the stats; narrowed to the readonly view on the way out. */
+interface MutableElectiveStats {
   totalElectives: number;
   typeCounts: Array<{ type: ElectiveType; count: number }>;
   oeCount: number;
@@ -319,7 +336,7 @@ function buildIndex(electives: Elective[]): ElectiveIndex {
     else if (type.startsWith("PE")) programElectiveCount += count;
   }
 
-  const stats: ElectiveStats = {
+  const stats: MutableElectiveStats = {
     totalElectives: n,
     typeCounts,
     oeCount,
@@ -532,12 +549,12 @@ function orderingFor(
  * stable identity across calls (which `useMemo` and `memo` benefit from).
  * Treat it as read-only.
  */
-export function getElectiveTypes(electives: Elective[]): ElectiveType[] {
+export function getElectiveTypes(electives: Elective[]): readonly ElectiveType[] {
   return getIndex(electives).types;
 }
 
 /** Distinct departments, sorted. Shared and read-only, as `getElectiveTypes`. */
-export function getDepartments(electives: Elective[]): string[] {
+export function getDepartments(electives: Elective[]): readonly string[] {
   return getIndex(electives).departments;
 }
 

@@ -39,6 +39,34 @@ function fail(message: string) {
   if (failures.length < 20) failures.push(message);
 }
 
+/**
+ * Structural equality, used instead of comparing `JSON.stringify` output.
+ *
+ * `JSON.stringify` is the wrong tool for an assertion this file's guarantees
+ * rest on: it maps both `NaN` and `Infinity` to `null`, so a stats object whose
+ * `lowestCutoff` is `Infinity` (which is what an empty dataset produces) would
+ * compare equal to one holding `null` or `NaN`; it drops `undefined`-valued
+ * properties entirely, hiding a missing field; and it serialises in property
+ * insertion order, so two logically equal objects built in a different order
+ * compare unequal. `Object.is` at the leaves keeps all three distinctions.
+ */
+function deepEqual(a: unknown, b: unknown): boolean {
+  if (Object.is(a, b)) return true;
+  if (typeof a !== "object" || typeof b !== "object" || a === null || b === null) return false;
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+
+  const aKeys = Object.keys(a as Record<string, unknown>);
+  const bKeys = Object.keys(b as Record<string, unknown>);
+  if (aKeys.length !== bKeys.length) return false;
+  for (const key of aKeys) {
+    if (!Object.hasOwn(b as Record<string, unknown>, key)) return false;
+    if (!deepEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])) {
+      return false;
+    }
+  }
+  return true;
+}
+
 function describe(s: Scenario) {
   return `semester=${s.semester} type=${JSON.stringify(s.type)} dept=${JSON.stringify(
     s.department,
@@ -51,20 +79,20 @@ for (const semester of SEMESTERS) {
   // --- Derived-list helpers -------------------------------------------------
   const expectedTypes = refGetElectiveTypes(electives);
   const actualTypes = getElectiveTypes(electives);
-  if (JSON.stringify(actualTypes) !== JSON.stringify(expectedTypes)) {
+  if (!deepEqual(actualTypes, expectedTypes)) {
     fail(`getElectiveTypes(${semester}): ${JSON.stringify(actualTypes)} !== ${JSON.stringify(expectedTypes)}`);
   }
 
   const expectedDepts = refGetDepartments(electives);
   const actualDepts = getDepartments(electives);
-  if (JSON.stringify(actualDepts) !== JSON.stringify(expectedDepts)) {
+  if (!deepEqual(actualDepts, expectedDepts)) {
     fail(`getDepartments(${semester}): ${JSON.stringify(actualDepts)} !== ${JSON.stringify(expectedDepts)}`);
   }
 
   // --- Stats ----------------------------------------------------------------
   const expectedStats = refGetStats(electives);
   const actualStats = getStats(electives);
-  if (JSON.stringify(actualStats) !== JSON.stringify(expectedStats)) {
+  if (!deepEqual(actualStats, expectedStats)) {
     fail(
       `getStats(${semester}):\n  actual   ${JSON.stringify(actualStats)}\n  expected ${JSON.stringify(
         expectedStats,
