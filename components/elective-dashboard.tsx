@@ -392,6 +392,9 @@ export default function ElectiveDashboard() {
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
     const [commandOpen, setCommandOpen] = useState(false);
     const [highlightedElective, setHighlightedElective] = useState<string | null>(null);
+    // Which highlight id we have already scrolled to, so the effect below
+    // scrolls once per selection rather than on every grid update.
+    const scrolledForRef = useRef<string | null>(null);
 
     const dataset = semesterDatasets[semester];
     const electiveData = dataset.electives;
@@ -429,24 +432,42 @@ export default function ElectiveDashboard() {
     }, []);
 
     const handleSelectElective = useCallback((elective: Elective) => {
-        // Clear filters to show the elective
+        // Clear filters so the selected elective is in the grid
         setSearch("");
         setTypeFilter("all");
         setDeptFilter("all");
 
-        // Highlight and scroll to the elective
-        const id = `elective-${elective.code}-${elective.type}`;
-        setHighlightedElective(id);
-
-        // Wait for render then scroll
-        setTimeout(() => {
-            const element = document.getElementById(id);
-            element?.scrollIntoView({ behavior: "smooth", block: "center" });
-
-            // Remove highlight after animation
-            setTimeout(() => setHighlightedElective(null), 2000);
-        }, 100);
+        // Allow re-selecting the same elective to scroll to it again.
+        scrolledForRef.current = null;
+        setHighlightedElective(`elective-${elective.code}-${elective.type}`);
     }, []);
+
+    /**
+     * Scroll to the highlighted card once the grid has actually rendered it.
+     *
+     * This used to be a fixed 100ms `setTimeout` inside the selection handler,
+     * which is a race: the grid renders from `deferredSearch`, so after the
+     * handler clears `search` React may still paint one frame with the old
+     * query — and on a busy or slow browser more than one. If the card is not
+     * in the DOM when the timer fires, the scroll silently does nothing.
+     *
+     * Keying the effect on `filteredElectives` removes the guess. If the card
+     * isn't there yet, the effect simply re-runs when the deferred grid catches
+     * up, and the ref keeps it to one scroll per selection.
+     */
+    useEffect(() => {
+        if (!highlightedElective) return;
+
+        if (scrolledForRef.current !== highlightedElective) {
+            const element = document.getElementById(highlightedElective);
+            if (!element) return; // not rendered yet — re-runs when the grid updates
+            scrolledForRef.current = highlightedElective;
+            element.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        const timer = setTimeout(() => setHighlightedElective(null), 2000);
+        return () => clearTimeout(timer);
+    }, [highlightedElective, filteredElectives]);
 
     // Stable identity so the memoized palette isn't invalidated on every render.
     const handleCloseCommand = useCallback(() => setCommandOpen(false), []);
