@@ -14,6 +14,7 @@ import { benchKeystrokes, SEMESTERS } from "./scenarios";
 
 const BATCHES = 12;
 const MIN_BATCH_MS = 60;
+const MAX_ITERS = 1 << 22;
 
 let sink = 0;
 
@@ -22,6 +23,16 @@ function consume(list: Elective[]): number {
   let h = list.length;
   for (let i = 0; i < list.length; i++) h = (h * 31 + list[i].students + i) | 0;
   return h;
+}
+
+/**
+ * Folds one result into a running checksum. Loops over a keystroke stream must
+ * use this rather than assigning `h`: assigning leaves only the last query in
+ * the checksum, so a wrong or skipped intermediate result would still compare
+ * equal between the two implementations and report a bogus speedup.
+ */
+function fold(h: number, next: number): number {
+  return (h * 31 + next) | 0;
 }
 
 type Result = { nsPerOp: number; checksum: number; opsRun: number };
@@ -36,8 +47,14 @@ function measure(label: string, fn: () => number): Result {
     const t0 = performance.now();
     for (let i = 0; i < iters; i++) fn();
     const dt = performance.now() - t0;
-    if (dt >= MIN_BATCH_MS || iters > 1 << 22) break;
-    iters = Math.max(iters * 2, Math.ceil((iters * MIN_BATCH_MS) / Math.max(dt, 0.01)));
+    if (dt >= MIN_BATCH_MS || iters >= MAX_ITERS) break;
+    // Clamp before assigning, not after: an extremely fast case with a near-zero
+    // `dt` can otherwise scale `iters` far past the cap and run one enormous
+    // batch before the guard above gets a chance to stop it.
+    iters = Math.min(
+      MAX_ITERS,
+      Math.max(iters * 2, Math.ceil((iters * MIN_BATCH_MS) / Math.max(dt, 0.01))),
+    );
   }
 
   let best = Infinity;
@@ -95,12 +112,12 @@ for (const semester of SEMESTERS) {
     `${tag} typing stream — ${keystrokes.length} keystrokes, sort=cutoff`,
     () => {
       let h = 0;
-      for (const q of keystrokes) h = consume(refFilterElectives(electives, "all", "all", q, "cutoff", "asc"));
+      for (const q of keystrokes) h = fold(h, consume(refFilterElectives(electives, "all", "all", q, "cutoff", "asc")));
       return h;
     },
     () => {
       let h = 0;
-      for (const q of keystrokes) h = consume(filterElectives(electives, "all", "all", q, "cutoff", "asc"));
+      for (const q of keystrokes) h = fold(h, consume(filterElectives(electives, "all", "all", q, "cutoff", "asc")));
       return h;
     },
   );
@@ -109,12 +126,12 @@ for (const semester of SEMESTERS) {
     `${tag} typing stream — sort=name (localeCompare)`,
     () => {
       let h = 0;
-      for (const q of keystrokes) h = consume(refFilterElectives(electives, "all", "all", q, "name", "asc"));
+      for (const q of keystrokes) h = fold(h, consume(refFilterElectives(electives, "all", "all", q, "name", "asc")));
       return h;
     },
     () => {
       let h = 0;
-      for (const q of keystrokes) h = consume(filterElectives(electives, "all", "all", q, "name", "asc"));
+      for (const q of keystrokes) h = fold(h, consume(filterElectives(electives, "all", "all", q, "name", "asc")));
       return h;
     },
   );
