@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo, useDeferredValue, memo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ import {
     getStats,
     getDifficultyLevel,
     getCoursePageUrl,
+    searchTopK,
     type SemesterId,
     type Elective
 } from "@/lib/electives";
@@ -30,8 +31,11 @@ import {
     Command
 } from "lucide-react";
 
+/** How many results the command palette shows. */
+const PALETTE_RESULTS = 8;
+
 // Command Search Modal
-function CommandSearch({
+function CommandSearchImpl({
     isOpen,
     onClose,
     onSelect,
@@ -47,13 +51,13 @@ function CommandSearch({
     const inputRef = useRef<HTMLInputElement>(null);
     const listRef = useRef<HTMLDivElement>(null);
 
-    const results = query.length > 0
-        ? electives.filter(e =>
-            e.name.toLowerCase().includes(query.toLowerCase()) ||
-            e.code.toLowerCase().includes(query.toLowerCase()) ||
-            e.department.toLowerCase().includes(query.toLowerCase())
-        ).slice(0, 8)
-        : electives.slice(0, 8);
+    // Recomputed only when the query or dataset changes. Without the memo this
+    // re-ran on every render of this component — including every arrow-key press,
+    // which only moves the selection highlight and cannot change the results.
+    const results = useMemo(
+        () => searchTopK(electives, query, PALETTE_RESULTS),
+        [electives, query]
+    );
 
     useEffect(() => {
         if (isOpen) {
@@ -155,9 +159,10 @@ function CommandSearch({
                         ) : (
                             results.map((elective, idx) => {
                                 const difficulty = getDifficultyLevel(elective.lowestCGPA);
+                                const courseUrl = getCoursePageUrl(elective.code);
                                 return (
                                     <button
-                                        key={`${elective.code}-${elective.type}-${idx}`}
+                                        key={`${elective.code}-${elective.type}`}
                                         data-index={idx}
                                         onClick={() => { onSelect(elective); onClose(); }}
                                         className={`w-full px-4 py-3 flex items-start gap-3 text-left transition-colors ${idx === selectedIndex
@@ -171,39 +176,30 @@ function CommandSearch({
                                          <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2">
                                                 <span className="text-xs font-mono text-neutral-500">{elective.code}</span>
-                                                {(() => {
-                                                    const courseUrl = getCoursePageUrl(elective.code);
-                                                    return courseUrl ? (
-                                                        <ExternalLink className="h-3 w-3 text-emerald-400" />
-                                                    ) : (
-                                                        <Info className="h-3 w-3 text-neutral-600" />
-                                                    );
-                                                })()}
+                                                {courseUrl ? (
+                                                    <ExternalLink className="h-3 w-3 text-emerald-400" />
+                                                ) : (
+                                                    <Info className="h-3 w-3 text-neutral-600" />
+                                                )}
                                                 <span className="text-xs font-mono text-neutral-300 bg-neutral-700 px-1.5 py-0.5 rounded">
                                                     {elective.type}
                                                 </span>
                                             </div>
-                                            {(() => {
-                                                const courseUrl = getCoursePageUrl(elective.code);
-                                                if (courseUrl) {
-                                                    return (
-                                                        <a
-                                                            href={courseUrl}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            onClick={(e) => e.stopPropagation()}
-                                                            className="text-white font-medium truncate mt-0.5 hover:text-neutral-200 hover:underline block"
-                                                        >
-                                                            {elective.name}
-                                                        </a>
-                                                    );
-                                                }
-                                                return (
-                                                    <div className="text-neutral-400 font-medium truncate mt-0.5">
-                                                        {elective.name}
-                                                    </div>
-                                                );
-                                            })()}
+                                            {courseUrl ? (
+                                                <a
+                                                    href={courseUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    className="text-white font-medium truncate mt-0.5 hover:text-neutral-200 hover:underline block"
+                                                >
+                                                    {elective.name}
+                                                </a>
+                                            ) : (
+                                                <div className="text-neutral-400 font-medium truncate mt-0.5">
+                                                    {elective.name}
+                                                </div>
+                                            )}
                                             <div className="text-xs text-neutral-500 mt-0.5">
                                                 {elective.department} • Min CGPA: <span className={`font-mono ${difficulty.color}`}>{elective.lowestCGPA.toFixed(2)}</span>
                                             </div>
@@ -239,8 +235,13 @@ function CommandSearch({
     );
 }
 
+// Memoized: the dashboard re-renders on every keystroke, but the palette's props
+// (isOpen, the two callbacks, the dataset) change only when it is actually opened
+// or the semester is switched.
+const CommandSearch = memo(CommandSearchImpl);
+
 // Stats Card Component
-function StatCard({
+function StatCardImpl({
     title,
     value,
     subtitle,
@@ -265,8 +266,12 @@ function StatCard({
     );
 }
 
+// Memoized: stat values depend only on the dataset, so these should not re-render
+// when the search box or a filter changes.
+const StatCard = memo(StatCardImpl);
+
 // Elective Card Component
-function ElectiveCard({ elective, isHighlighted }: { elective: Elective; isHighlighted?: boolean }) {
+function ElectiveCardImpl({ elective, isHighlighted }: { elective: Elective; isHighlighted?: boolean }) {
     const difficulty = getDifficultyLevel(elective.lowestCGPA);
     const courseUrl = getCoursePageUrl(elective.code);
 
@@ -367,6 +372,17 @@ function ElectiveCard({ elective, isHighlighted }: { elective: Elective; isHighl
     );
 }
 
+/**
+ * Memoized, and the reason the whole grid stops re-rendering on every keystroke.
+ *
+ * `elective` is a stable object straight out of the dataset and `isHighlighted`
+ * is a boolean, so the default shallow comparison is exactly right: a card only
+ * re-renders when it is the one being highlighted. This relies on
+ * `getDifficultyLevel` returning frozen singletons rather than a fresh object
+ * per call, which the query-engine change established.
+ */
+const ElectiveCard = memo(ElectiveCardImpl);
+
 export default function ElectiveDashboard() {
     const [semester, setSemester] = useState<SemesterId>("seventh");
     const [search, setSearch] = useState("");
@@ -383,16 +399,21 @@ export default function ElectiveDashboard() {
     const stats = useMemo(() => getStats(electiveData), [electiveData]);
     const departments = useMemo(() => getDepartments(electiveData), [electiveData]);
 
+    // The input stays on `search` so typing is never held up; the grid renders
+    // from the deferred value, letting React keep the keystroke responsive and
+    // drop intermediate list renders when typing outpaces rendering.
+    const deferredSearch = useDeferredValue(search);
+
     const filteredElectives = useMemo(() => {
         return filterElectives(
             electiveData,
             typeFilter,
             deptFilter,
-            search,
+            deferredSearch,
             sortBy,
             sortOrder
         );
-    }, [electiveData, typeFilter, deptFilter, search, sortBy, sortOrder]);
+    }, [electiveData, typeFilter, deptFilter, deferredSearch, sortBy, sortOrder]);
 
     // Keyboard shortcut for Ctrl+K (toggle)
     useEffect(() => {
@@ -427,14 +448,20 @@ export default function ElectiveDashboard() {
         }, 100);
     }, []);
 
-    const handleSemesterChange = (nextSemester: SemesterId) => {
+    // Stable identity so the memoized palette isn't invalidated on every render.
+    const handleCloseCommand = useCallback(() => setCommandOpen(false), []);
+
+    const handleSemesterChange = useCallback((nextSemester: SemesterId) => {
         setSemester(nextSemester);
         setSearch("");
         setTypeFilter("all");
         setDeptFilter("all");
         setHighlightedElective(null);
-    };
+    }, []);
 
+    // Left un-memoized on purpose: it depends on `sortBy`, so a `useCallback`
+    // would be invalidated exactly when it is used, and the sort buttons are
+    // plain DOM elements that gain nothing from a stable callback identity.
     const toggleSort = (newSortBy: typeof sortBy) => {
         if (sortBy === newSortBy) {
             setSortOrder(prev => prev === "asc" ? "desc" : "asc");
@@ -449,7 +476,7 @@ export default function ElectiveDashboard() {
             {/* Command Search Modal */}
             <CommandSearch
                 isOpen={commandOpen}
-                onClose={() => setCommandOpen(false)}
+                onClose={handleCloseCommand}
                 onSelect={handleSelectElective}
                 electives={electiveData}
             />
@@ -630,9 +657,16 @@ export default function ElectiveDashboard() {
 
                 {/* Electives Grid */}
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {filteredElectives.map((elective, idx) => (
+                    {/*
+                      * The key deliberately excludes the array index. With it, every
+                      * card's key changed whenever filtering or sorting moved it, so
+                      * React unmounted and remounted the whole grid instead of
+                      * reordering it — which also defeats the memo above.
+                      * `bench/verify.ts` asserts (code, type) is unique per dataset.
+                      */}
+                    {filteredElectives.map((elective) => (
                         <ElectiveCard
-                            key={`${elective.code}-${elective.type}-${idx}`}
+                            key={`${elective.code}-${elective.type}`}
                             elective={elective}
                             isHighlighted={highlightedElective === `elective-${elective.code}-${elective.type}`}
                         />

@@ -651,6 +651,82 @@ export function filterElectives(
   return out;
 }
 
+/**
+ * The first `k` electives matching `query`, in dataset order — the command
+ * palette's shape of search.
+ *
+ * Equivalent to filtering everything and taking `.slice(0, k)`, but it stops as
+ * soon as it has `k` matches instead of scanning the whole dataset to throw most
+ * of the work away. It also deliberately does not touch the incremental-narrowing
+ * cache: the palette's query and the main list's query are independent pieces of
+ * UI state, and letting them share a single-entry cache would make each one
+ * evict the other's.
+ */
+export function searchTopK(electives: Elective[], query: string, k: number): Elective[] {
+  if (k <= 0) return [];
+
+  const index = getIndex(electives);
+  const { n, haystack } = index;
+
+  if (query.length === 0) return electives.slice(0, k);
+
+  const q = query.toLowerCase();
+  const out: Elective[] = [];
+
+  // Separator-bearing queries can't use the concatenated haystack; see `searchHits`.
+  if (q.indexOf(SEP) !== -1) {
+    for (let i = 0; i < n && out.length < k; i++) {
+      const e = electives[i];
+      if (
+        e.name.toLowerCase().includes(q) ||
+        e.code.toLowerCase().includes(q) ||
+        e.department.toLowerCase().includes(q)
+      ) {
+        out.push(e);
+      }
+    }
+    return out;
+  }
+
+  const { charBitmap, charFreq, words } = index;
+  let rarest: Uint32Array | null = null;
+  let rarestFreq = Infinity;
+  let second: Uint32Array | null = null;
+  let secondFreq = Infinity;
+
+  for (let p = 0; p < q.length; p++) {
+    const c = q.charCodeAt(p);
+    const bm = charBitmap.get(c);
+    if (bm === undefined) return out;
+    const freq = charFreq.get(c)!;
+    if (freq < rarestFreq) {
+      second = rarest;
+      secondFreq = rarestFreq;
+      rarest = bm;
+      rarestFreq = freq;
+    } else if (freq < secondFreq && bm !== rarest) {
+      second = bm;
+      secondFreq = freq;
+    }
+  }
+
+  const needsVerify = q.length > 1;
+  for (let w = 0; w < words; w++) {
+    let bits = (second !== null ? rarest![w] & second[w] : rarest![w]) | 0;
+    const base = w << 5;
+    while (bits !== 0) {
+      const lowest = bits & -bits;
+      const i = base + (31 - Math.clz32(lowest));
+      bits ^= lowest;
+      if (!needsVerify || haystack[i].indexOf(q) !== -1) {
+        out.push(electives[i]);
+        if (out.length === k) return out;
+      }
+    }
+  }
+  return out;
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Presentation helpers                                                      */
 /* -------------------------------------------------------------------------- */
