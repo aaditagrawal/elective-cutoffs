@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "bench": "bun run bench/bench.ts",
+    "bench:render": "bun run bench/render.ts",
     "bench:verify": "bun run bench/verify.ts"
   },
   "dependencies": {

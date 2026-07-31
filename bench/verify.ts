@@ -13,6 +13,7 @@ import {
   getElectiveTypes,
   getDepartments,
   getStats,
+  searchTopK,
 } from "@/lib/electives";
 import {
   refFilterElectives,
@@ -142,20 +143,40 @@ for (const semester of SEMESTERS) {
     }
   }
 
-  // --- Command palette (top-8 search) --------------------------------------
+  // --- Command palette (top-K search) --------------------------------------
+  // `searchTopK` must reproduce the palette's old "filter everything, then take
+  // the first 8 in dataset order" exactly — same objects, same order.
   for (const query of searchQueries(semester)) {
-    const expected = refCommandSearch(electives, query);
-    const actual = filterElectives(electives, "all", "all", query, undefined, undefined);
-    checked++;
-    // The palette applies no sort, so compare as sets of the first 8 *matching*
-    // items in dataset order rather than against the sorted filter output.
-    const expectedKeys = expected.map((e) => `${e.code}|${e.type}`);
-    const actualSet = new Set(actual.map((e) => `${e.code}|${e.type}`));
-    for (const key of expectedKeys) {
-      if (!actualSet.has(key)) {
-        fail(`command-palette match ${key} missing from filterElectives for query ${JSON.stringify(query)}`);
-        break;
+    for (const k of [1, 8, 50]) {
+      const expected = refCommandSearch(electives, query, k);
+      const actual = searchTopK(electives, query, k);
+      checked++;
+      if (actual.length !== expected.length) {
+        fail(
+          `searchTopK(${JSON.stringify(query)}, ${k}) length ${actual.length} !== ${expected.length} in ${semester}`,
+        );
+        continue;
       }
+      for (let i = 0; i < expected.length; i++) {
+        if (actual[i] !== expected[i]) {
+          fail(`searchTopK(${JSON.stringify(query)}, ${k}) index ${i} differs in ${semester}`);
+          break;
+        }
+      }
+    }
+  }
+
+  // --- React key / DOM id uniqueness ---------------------------------------
+  // The grid keys cards, and ids DOM nodes, by `code`+`type`. If that pair is
+  // ever non-unique React silently renders duplicate keys and `getElementById`
+  // picks the wrong card to scroll to. Assert it here so a future data update
+  // fails this test rather than the UI.
+  {
+    const seen = new Set<string>();
+    for (const e of electives) {
+      const key = `${e.code}|${e.type}`;
+      if (seen.has(key)) fail(`duplicate (code,type) key ${JSON.stringify(key)} in ${semester}`);
+      seen.add(key);
     }
   }
 }

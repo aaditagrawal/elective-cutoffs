@@ -84,8 +84,43 @@ export function refGetStats(electives: Elective[]) {
   };
 }
 
-/** Verbatim copy of the original command-palette result computation. */
-export function refCommandSearch(electives: Elective[], query: string): Elective[] {
+/** Original: a freshly allocated object on every call, once per card per render. */
+export function refGetDifficultyLevel(cutoff: number): { level: string; color: string } {
+  if (cutoff >= 8) return { level: "Very Hard", color: "text-red-400" };
+  if (cutoff >= 7) return { level: "Hard", color: "text-orange-400" };
+  if (cutoff >= 6) return { level: "Medium", color: "text-yellow-400" };
+  if (cutoff >= 5) return { level: "Easy", color: "text-green-400" };
+  return { level: "Very Easy", color: "text-emerald-400" };
+}
+
+const REF_VALID_COURSE_CODES = new Set([
+  "AAE 4311", "AAE 4313", "AAE 4401", "AAE 4403", "AAE 4405", "AAE 4406",
+  "AAE 4413", "AAE 4414", "AAE 4417", "AAE 4418", "AAE 4421", "AAE 4422",
+  "BIO 4402", "BIO 4403", "BIO 4405", "BIO 4407", "BME 4315", "BME 4402",
+  "BME 4404", "BME 4405", "BME 4406", "CHE 4311", "CHE 4312", "CHE 4401",
+  "CHE 4402", "CHE 4406", "CHE 4407", "CHE 4409", "CHE 4410", "CHM 4312",
+  "CIE 4313", "CIE 4314", "CIE 4316", "CIE 4401", "CIE 4402", "CIE 4409",
+  "CIE 4410", "CIE 4417", "CIE 4418", "DSE 4401", "DSE 4402", "DSE 4405",
+  "DSE 4406", "ECE 4311", "ECE 4406", "ECE 4409", "ECE 4411", "ECE 4416",
+  "ECE 4421", "ECE 4424", "ELE 4312", "ELE 4409", "ELE 4415", "ELE 4416",
+  "HUM 4322", "HUM 4323", "HUM 4329", "HUM 4401", "HUM 4402", "HUM 4408",
+  "HUM 4409", "HUM 4411", "HUM 4420", "HUM 4424", "ICE 4316", "ICE 4402",
+  "ICT 4401", "ICT 4402", "ICT 4414", "MAT 4405", "MAT 4407", "MIE 4401",
+  "MIE 4402", "MIE 4408", "MIE 4409", "MIE 4421",
+]);
+
+/** Original: `encodeURIComponent` plus a template interpolation on every call. */
+export function refGetCoursePageUrl(code: string): string | null {
+  if (!REF_VALID_COURSE_CODES.has(code)) return null;
+  return `https://courses.coolstuff.work/course/${encodeURIComponent(code)}`;
+}
+
+/**
+ * The original command-palette result computation. Verbatim except that the
+ * hard-coded `8` is a parameter, so the same oracle can check `searchTopK` at
+ * other cut-offs; `k = 8` reproduces the original exactly.
+ */
+export function refCommandSearch(electives: Elective[], query: string, k = 8): Elective[] {
   return query.length > 0
     ? electives
         .filter(
@@ -94,6 +129,6 @@ export function refCommandSearch(electives: Elective[], query: string): Elective
             e.code.toLowerCase().includes(query.toLowerCase()) ||
             e.department.toLowerCase().includes(query.toLowerCase()),
         )
-        .slice(0, 8)
-    : electives.slice(0, 8);
+        .slice(0, k)
+    : electives.slice(0, k);
 }
