@@ -22,6 +22,8 @@ import {
   refGetStats,
   refCommandSearch,
 } from "./reference-impl";
+import sixthSource from "@/data/sixth-semester.json";
+import seventhSource from "@/data/seventh-semester.json";
 import {
   allScenarios,
   searchQueries,
@@ -35,6 +37,55 @@ import {
 
 let checked = 0;
 const failures: string[] = [];
+
+/* -------------------------------------------------------------------------- */
+/*  Encoded data must decode back to the source data, exactly                  */
+/*                                                                            */
+/*  The client loads `data/*.compact.json`, but `data/*-semester.json` remains */
+/*  the source of truth. If `bun run encode-data` is not re-run after a data   */
+/*  update, the site would silently serve stale electives. This makes that a   */
+/*  test failure instead.                                                     */
+/* -------------------------------------------------------------------------- */
+{
+  const sources: Record<string, { metadata: Record<string, unknown>; electives: unknown[] }> = {
+    sixth: sixthSource,
+    seventh: seventhSource,
+  };
+  for (const semester of SEMESTERS) {
+    const source = sources[semester];
+    const decoded = semesterDatasets[semester];
+    checked++;
+
+    // Electives must round-trip field for field, in order.
+    if (JSON.stringify(decoded.electives) !== JSON.stringify(source.electives)) {
+      const a = decoded.electives;
+      const b = source.electives;
+      if (a.length !== b.length) {
+        fail(`${semester}: compact data has ${a.length} electives, source has ${b.length} — re-run \`bun run encode-data\``);
+      } else {
+        for (let i = 0; i < a.length; i++) {
+          if (JSON.stringify(a[i]) !== JSON.stringify(b[i])) {
+            fail(
+              `${semester}: elective ${i} differs between compact and source — re-run \`bun run encode-data\`\n` +
+                `      compact ${JSON.stringify(a[i])}\n      source  ${JSON.stringify(b[i])}`,
+            );
+            break;
+          }
+        }
+      }
+    }
+
+    // Metadata is deliberately narrowed to the three declared fields; those must match.
+    for (const key of ["title", "academicYear", "semester"] as const) {
+      if (decoded.metadata[key] !== source.metadata[key]) {
+        fail(
+          `${semester}: metadata.${key} is ${JSON.stringify(decoded.metadata[key])} in compact data ` +
+            `but ${JSON.stringify(source.metadata[key])} in source`,
+        );
+      }
+    }
+  }
+}
 
 function fail(message: string) {
   if (failures.length < 20) failures.push(message);

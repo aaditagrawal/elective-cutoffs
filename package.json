@@ -7,8 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "encode-data": "bun run scripts/encode-data.ts",
     "bench": "bun run bench/bench.ts",
     "bench:render": "bun run bench/render.ts",
+    "bench:payload": "bun run bench/payload.ts",
     "bench:verify": "bun run bench/verify.ts"
   },
   "dependencies": {

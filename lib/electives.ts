@@ -1,5 +1,5 @@
-import sixthSemesterData from "@/data/sixth-semester.json";
-import seventhSemesterData from "@/data/seventh-semester.json";
+import sixthSemesterCompact from "@/data/sixth-semester.compact.json";
+import seventhSemesterCompact from "@/data/seventh-semester.compact.json";
 
 export type SemesterId = "sixth" | "seventh";
 export type ElectiveType =
@@ -33,9 +33,79 @@ export interface SemesterDataset {
   electives: Elective[];
 }
 
+/**
+ * The on-disk shape of `data/*.compact.json`: columnar, with the three
+ * low-cardinality string fields dictionary-encoded. See `scripts/encode-data.ts`.
+ */
+interface CompactDataset {
+  metadata: { title: string; academicYear: string; semester: string };
+  count: number;
+  types: string[];
+  typeLabels: string[];
+  departments: string[];
+  typeCodes: number[];
+  typeLabelCodes: number[];
+  departmentCodes: number[];
+  codes: string[];
+  names: string[];
+  lowestCGPA: number[];
+  highestCGPA: number[];
+  students: number[];
+}
+
+/** Rebuilds the row-oriented `Elective[]` the rest of the app expects. */
+function decodeDataset(compact: CompactDataset): SemesterDataset {
+  const {
+    count,
+    types,
+    typeLabels,
+    departments,
+    typeCodes,
+    typeLabelCodes,
+    departmentCodes,
+    codes,
+    names,
+    lowestCGPA,
+    highestCGPA,
+    students,
+  } = compact;
+
+  const electives = new Array<Elective>(count);
+  for (let i = 0; i < count; i++) {
+    electives[i] = {
+      type: types[typeCodes[i]] as ElectiveType,
+      typeLabel: typeLabels[typeLabelCodes[i]],
+      code: codes[i],
+      name: names[i],
+      department: departments[departmentCodes[i]],
+      lowestCGPA: lowestCGPA[i],
+      highestCGPA: highestCGPA[i],
+      students: students[i],
+    };
+  }
+
+  return { metadata: compact.metadata, electives };
+}
+
+const decoded: Partial<Record<SemesterId, SemesterDataset>> = {};
+
+function datasetOf(id: SemesterId, compact: CompactDataset): SemesterDataset {
+  return (decoded[id] ??= decodeDataset(compact));
+}
+
+/**
+ * Decoded lazily, per semester, via getters. Opening the page on one semester
+ * never materializes the other's electives — and because the getter memoizes,
+ * `semesterDatasets.seventh.electives` keeps a stable identity across renders,
+ * which the query index (keyed on that array) and `useMemo` both rely on.
+ */
 export const semesterDatasets: Record<SemesterId, SemesterDataset> = {
-  sixth: sixthSemesterData as SemesterDataset,
-  seventh: seventhSemesterData as SemesterDataset,
+  get sixth() {
+    return datasetOf("sixth", sixthSemesterCompact as CompactDataset);
+  },
+  get seventh() {
+    return datasetOf("seventh", seventhSemesterCompact as CompactDataset);
+  },
 };
 
 export type SortBy = "name" | "cutoff" | "students" | "difficulty";
