@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "bench": "bun run bench/bench.ts",
+    "bench:verify": "bun run bench/verify.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.0.0",
