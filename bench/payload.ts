@@ -71,7 +71,13 @@ function decode(k: Compact) {
 const pct = (before: number, after: number) => ((1 - after / before) * 100).toFixed(1) + "%";
 
 console.log("\nbytes on disk (what the bundler embeds):\n");
-console.log("dataset".padEnd(10) + "encoding".padEnd(12) + "raw".padStart(9) + "gzip".padStart(9) + "brotli".padStart(9));
+console.log(
+  "dataset".padEnd(10) +
+    "encoding".padEnd(12) +
+    "raw".padStart(9) +
+    "gzip".padStart(9) +
+    "brotli".padStart(9),
+);
 console.log("-".repeat(49));
 
 let rawBefore = 0;
@@ -87,16 +93,24 @@ for (const semester of SEMESTERS) {
   gzBefore += source.gzip;
   gzAfter += compact.gzip;
   console.log(
-    semester.padEnd(10) + "row-oriented".padEnd(12) +
-      String(source.raw).padStart(9) + String(source.gzip).padStart(9) + String(source.brotli).padStart(9),
+    semester.padEnd(10) +
+      "row-oriented".padEnd(12) +
+      String(source.raw).padStart(9) +
+      String(source.gzip).padStart(9) +
+      String(source.brotli).padStart(9),
   );
   console.log(
-    "".padEnd(10) + "compact".padEnd(12) +
-      String(compact.raw).padStart(9) + String(compact.gzip).padStart(9) + String(compact.brotli).padStart(9),
+    "".padEnd(10) +
+      "compact".padEnd(12) +
+      String(compact.raw).padStart(9) +
+      String(compact.gzip).padStart(9) +
+      String(compact.brotli).padStart(9),
   );
 }
 console.log("-".repeat(49));
-console.log(`total      raw ${rawBefore} -> ${rawAfter} (${pct(rawBefore, rawAfter)} smaller), gzip ${gzBefore} -> ${gzAfter} (${pct(gzBefore, gzAfter)} smaller)`);
+console.log(
+  `total      raw ${rawBefore} -> ${rawAfter} (${pct(rawBefore, rawAfter)} smaller), gzip ${gzBefore} -> ${gzAfter} (${pct(gzBefore, gzAfter)} smaller)`,
+);
 
 console.log("\ntime to reach an identical Elective[] from the embedded string:\n");
 for (const semester of SEMESTERS) {

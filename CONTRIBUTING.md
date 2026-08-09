@@ -133,7 +133,7 @@ When adding new elective courses:
 
 Before submitting a PR, ensure:
 - The application builds without errors: `bun build`
-- ESLint passes: `bun lint`
+- Oxlint passes: `bun lint`
 - All existing features still work
 - Your new feature works as expected
 

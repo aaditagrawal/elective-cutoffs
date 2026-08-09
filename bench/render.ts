@@ -122,7 +122,15 @@ for (const semester of SEMESTERS) {
 }
 
 const w = Math.max(...rows.map((r) => r.case.length));
-console.log("\n" + "case".padEnd(w) + "  " + "before".padStart(11) + "  " + "after".padStart(11) + "  speedup");
+console.log(
+  "\n" +
+    "case".padEnd(w) +
+    "  " +
+    "before".padStart(11) +
+    "  " +
+    "after".padStart(11) +
+    "  speedup",
+);
 console.log("-".repeat(w + 40));
 for (const r of rows) {
   console.log(

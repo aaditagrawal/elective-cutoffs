@@ -112,12 +112,14 @@ for (const semester of SEMESTERS) {
     `${tag} typing stream — ${keystrokes.length} keystrokes, sort=cutoff`,
     () => {
       let h = 0;
-      for (const q of keystrokes) h = fold(h, consume(refFilterElectives(electives, "all", "all", q, "cutoff", "asc")));
+      for (const q of keystrokes)
+        h = fold(h, consume(refFilterElectives(electives, "all", "all", q, "cutoff", "asc")));
       return h;
     },
     () => {
       let h = 0;
-      for (const q of keystrokes) h = fold(h, consume(filterElectives(electives, "all", "all", q, "cutoff", "asc")));
+      for (const q of keystrokes)
+        h = fold(h, consume(filterElectives(electives, "all", "all", q, "cutoff", "asc")));
       return h;
     },
   );
@@ -126,12 +128,14 @@ for (const semester of SEMESTERS) {
     `${tag} typing stream — sort=name (localeCompare)`,
     () => {
       let h = 0;
-      for (const q of keystrokes) h = fold(h, consume(refFilterElectives(electives, "all", "all", q, "name", "asc")));
+      for (const q of keystrokes)
+        h = fold(h, consume(refFilterElectives(electives, "all", "all", q, "name", "asc")));
       return h;
     },
     () => {
       let h = 0;
-      for (const q of keystrokes) h = fold(h, consume(filterElectives(electives, "all", "all", q, "name", "asc")));
+      for (const q of keystrokes)
+        h = fold(h, consume(filterElectives(electives, "all", "all", q, "name", "asc")));
       return h;
     },
   );
@@ -145,8 +149,21 @@ for (const semester of SEMESTERS) {
 
   compare(
     `${tag} filter by type + dept`,
-    () => consume(refFilterElectives(electives, electives[0].type, electives[0].department, "", "cutoff", "asc")),
-    () => consume(filterElectives(electives, electives[0].type, electives[0].department, "", "cutoff", "asc")),
+    () =>
+      consume(
+        refFilterElectives(
+          electives,
+          electives[0].type,
+          electives[0].department,
+          "",
+          "cutoff",
+          "asc",
+        ),
+      ),
+    () =>
+      consume(
+        filterElectives(electives, electives[0].type, electives[0].department, "", "cutoff", "asc"),
+      ),
   );
 
   // --- Stats (steady state: the index memoizes these) ----------------------
@@ -181,7 +198,15 @@ for (const semester of SEMESTERS) {
 }
 
 const w = Math.max(...rows.map((r) => r.case.length));
-console.log("\n" + "case".padEnd(w) + "  " + "before".padStart(11) + "  " + "after".padStart(11) + "  speedup");
+console.log(
+  "\n" +
+    "case".padEnd(w) +
+    "  " +
+    "before".padStart(11) +
+    "  " +
+    "after".padStart(11) +
+    "  speedup",
+);
 console.log("-".repeat(w + 40));
 for (const r of rows) {
   const speedup = r.before / r.after;

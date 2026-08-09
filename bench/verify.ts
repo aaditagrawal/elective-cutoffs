@@ -61,7 +61,9 @@ const failures: string[] = [];
       const a = decoded.electives;
       const b = source.electives;
       if (a.length !== b.length) {
-        fail(`${semester}: compact data has ${a.length} electives, source has ${b.length} — re-run \`bun run encode-data\``);
+        fail(
+          `${semester}: compact data has ${a.length} electives, source has ${b.length} — re-run \`bun run encode-data\``,
+        );
       } else {
         for (let i = 0; i < a.length; i++) {
           if (JSON.stringify(a[i]) !== JSON.stringify(b[i])) {
@@ -132,13 +134,17 @@ for (const semester of SEMESTERS) {
   const expectedTypes = refGetElectiveTypes(electives);
   const actualTypes = getElectiveTypes(electives);
   if (!deepEqual(actualTypes, expectedTypes)) {
-    fail(`getElectiveTypes(${semester}): ${JSON.stringify(actualTypes)} !== ${JSON.stringify(expectedTypes)}`);
+    fail(
+      `getElectiveTypes(${semester}): ${JSON.stringify(actualTypes)} !== ${JSON.stringify(expectedTypes)}`,
+    );
   }
 
   const expectedDepts = refGetDepartments(electives);
   const actualDepts = getDepartments(electives);
   if (!deepEqual(actualDepts, expectedDepts)) {
-    fail(`getDepartments(${semester}): ${JSON.stringify(actualDepts)} !== ${JSON.stringify(expectedDepts)}`);
+    fail(
+      `getDepartments(${semester}): ${JSON.stringify(actualDepts)} !== ${JSON.stringify(expectedDepts)}`,
+    );
   }
 
   // --- Stats ----------------------------------------------------------------
@@ -243,7 +249,14 @@ for (const semester of SEMESTERS) {
 
 function checkOne(semester: (typeof SEMESTERS)[number], s: Scenario, context: string) {
   const electives = semesterDatasets[semester].electives;
-  const expected = refFilterElectives(electives, s.type, s.department, s.search, s.sortBy, s.sortOrder);
+  const expected = refFilterElectives(
+    electives,
+    s.type,
+    s.department,
+    s.search,
+    s.sortBy,
+    s.sortOrder,
+  );
   const actual = filterElectives(electives, s.type, s.department, s.search, s.sortBy, s.sortOrder);
   checked++;
   if (actual.length !== expected.length) {
@@ -263,7 +276,11 @@ function checkOne(semester: (typeof SEMESTERS)[number], s: Scenario, context: st
 for (const semester of SEMESTERS) {
   for (const q of benchKeystrokes(semester)) {
     for (const sortBy of SORT_BYS) {
-      checkOne(semester, { semester, type: "all", department: "all", search: q, sortBy, sortOrder: "asc" }, "typing");
+      checkOne(
+        semester,
+        { semester, type: "all", department: "all", search: q, sortBy, sortOrder: "asc" },
+        "typing",
+      );
     }
   }
 }
@@ -277,12 +294,26 @@ for (const semester of SEMESTERS) {
   for (let i = 0; i < len; i++) {
     checkOne(
       "sixth",
-      { semester: "sixth", type: "all", department: "all", search: sixthQueries[i % sixthQueries.length], sortBy: "cutoff", sortOrder: "asc" },
+      {
+        semester: "sixth",
+        type: "all",
+        department: "all",
+        search: sixthQueries[i % sixthQueries.length],
+        sortBy: "cutoff",
+        sortOrder: "asc",
+      },
       "interleaved",
     );
     checkOne(
       "seventh",
-      { semester: "seventh", type: "all", department: "all", search: seventhQueries[i % seventhQueries.length], sortBy: "cutoff", sortOrder: "asc" },
+      {
+        semester: "seventh",
+        type: "all",
+        department: "all",
+        search: seventhQueries[i % seventhQueries.length],
+        sortBy: "cutoff",
+        sortOrder: "asc",
+      },
       "interleaved",
     );
   }
@@ -310,7 +341,11 @@ for (const semester of SEMESTERS) {
   for (const search of ["e", "engineering", "zzz", "e", ""]) {
     for (let rep = 0; rep < 3; rep++) {
       for (const sortOrder of SORT_ORDERS) {
-        checkOne(semester, { semester, type: "all", department: "all", search, sortBy: "name", sortOrder }, "repeat");
+        checkOne(
+          semester,
+          { semester, type: "all", department: "all", search, sortBy: "name", sortOrder },
+          "repeat",
+        );
       }
     }
   }
@@ -325,9 +360,24 @@ for (const semester of SEMESTERS) {
     for (let cut = 0; cut < q.length; cut++) {
       const prime = q.slice(0, cut);
       if (prime.length > 0) {
-        checkOne(semester, { semester, type: "all", department: "all", search: prime, sortBy: "name", sortOrder: "asc" }, "sep-prime");
+        checkOne(
+          semester,
+          {
+            semester,
+            type: "all",
+            department: "all",
+            search: prime,
+            sortBy: "name",
+            sortOrder: "asc",
+          },
+          "sep-prime",
+        );
       }
-      checkOne(semester, { semester, type: "all", department: "all", search: q, sortBy: "name", sortOrder: "asc" }, "sep-extend");
+      checkOne(
+        semester,
+        { semester, type: "all", department: "all", search: q, sortBy: "name", sortOrder: "asc" },
+        "sep-extend",
+      );
     }
   }
 }
