@@ -5,6 +5,7 @@ Thank you for your interest in contributing to Elective Cutoffs! This document o
 ## Code of Conduct
 
 By participating in this project, you are expected to:
+
 - Be respectful and inclusive of others
 - Use welcoming and inclusive language
 - Be accepting of different viewpoints and experiences
@@ -104,6 +105,7 @@ By participating in this project, you are expected to:
   - `chore:` for maintenance tasks
 
 Example:
+
 ```
 feat: add filter by department functionality
 fix: resolve sorting issue with cutoff values
@@ -115,6 +117,7 @@ docs: update README with deployment instructions
 When adding new elective courses:
 
 1. Add the course to `data/elective_cutoffs.csv` with the format:
+
    ```
    Elective Type,Course Name,Lowest CGPA (Cutoff),Highest CGPA,Number of Students
    ```
@@ -132,6 +135,7 @@ When adding new elective courses:
 ## Testing
 
 Before submitting a PR, ensure:
+
 - The application builds without errors: `bun build`
 - Oxlint passes: `bun lint`
 - All existing features still work

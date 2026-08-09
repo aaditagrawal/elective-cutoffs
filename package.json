@@ -8,13 +8,14 @@
     "start": "next start",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",
-    "format": "oxfmt --write \"**/*.{js,mjs,cjs,ts,tsx,jsx}\" --ignore-path .gitignore --no-error-on-unmatched-pattern",
-    "format:check": "oxfmt --check \"**/*.{js,mjs,cjs,ts,tsx,jsx}\" --ignore-path .gitignore --no-error-on-unmatched-pattern",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "encode-data": "bun run scripts/encode-data.ts",
     "bench": "bun run bench/bench.ts",
     "bench:render": "bun run bench/render.ts",
     "bench:payload": "bun run bench/payload.ts",
-    "bench:verify": "bun run bench/verify.ts"
+    "bench:verify": "bun run bench/verify.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
