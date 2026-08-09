@@ -30,17 +30,20 @@ A web application for browsing and filtering elective course cutoffs for MIT Man
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone <repository-url>
    cd elective-cutoffs
    ```
 
 2. Install dependencies:
+
    ```bash
    bun install
    ```
 
 3. Start the development server:
+
    ```bash
    bun dev
    ```
