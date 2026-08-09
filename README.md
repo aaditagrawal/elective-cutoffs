@@ -52,7 +52,7 @@ A web application for browsing and filtering elective course cutoffs for MIT Man
 - `bun dev` - Start the development server
 - `bun build` - Build for production
 - `bun start` - Start the production server
-- `bun lint` - Run ESLint
+- `bun lint` - Run Oxlint
 
 ## Project Structure
 
