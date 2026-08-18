@@ -2,16 +2,39 @@ import sixthSemesterCompact from "@/data/sixth-semester.compact.json";
 import seventhSemesterCompact from "@/data/seventh-semester.compact.json";
 
 export type SemesterId = "sixth" | "seventh";
-export type ElectiveType =
-  | "OE"
-  | "PE I"
-  | "PE II"
-  | "OE III"
-  | "PE III"
-  | "PE IV"
-  | "PE V"
-  | "PE VI"
-  | "PE VII";
+
+/** Every elective type the datasets are allowed to contain. */
+const ELECTIVE_TYPES = [
+  "OE",
+  "PE I",
+  "PE II",
+  "OE III",
+  "PE III",
+  "PE IV",
+  "PE V",
+  "PE VI",
+  "PE VII",
+] as const;
+
+export type ElectiveType = (typeof ELECTIVE_TYPES)[number];
+
+const ELECTIVE_TYPE_NAMES = new Set<string>(ELECTIVE_TYPES);
+
+function isElectiveType(value: string): value is ElectiveType {
+  return ELECTIVE_TYPE_NAMES.has(value);
+}
+
+/**
+ * Decodes one entry of the compact `types` dictionary. The dictionary holds a
+ * handful of entries per dataset, so validating here costs nothing and an
+ * unrecognized type fails loudly at load instead of spreading through the rows.
+ */
+function toElectiveType(value: string): ElectiveType {
+  if (!isElectiveType(value)) {
+    throw new Error(`Unrecognized elective type in compact dataset: ${value}`);
+  }
+  return value;
+}
 
 export interface Elective {
   type: ElectiveType;
@@ -70,10 +93,12 @@ function decodeDataset(compact: CompactDataset): SemesterDataset {
     students,
   } = compact;
 
+  const electiveTypes = types.map(toElectiveType);
+
   const electives = new Array<Elective>(count);
   for (let i = 0; i < count; i++) {
     electives[i] = {
-      type: types[typeCodes[i]] as ElectiveType,
+      type: electiveTypes[typeCodes[i]],
       typeLabel: typeLabels[typeLabelCodes[i]],
       code: codes[i],
       name: names[i],
@@ -99,14 +124,14 @@ function datasetOf(id: SemesterId, compact: CompactDataset): SemesterDataset {
  * `semesterDatasets.seventh.electives` keeps a stable identity across renders,
  * which the query index (keyed on that array) and `useMemo` both rely on.
  */
-export const semesterDatasets: Record<SemesterId, SemesterDataset> = {
+export const semesterDatasets = {
   get sixth() {
-    return datasetOf("sixth", sixthSemesterCompact as CompactDataset);
+    return datasetOf("sixth", sixthSemesterCompact);
   },
   get seventh() {
-    return datasetOf("seventh", seventhSemesterCompact as CompactDataset);
+    return datasetOf("seventh", seventhSemesterCompact);
   },
-};
+} satisfies Record<SemesterId, SemesterDataset>;
 
 export type SortBy = "name" | "cutoff" | "students" | "difficulty";
 export type SortOrder = "asc" | "desc";

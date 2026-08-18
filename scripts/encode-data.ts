@@ -36,8 +36,27 @@ interface SourceElective {
   students: number;
 }
 
+/** The three metadata keys the compact form keeps; the rest are provenance and are dropped. */
+interface SourceMetadata {
+  title: string;
+  academicYear: string;
+  semester: string;
+}
+
+/** The row-oriented shape of `data/<sem>-semester.json`. */
+interface SourceDataset {
+  metadata: SourceMetadata;
+  electives: SourceElective[];
+}
+
+/** A dictionary-encoded column: the distinct values, plus one table index per row. */
+interface EncodedColumn {
+  table: string[];
+  codes: number[];
+}
+
 /** Assigns each distinct value an index, in first-appearance order. */
-function dictionary(values: string[]): { table: string[]; codes: number[] } {
+function dictionary(values: string[]): EncodedColumn {
   const table: string[] = [];
   const ids = new Map<string, number>();
   const codes = values.map((v) => {
@@ -56,10 +75,7 @@ for (const semester of SEMESTERS) {
   const sourcePath = `data/${semester}-semester.json`;
   const outPath = `data/${semester}-semester.compact.json`;
 
-  const source = JSON.parse(readFileSync(sourcePath, "utf8")) as {
-    metadata: Record<string, unknown>;
-    electives: SourceElective[];
-  };
+  const source: SourceDataset = JSON.parse(readFileSync(sourcePath, "utf8"));
   const rows = source.electives;
 
   const type = dictionary(rows.map((e) => e.type));
