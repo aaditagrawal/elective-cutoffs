@@ -1,5 +1,7 @@
 "use client";
 
+import { classNames } from "@/ui.stylex";
+
 import { Card, CardContent } from "@/components/ui/card";
 
 const faqs = [
@@ -19,19 +21,19 @@ const faqs = [
 
 export default function FAQPage() {
   return (
-    <div className="min-h-screen bg-neutral-950 text-white">
-      <div className="max-w-3xl mx-auto px-6 py-12">
-        <h1 className="text-4xl font-serif mb-2">FAQ</h1>
-        <p className="text-neutral-400 mb-8">
+    <div className={classNames.home0}>
+      <div className={classNames.home1}>
+        <h1 className={classNames.home2}>FAQ</h1>
+        <p className={classNames.home3}>
           Frequently asked questions about the elective allocation system.
         </p>
 
-        <div className="space-y-4">
+        <div className={classNames.home4}>
           {faqs.map((faq) => (
-            <Card key={faq.id} className="bg-neutral-900/50 border-neutral-800">
-              <CardContent className="pt-6">
-                <h2 className="text-lg font-medium mb-2">{faq.question}</h2>
-                <p className="text-neutral-400">{faq.answer}</p>
+            <Card key={faq.id} className={classNames.home5}>
+              <CardContent className={classNames.home6}>
+                <h2 className={classNames.home7}>{faq.question}</h2>
+                <p className={classNames.home8}>{faq.answer}</p>
               </CardContent>
             </Card>
           ))}

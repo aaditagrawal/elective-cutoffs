@@ -1,5 +1,7 @@
 "use client";
 
+import { classNames, difficultyClassNames } from "@/ui.stylex";
+
 import { useState, useEffect, useRef, useCallback, useMemo, useDeferredValue, memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -125,26 +127,26 @@ function CommandSearchImpl({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50" role="presentation">
+    <div className={classNames.electiveDashboard24} role="presentation">
       {/* Backdrop */}
       <button
         type="button"
         aria-label="Close search"
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className={classNames.electiveDashboard25}
         onClick={onClose}
       />
 
       {/* Modal */}
       <div
-        className="relative max-w-2xl mx-auto mt-[15vh]"
+        className={classNames.electiveDashboard26}
         role="dialog"
         aria-modal="true"
         aria-label="Search electives"
       >
-        <div className="bg-neutral-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden">
+        <div className={classNames.electiveDashboard27}>
           {/* Search Input */}
-          <div className="flex items-center border-b border-white/10 px-4">
-            <Search className="h-5 w-5 text-neutral-500 shrink-0" />
+          <div className={classNames.electiveDashboard28}>
+            <Search className={classNames.electiveDashboard29} />
             <input
               ref={inputRef}
               type="text"
@@ -152,17 +154,17 @@ function CommandSearchImpl({
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search electives..."
-              className="flex-1 bg-transparent py-4 px-3 text-white placeholder:text-neutral-500 outline-none text-lg"
+              className={classNames.electiveDashboard30}
             />
-            <button onClick={onClose} className="p-1 rounded hover:bg-white/10 transition-colors">
-              <X className="h-4 w-4 text-neutral-500" />
+            <button onClick={onClose} className={classNames.electiveDashboard31}>
+              <X className={classNames.electiveDashboard32} />
             </button>
           </div>
 
           {/* Results */}
-          <div ref={listRef} className="max-h-[50vh] overflow-y-auto py-2">
+          <div ref={listRef} className={classNames.electiveDashboard33}>
             {results.length === 0 ? (
-              <div className="px-4 py-8 text-center text-neutral-500">
+              <div className={classNames.electiveDashboard34}>
                 No electives found for &ldquo;{query}&rdquo;
               </div>
             ) : (
@@ -177,24 +179,24 @@ function CommandSearchImpl({
                       onSelect(elective);
                       onClose();
                     }}
-                    className={`w-full px-4 py-3 flex items-start gap-3 text-left transition-colors ${
-                      idx === selectedIndex ? "bg-white/10" : "hover:bg-white/5"
+                    className={`${classNames.electiveDashboard37} ${
+                      idx === selectedIndex
+                        ? classNames.electiveDashboard35
+                        : classNames.electiveDashboard36
                     }`}
                   >
-                    <div className="shrink-0 mt-0.5">
-                      <GraduationCap className="h-5 w-5 text-neutral-500" />
+                    <div className={classNames.electiveDashboard38}>
+                      <GraduationCap className={classNames.electiveDashboard39} />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-neutral-500">{elective.code}</span>
+                    <div className={classNames.electiveDashboard40}>
+                      <div className={classNames.electiveDashboard41}>
+                        <span className={classNames.electiveDashboard42}>{elective.code}</span>
                         {courseUrl ? (
-                          <ExternalLink className="h-3 w-3 text-emerald-400" />
+                          <ExternalLink className={classNames.electiveDashboard43} />
                         ) : (
-                          <Info className="h-3 w-3 text-neutral-600" />
+                          <Info className={classNames.electiveDashboard44} />
                         )}
-                        <span className="text-xs font-mono text-neutral-300 bg-neutral-700 px-1.5 py-0.5 rounded">
-                          {elective.type}
-                        </span>
+                        <span className={classNames.electiveDashboard45}>{elective.type}</span>
                       </div>
                       {courseUrl ? (
                         <a
@@ -202,23 +204,25 @@ function CommandSearchImpl({
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="text-white font-medium truncate mt-0.5 hover:text-neutral-200 hover:underline block"
+                          className={classNames.electiveDashboard46}
                         >
                           {elective.name}
                         </a>
                       ) : (
-                        <div className="text-neutral-400 font-medium truncate mt-0.5">
-                          {elective.name}
-                        </div>
+                        <div className={classNames.electiveDashboard47}>{elective.name}</div>
                       )}
-                      <div className="text-xs text-neutral-500 mt-0.5">
+                      <div className={classNames.electiveDashboard48}>
                         {elective.department} • Min CGPA:{" "}
-                        <span className={`font-mono ${difficulty.color}`}>
+                        <span
+                          className={`${classNames.electiveDashboard49} ${difficultyClassNames[difficulty.color]}`}
+                        >
                           {elective.lowestCGPA.toFixed(2)}
                         </span>
                       </div>
                     </div>
-                    <div className={`text-xs font-medium shrink-0 ${difficulty.color}`}>
+                    <div
+                      className={`${classNames.electiveDashboard50} ${difficultyClassNames[difficulty.color]}`}
+                    >
                       {difficulty.level}
                     </div>
                   </button>
@@ -228,26 +232,18 @@ function CommandSearchImpl({
           </div>
 
           {/* Footer */}
-          <div className="border-t border-white/10 px-4 py-2 flex items-center gap-4 text-xs text-neutral-500">
-            <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">
-                ↑
-              </kbd>
-              <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">
-                ↓
-              </kbd>
+          <div className={classNames.electiveDashboard51}>
+            <span className={classNames.electiveDashboard52}>
+              <kbd className={classNames.electiveDashboard53}>↑</kbd>
+              <kbd className={classNames.electiveDashboard53}>↓</kbd>
               Navigate
             </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">
-                ↵
-              </kbd>
+            <span className={classNames.electiveDashboard52}>
+              <kbd className={classNames.electiveDashboard53}>↵</kbd>
               Select
             </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">
-                esc
-              </kbd>
+            <span className={classNames.electiveDashboard52}>
+              <kbd className={classNames.electiveDashboard53}>esc</kbd>
               Close
             </span>
           </div>
@@ -275,14 +271,14 @@ function StatCardImpl({
   icon: React.ElementType;
 }) {
   return (
-    <Card className="relative overflow-hidden border-white/10 bg-neutral-900/50 backdrop-blur-sm">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-neutral-400">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-neutral-500" />
+    <Card className={classNames.electiveDashboard54}>
+      <CardHeader className={classNames.electiveDashboard55}>
+        <CardTitle className={classNames.electiveDashboard56}>{title}</CardTitle>
+        <Icon className={classNames.electiveDashboard32} />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold text-white">{value}</div>
-        {subtitle && <p className="text-xs text-neutral-500 mt-1">{subtitle}</p>}
+        <div className={classNames.electiveDashboard57}>{value}</div>
+        {subtitle && <p className={classNames.electiveDashboard58}>{subtitle}</p>}
       </CardContent>
     </Card>
   );
@@ -306,16 +302,13 @@ function ElectiveCardImpl({
   return (
     <Card
       id={`elective-${elective.code}-${elective.type}`}
-      className={`group relative overflow-hidden border-white/5 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-neutral-900/80 h-full ${
-        isHighlighted ? "ring-2 ring-white/30 border-white/30" : ""
+      className={`${classNames.electiveDashboard60} ${
+        isHighlighted ? classNames.electiveDashboard59 : ""
       }`}
     >
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-2">
-          <Badge
-            variant="secondary"
-            className="text-xs font-mono bg-neutral-800 text-neutral-300 border-0"
-          >
+      <CardHeader className={classNames.electiveDashboard61}>
+        <div className={classNames.electiveDashboard62}>
+          <Badge variant="secondary" className={classNames.electiveDashboard63}>
             {elective.type}
           </Badge>
           {courseUrl ? (
@@ -323,23 +316,17 @@ function ElectiveCardImpl({
               href={courseUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:opacity-80 transition-opacity"
+              className={classNames.electiveDashboard64}
             >
-              <Badge
-                variant="outline"
-                className="text-xs font-mono border-neutral-700 text-neutral-400 hover:border-neutral-500 hover:text-neutral-300 cursor-pointer"
-              >
+              <Badge variant="outline" className={classNames.electiveDashboard65}>
                 {elective.code}
-                <ExternalLink className="ml-1 h-3 w-3" />
+                <ExternalLink className={classNames.electiveDashboard66} />
               </Badge>
             </a>
           ) : (
-            <Badge
-              variant="outline"
-              className="text-xs font-mono border-neutral-700 text-neutral-400"
-            >
+            <Badge variant="outline" className={classNames.electiveDashboard67}>
               {elective.code}
-              <Info className="ml-1 h-3 w-3" />
+              <Info className={classNames.electiveDashboard66} />
             </Badge>
           )}
         </div>
@@ -348,55 +335,53 @@ function ElectiveCardImpl({
             href={courseUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-neutral-200 transition-colors"
+            className={classNames.electiveDashboard68}
           >
-            <CardTitle className="text-base font-semibold leading-tight mt-2 line-clamp-2 text-white hover:underline">
-              {elective.name}
-            </CardTitle>
+            <CardTitle className={classNames.electiveDashboard69}>{elective.name}</CardTitle>
           </a>
         ) : (
-          <CardTitle className="text-base font-semibold leading-tight mt-2 line-clamp-2 text-neutral-400">
-            {elective.name}
-          </CardTitle>
+          <CardTitle className={classNames.electiveDashboard70}>{elective.name}</CardTitle>
         )}
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-3 gap-3 text-center">
-          <div className="space-y-1">
-            <div className="text-xs text-neutral-500">Min CGPA</div>
-            <div className={`text-lg font-bold font-mono ${difficulty.color}`}>
+        <div className={classNames.electiveDashboard71}>
+          <div className={classNames.electiveDashboard72}>
+            <div className={classNames.electiveDashboard73}>Min CGPA</div>
+            <div
+              className={`${classNames.electiveDashboard74} ${difficultyClassNames[difficulty.color]}`}
+            >
               {elective.lowestCGPA.toFixed(2)}
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="text-xs text-neutral-500">Max CGPA</div>
-            <div className="text-lg font-semibold font-mono text-neutral-300">
-              {elective.highestCGPA.toFixed(2)}
-            </div>
+          <div className={classNames.electiveDashboard72}>
+            <div className={classNames.electiveDashboard73}>Max CGPA</div>
+            <div className={classNames.electiveDashboard75}>{elective.highestCGPA.toFixed(2)}</div>
           </div>
-          <div className="space-y-1">
-            <div className="text-xs text-neutral-500">Students</div>
-            <div className="text-lg font-semibold font-mono text-neutral-300">
-              {elective.students}
-            </div>
+          <div className={classNames.electiveDashboard72}>
+            <div className={classNames.electiveDashboard73}>Students</div>
+            <div className={classNames.electiveDashboard75}>{elective.students}</div>
           </div>
         </div>
-        <div className="mt-3 pt-3 border-t border-white/5">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-neutral-500">Allocation Difficulty</span>
-            <span className={`font-medium ${difficulty.color}`}>{difficulty.level}</span>
+        <div className={classNames.electiveDashboard76}>
+          <div className={classNames.electiveDashboard77}>
+            <span className={classNames.electiveDashboard78}>Allocation Difficulty</span>
+            <span
+              className={`${classNames.electiveDashboard79} ${difficultyClassNames[difficulty.color]}`}
+            >
+              {difficulty.level}
+            </span>
           </div>
           {/* CGPA Range Bar */}
-          <div className="mt-2 h-2 bg-neutral-800 rounded-full overflow-hidden">
+          <div className={classNames.electiveDashboard80}>
             <div
-              className="h-full bg-gradient-to-r from-emerald-500 via-yellow-500 to-red-500 rounded-full"
+              className={classNames.electiveDashboard81}
               style={{
                 marginLeft: `${(elective.lowestCGPA / 10) * 100}%`,
                 width: `${((elective.highestCGPA - elective.lowestCGPA) / 10) * 100}%`,
               }}
             />
           </div>
-          <div className="flex justify-between text-[10px] text-neutral-600 mt-1 font-mono">
+          <div className={classNames.electiveDashboard82}>
             <span>0</span>
             <span>5</span>
             <span>10</span>
@@ -521,7 +506,7 @@ export default function ElectiveDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950">
+    <div className={classNames.electiveDashboard83}>
       {/* Command Search Modal */}
       <CommandSearch
         isOpen={commandOpen}
@@ -531,24 +516,22 @@ export default function ElectiveDashboard() {
       />
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden border-b border-white/5">
-        <div className="absolute inset-0 bg-gradient-to-br from-neutral-900 via-neutral-950 to-black" />
-        <div className="relative max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl font-serif text-white tracking-tight">
-              Elective Cutoff Analysis
-            </h1>
-            <p className="mt-3 text-lg text-neutral-400 max-w-2xl mx-auto">
+      <div className={classNames.electiveDashboard84}>
+        <div className={classNames.electiveDashboard85} />
+        <div className={classNames.electiveDashboard86}>
+          <div className={classNames.electiveDashboard87}>
+            <h1 className={classNames.electiveDashboard88}>Elective Cutoff Analysis</h1>
+            <p className={classNames.electiveDashboard89}>
               {semester === "sixth"
                 ? "Explore VI semester CGPA cutoffs for Open Electives and Program Electives I–II."
                 : "Explore VII semester CGPA cutoffs for Open Elective III and Program Electives III–VII."}
             </p>
-            <p className="mt-2 text-sm text-neutral-500">
+            <p className={classNames.electiveDashboard90}>
               Academic Year {dataset.metadata.academicYear}
             </p>
 
             {/* Semester Toggle */}
-            <div className="mt-5 inline-flex rounded-lg border border-white/10 bg-neutral-900 p-1">
+            <div className={classNames.electiveDashboard91}>
               {(
                 [
                   ["sixth", "6th Semester"],
@@ -559,10 +542,10 @@ export default function ElectiveDashboard() {
                   key={value}
                   onClick={() => handleSemesterChange(value)}
                   aria-pressed={semester === value}
-                  className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`${classNames.electiveDashboard94} ${
                     semester === value
-                      ? "bg-white text-neutral-950"
-                      : "text-neutral-400 hover:text-white"
+                      ? classNames.electiveDashboard92
+                      : classNames.electiveDashboard93
                   }`}
                 >
                   {label}
@@ -571,20 +554,17 @@ export default function ElectiveDashboard() {
             </div>
 
             {/* Quick Search Button */}
-            <button
-              onClick={() => setCommandOpen(true)}
-              className="mt-5 ml-2 inline-flex items-center gap-2 px-3 py-2 bg-neutral-900 border border-white/10 rounded-lg text-neutral-400 hover:bg-neutral-800 hover:text-neutral-300 transition-colors text-sm"
-            >
-              <Search className="h-4 w-4" />
+            <button onClick={() => setCommandOpen(true)} className={classNames.electiveDashboard95}>
+              <Search className={classNames.electiveDashboard96} />
               <span>Search...</span>
-              <kbd className="ml-1 px-1.5 py-0.5 bg-neutral-800 rounded text-xs font-mono text-neutral-500 flex items-center gap-0.5">
-                <Command className="h-2.5 w-2.5" />K
+              <kbd className={classNames.electiveDashboard97}>
+                <Command className={classNames.electiveDashboard98} />K
               </kbd>
             </button>
           </div>
 
           {/* Stats Grid */}
-          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className={classNames.electiveDashboard99}>
             <StatCard
               title="Total Electives"
               value={stats.totalElectives}
@@ -618,23 +598,23 @@ export default function ElectiveDashboard() {
       </div>
 
       {/* Filters Section */}
-      <div className="sticky top-0 z-40 bg-neutral-950/95 backdrop-blur-xl border-b border-white/5 pt-2">
-        <div className="max-w-7xl mx-auto px-3 pb-2.5 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-2">
+      <div className={classNames.electiveDashboard100}>
+        <div className={classNames.electiveDashboard101}>
+          <div className={classNames.electiveDashboard102}>
             {/* Search */}
-            <div className="w-full sm:flex-1 sm:min-w-[200px]">
+            <div className={classNames.electiveDashboard103}>
               <Input
                 placeholder="Search electives..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-9 bg-neutral-900/70 border-white/10 text-white placeholder:text-neutral-500"
+                className={classNames.electiveDashboard104}
               />
             </div>
 
             {/* Type and Department Filters - side by side on mobile */}
-            <div className="flex w-full gap-2">
+            <div className={classNames.electiveDashboard105}>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="h-9 flex-1 bg-neutral-900/70 border-white/10 text-neutral-300 text-xs">
+                <SelectTrigger className={classNames.electiveDashboard106}>
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -648,7 +628,7 @@ export default function ElectiveDashboard() {
               </Select>
 
               <Select value={deptFilter} onValueChange={setDeptFilter}>
-                <SelectTrigger className="h-9 flex-1 bg-neutral-900/70 border-white/10 text-neutral-300 text-xs">
+                <SelectTrigger className={classNames.electiveDashboard106}>
                   <SelectValue placeholder="Department" />
                 </SelectTrigger>
                 <SelectContent>
@@ -663,33 +643,33 @@ export default function ElectiveDashboard() {
             </div>
 
             {/* Sort Buttons */}
-            <div className="flex gap-1.5">
+            <div className={classNames.electiveDashboard107}>
               <button
                 onClick={() => toggleSort("cutoff")}
-                className={`h-9 px-3 rounded-md text-xs font-medium transition-colors ${
+                className={`${classNames.electiveDashboard110} ${
                   sortBy === "cutoff"
-                    ? "bg-white text-neutral-900"
-                    : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
+                    ? classNames.electiveDashboard108
+                    : classNames.electiveDashboard109
                 }`}
               >
                 Cutoff {sortBy === "cutoff" && (sortOrder === "asc" ? "↑" : "↓")}
               </button>
               <button
                 onClick={() => toggleSort("students")}
-                className={`h-9 px-3 rounded-md text-xs font-medium transition-colors ${
+                className={`${classNames.electiveDashboard110} ${
                   sortBy === "students"
-                    ? "bg-white text-neutral-900"
-                    : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
+                    ? classNames.electiveDashboard108
+                    : classNames.electiveDashboard109
                 }`}
               >
                 Students {sortBy === "students" && (sortOrder === "asc" ? "↑" : "↓")}
               </button>
               <button
                 onClick={() => toggleSort("name")}
-                className={`h-9 px-3 rounded-md text-xs font-medium transition-colors ${
+                className={`${classNames.electiveDashboard110} ${
                   sortBy === "name"
-                    ? "bg-white text-neutral-900"
-                    : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
+                    ? classNames.electiveDashboard108
+                    : classNames.electiveDashboard109
                 }`}
               >
                 Name {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
@@ -700,9 +680,9 @@ export default function ElectiveDashboard() {
       </div>
 
       {/* Results */}
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-white">
+      <div className={classNames.electiveDashboard111}>
+        <div className={classNames.electiveDashboard112}>
+          <h2 className={classNames.electiveDashboard113}>
             {filteredElectives.length} Elective{filteredElectives.length !== 1 ? "s" : ""} Found
           </h2>
           {search || typeFilter !== "all" || deptFilter !== "all" ? (
@@ -712,7 +692,7 @@ export default function ElectiveDashboard() {
                 setTypeFilter("all");
                 setDeptFilter("all");
               }}
-              className="text-sm text-neutral-500 hover:text-neutral-300 transition-colors"
+              className={classNames.electiveDashboard114}
             >
               Clear Filters
             </button>
@@ -720,7 +700,7 @@ export default function ElectiveDashboard() {
         </div>
 
         {/* Electives Grid */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className={classNames.electiveDashboard115}>
           {/*
            * The key deliberately excludes the array index. With it, every
            * card's key changed whenever filtering or sorting moved it, so
@@ -738,28 +718,28 @@ export default function ElectiveDashboard() {
         </div>
 
         {filteredElectives.length === 0 && (
-          <div className="text-center py-16">
-            <GraduationCap className="mx-auto h-12 w-12 text-neutral-700" />
-            <h3 className="mt-4 text-lg font-medium text-neutral-300">No electives found</h3>
-            <p className="text-neutral-500">Try adjusting your search or filters</p>
+          <div className={classNames.electiveDashboard116}>
+            <GraduationCap className={classNames.electiveDashboard117} />
+            <h3 className={classNames.electiveDashboard118}>No electives found</h3>
+            <p className={classNames.electiveDashboard78}>Try adjusting your search or filters</p>
           </div>
         )}
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-8 text-center text-sm text-neutral-500">
+      <footer className={classNames.electiveDashboard119}>
         <p>
           Data based on actual {dataset.metadata.semester} semester allocations for Academic Year{" "}
           {dataset.metadata.academicYear}. Cutoffs may vary each semester.
         </p>
-        <p className="mt-1">Use this as a reference, not a guarantee.</p>
-        <p className="mt-4">
-          Made by <span className="text-neutral-400">Aditya Mathpal</span>,{" "}
+        <p className={classNames.electiveDashboard120}>Use this as a reference, not a guarantee.</p>
+        <p className={classNames.electiveDashboard121}>
+          Made by <span className={classNames.home8}>Aditya Mathpal</span>,{" "}
           <a
             href="https://lverma.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-neutral-400 hover:text-white transition-colors"
+            className={classNames.layout14}
           >
             Lakshit Verma
           </a>
@@ -768,7 +748,7 @@ export default function ElectiveDashboard() {
             href="https://aadit.cc"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-neutral-400 hover:text-white transition-colors"
+            className={classNames.layout14}
           >
             Aadit Agrawal
           </a>
