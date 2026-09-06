@@ -1,3 +1,4 @@
+import { classNames } from "@/ui.stylex";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Instrument_Serif, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
@@ -41,17 +42,17 @@ export default function RootLayout({
       lang="en"
       className={`${instrumentSerif.variable} ${instrumentSans.variable} ${ibmPlexMono.variable} dark`}
     >
-      <body className="font-sans antialiased">
-        <header className="border-b border-white/5 bg-neutral-950 z-50">
-          <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-            <Link href="/" className="text-xl font-serif text-white">
+      <body className={classNames.layout9}>
+        <header className={classNames.layout10}>
+          <nav className={classNames.layout11}>
+            <Link href="/" className={classNames.layout12}>
               Elective Cutoffs
             </Link>
-            <div className="flex gap-6">
-              <Link href="/" className="text-neutral-400 hover:text-white transition-colors">
+            <div className={classNames.layout13}>
+              <Link href="/" className={classNames.layout14}>
                 Dashboard
               </Link>
-              <Link href="/faq" className="text-neutral-400 hover:text-white transition-colors">
+              <Link href="/faq" className={classNames.layout14}>
                 FAQ
               </Link>
             </div>

@@ -1,6 +1,20 @@
 import type { NextConfig } from "next";
 
+import stylexOptions from "./stylex.config.cjs";
+const stylexLoader = {
+  loader: "babel-loader",
+  options: {
+    babelrc: false,
+    configFile: false,
+    plugins: [["@stylexjs/babel-plugin", stylexOptions]],
+  },
+};
 const nextConfig: NextConfig = {
+  turbopack: { rules: { "*.stylex.js": { loaders: [stylexLoader], as: "*.js" } } },
+  webpack(config) {
+    config.module.rules.push({ test: /\.stylex\.js$/, use: [stylexLoader] });
+    return config;
+  },
   experimental: {
     /**
      * Barrel packages: `import { Select } from "radix-ui"` and Base UI /
