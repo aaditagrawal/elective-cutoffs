@@ -70,11 +70,11 @@ function CommandSearchImpl({
   // which only moves the selection highlight and cannot change the results.
   const results = useMemo(() => searchTopK(electives, query, PALETTE_RESULTS), [electives, query]);
 
+  // Opening remounts this component (see the `key` at the call site), so
+  // `query`/`selectedIndex` start fresh without a setState-in-effect reset.
   useEffect(() => {
     if (isOpen) {
       inputRef.current?.focus();
-      setQuery("");
-      setSelectedIndex(0);
     }
   }, [isOpen]);
 
@@ -92,10 +92,6 @@ function CommandSearchImpl({
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
-
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [query]);
 
   // Scroll selected item into view
   useEffect(() => {
@@ -158,7 +154,10 @@ function CommandSearchImpl({
               ref={inputRef}
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setSelectedIndex(0);
+              }}
               onKeyDown={handleKeyDown}
               placeholder="Search electives..."
               className="flex-1 bg-transparent py-4 px-3 text-white placeholder:text-muted-foreground outline-none text-lg"
@@ -528,6 +527,7 @@ export default function ElectiveDashboard() {
     <div className="min-h-screen bg-background">
       {/* Command Search Modal */}
       <CommandSearch
+        key={commandOpen ? "open" : "closed"}
         isOpen={commandOpen}
         onClose={handleCloseCommand}
         onSelect={handleSelectElective}
