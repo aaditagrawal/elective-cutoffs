@@ -1,7 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useMemo, useDeferredValue, memo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  useDeferredValue,
+  memo,
+  type CSSProperties,
+} from "react";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -136,15 +145,15 @@ function CommandSearchImpl({
 
       {/* Modal */}
       <div
-        className="relative max-w-2xl mx-auto mt-[15vh]"
+        className="relative max-w-2xl mx-auto mt-30"
         role="dialog"
         aria-modal="true"
         aria-label="Search electives"
       >
-        <div className="bg-neutral-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden">
+        <div className="bg-card border border-white/10 rounded-xl shadow-2xl overflow-hidden">
           {/* Search Input */}
           <div className="flex items-center border-b border-white/10 px-4">
-            <Search className="h-5 w-5 text-neutral-500 shrink-0" />
+            <Search className="h-5 w-5 text-muted-foreground/70 shrink-0" />
             <input
               ref={inputRef}
               type="text"
@@ -152,17 +161,17 @@ function CommandSearchImpl({
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search electives..."
-              className="flex-1 bg-transparent py-4 px-3 text-white placeholder:text-neutral-500 outline-none text-lg"
+              className="flex-1 bg-transparent py-4 px-3 text-white placeholder:text-muted-foreground outline-none text-lg"
             />
             <button onClick={onClose} className="p-1 rounded hover:bg-white/10 transition-colors">
-              <X className="h-4 w-4 text-neutral-500" />
+              <X className="h-4 w-4 text-muted-foreground/70" />
             </button>
           </div>
 
           {/* Results */}
-          <div ref={listRef} className="max-h-[50vh] overflow-y-auto py-2">
+          <div ref={listRef} className="max-h-96 overflow-y-auto py-2">
             {results.length === 0 ? (
-              <div className="px-4 py-8 text-center text-neutral-500">
+              <div className="px-4 py-8 text-center text-muted-foreground/70">
                 No electives found for &ldquo;{query}&rdquo;
               </div>
             ) : (
@@ -182,17 +191,19 @@ function CommandSearchImpl({
                     }`}
                   >
                     <div className="shrink-0 mt-0.5">
-                      <GraduationCap className="h-5 w-5 text-neutral-500" />
+                      <GraduationCap className="h-5 w-5 text-muted-foreground/70" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-neutral-500">{elective.code}</span>
+                        <span className="text-xs font-mono text-muted-foreground/70">
+                          {elective.code}
+                        </span>
                         {courseUrl ? (
-                          <ExternalLink className="h-3 w-3 text-emerald-400" />
+                          <ExternalLink className="h-3 w-3 text-success" />
                         ) : (
-                          <Info className="h-3 w-3 text-neutral-600" />
+                          <Info className="h-3 w-3 text-muted-foreground/50" />
                         )}
-                        <span className="text-xs font-mono text-neutral-300 bg-neutral-700 px-1.5 py-0.5 rounded">
+                        <span className="text-xs font-mono text-foreground/80 bg-foreground/20 px-1.5 py-0.5 rounded">
                           {elective.type}
                         </span>
                       </div>
@@ -202,16 +213,16 @@ function CommandSearchImpl({
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="text-white font-medium truncate mt-0.5 hover:text-neutral-200 hover:underline block"
+                          className="text-white font-medium truncate mt-0.5 hover:text-foreground/80 hover:underline block"
                         >
                           {elective.name}
                         </a>
                       ) : (
-                        <div className="text-neutral-400 font-medium truncate mt-0.5">
+                        <div className="text-muted-foreground font-medium truncate mt-0.5">
                           {elective.name}
                         </div>
                       )}
-                      <div className="text-xs text-neutral-500 mt-0.5">
+                      <div className="text-xs text-muted-foreground/70 mt-0.5">
                         {elective.department} • Min CGPA:{" "}
                         <span className={`font-mono ${difficulty.color}`}>
                           {elective.lowestCGPA.toFixed(2)}
@@ -228,24 +239,24 @@ function CommandSearchImpl({
           </div>
 
           {/* Footer */}
-          <div className="border-t border-white/10 px-4 py-2 flex items-center gap-4 text-xs text-neutral-500">
+          <div className="border-t border-white/10 px-4 py-2 flex items-center gap-4 text-xs text-muted-foreground/70">
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">
+              <kbd className="px-1.5 py-0.5 bg-secondary rounded text-muted-foreground font-mono">
                 ↑
               </kbd>
-              <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">
+              <kbd className="px-1.5 py-0.5 bg-secondary rounded text-muted-foreground font-mono">
                 ↓
               </kbd>
               Navigate
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">
+              <kbd className="px-1.5 py-0.5 bg-secondary rounded text-muted-foreground font-mono">
                 ↵
               </kbd>
               Select
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-neutral-800 rounded text-neutral-400 font-mono">
+              <kbd className="px-1.5 py-0.5 bg-secondary rounded text-muted-foreground font-mono">
                 esc
               </kbd>
               Close
@@ -275,14 +286,14 @@ function StatCardImpl({
   icon: React.ElementType;
 }) {
   return (
-    <Card className="relative overflow-hidden border-white/10 bg-neutral-900/50 backdrop-blur-sm">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-neutral-400">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-neutral-500" />
+    <Card className="relative overflow-hidden">
+      <CardHeader className="flex flex-row items-center justify-between mb-2">
+        <CardDescription>{title}</CardDescription>
+        <Icon className="h-4 w-4 text-muted-foreground/70" />
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold text-white">{value}</div>
-        {subtitle && <p className="text-xs text-neutral-500 mt-1">{subtitle}</p>}
+        {subtitle && <p className="text-xs text-muted-foreground/70 mt-1">{subtitle}</p>}
       </CardContent>
     </Card>
   );
@@ -306,18 +317,17 @@ function ElectiveCardImpl({
   return (
     <Card
       id={`elective-${elective.code}-${elective.type}`}
-      className={`group relative overflow-hidden border-white/5 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-neutral-900/80 h-full ${
-        isHighlighted ? "ring-2 ring-white/30 border-white/30" : ""
-      }`}
+      className="group relative overflow-hidden h-full"
     >
-      <CardHeader className="pb-3">
+      {isHighlighted ? (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-xl ring-2 ring-foreground/30"
+        />
+      ) : null}
+      <CardHeader className="mb-3">
         <div className="flex items-start justify-between gap-2">
-          <Badge
-            variant="secondary"
-            className="text-xs font-mono bg-neutral-800 text-neutral-300 border-0"
-          >
-            {elective.type}
-          </Badge>
+          <Badge variant="secondary">{elective.type}</Badge>
           {courseUrl ? (
             <a
               href={courseUrl}
@@ -325,19 +335,13 @@ function ElectiveCardImpl({
               rel="noopener noreferrer"
               className="hover:opacity-80 transition-opacity"
             >
-              <Badge
-                variant="outline"
-                className="text-xs font-mono border-neutral-700 text-neutral-400 hover:border-neutral-500 hover:text-neutral-300 cursor-pointer"
-              >
+              <Badge variant="outline" className="cursor-pointer">
                 {elective.code}
                 <ExternalLink className="ml-1 h-3 w-3" />
               </Badge>
             </a>
           ) : (
-            <Badge
-              variant="outline"
-              className="text-xs font-mono border-neutral-700 text-neutral-400"
-            >
+            <Badge variant="outline">
               {elective.code}
               <Info className="ml-1 h-3 w-3" />
             </Badge>
@@ -348,55 +352,55 @@ function ElectiveCardImpl({
             href={courseUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-neutral-200 transition-colors"
+            className="mt-2 block text-base font-semibold leading-tight line-clamp-2 text-foreground transition-colors hover:text-foreground/80 hover:underline"
           >
-            <CardTitle className="text-base font-semibold leading-tight mt-2 line-clamp-2 text-white hover:underline">
-              {elective.name}
-            </CardTitle>
+            {elective.name}
           </a>
         ) : (
-          <CardTitle className="text-base font-semibold leading-tight mt-2 line-clamp-2 text-neutral-400">
+          <div className="mt-2 text-base font-semibold leading-tight line-clamp-2 text-muted-foreground">
             {elective.name}
-          </CardTitle>
+          </div>
         )}
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="space-y-1">
-            <div className="text-xs text-neutral-500">Min CGPA</div>
+            <div className="text-xs text-muted-foreground/70">Min CGPA</div>
             <div className={`text-lg font-bold font-mono ${difficulty.color}`}>
               {elective.lowestCGPA.toFixed(2)}
             </div>
           </div>
           <div className="space-y-1">
-            <div className="text-xs text-neutral-500">Max CGPA</div>
-            <div className="text-lg font-semibold font-mono text-neutral-300">
+            <div className="text-xs text-muted-foreground/70">Max CGPA</div>
+            <div className="text-lg font-semibold font-mono text-foreground/80">
               {elective.highestCGPA.toFixed(2)}
             </div>
           </div>
           <div className="space-y-1">
-            <div className="text-xs text-neutral-500">Students</div>
-            <div className="text-lg font-semibold font-mono text-neutral-300">
+            <div className="text-xs text-muted-foreground/70">Students</div>
+            <div className="text-lg font-semibold font-mono text-foreground/80">
               {elective.students}
             </div>
           </div>
         </div>
         <div className="mt-3 pt-3 border-t border-white/5">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-neutral-500">Allocation Difficulty</span>
+            <span className="text-muted-foreground/70">Allocation Difficulty</span>
             <span className={`font-medium ${difficulty.color}`}>{difficulty.level}</span>
           </div>
           {/* CGPA Range Bar */}
-          <div className="mt-2 h-2 bg-neutral-800 rounded-full overflow-hidden">
+          <div className="mt-2 h-2 bg-secondary rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-emerald-500 via-yellow-500 to-red-500 rounded-full"
-              style={{
-                marginLeft: `${(elective.lowestCGPA / 10) * 100}%`,
-                width: `${((elective.highestCGPA - elective.lowestCGPA) / 10) * 100}%`,
-              }}
+              className="h-full bg-gradient-to-r from-success via-warning to-destructive rounded-full ml-(--bar-start) w-(--bar-width)"
+              style={
+                {
+                  "--bar-start": `${(elective.lowestCGPA / 10) * 100}%`,
+                  "--bar-width": `${((elective.highestCGPA - elective.lowestCGPA) / 10) * 100}%`,
+                } as CSSProperties
+              }
             />
           </div>
-          <div className="flex justify-between text-[10px] text-neutral-600 mt-1 font-mono">
+          <div className="flex justify-between text-xs text-muted-foreground/50 mt-1 font-mono">
             <span>0</span>
             <span>5</span>
             <span>10</span>
@@ -521,7 +525,7 @@ export default function ElectiveDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950">
+    <div className="min-h-screen bg-background">
       {/* Command Search Modal */}
       <CommandSearch
         isOpen={commandOpen}
@@ -532,23 +536,23 @@ export default function ElectiveDashboard() {
 
       {/* Hero Section */}
       <div className="relative overflow-hidden border-b border-white/5">
-        <div className="absolute inset-0 bg-gradient-to-br from-neutral-900 via-neutral-950 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-br from-card via-background to-black" />
         <div className="relative max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl font-serif text-white tracking-tight">
               Elective Cutoff Analysis
             </h1>
-            <p className="mt-3 text-lg text-neutral-400 max-w-2xl mx-auto">
+            <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
               {semester === "sixth"
                 ? "Explore VI semester CGPA cutoffs for Open Electives and Program Electives I–II."
                 : "Explore VII semester CGPA cutoffs for Open Elective III and Program Electives III–VII."}
             </p>
-            <p className="mt-2 text-sm text-neutral-500">
+            <p className="mt-2 text-sm text-muted-foreground/70">
               Academic Year {dataset.metadata.academicYear}
             </p>
 
             {/* Semester Toggle */}
-            <div className="mt-5 inline-flex rounded-lg border border-white/10 bg-neutral-900 p-1">
+            <div className="mt-5 inline-flex rounded-lg border border-white/10 bg-card p-1">
               {(
                 [
                   ["sixth", "6th Semester"],
@@ -561,8 +565,8 @@ export default function ElectiveDashboard() {
                   aria-pressed={semester === value}
                   className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
                     semester === value
-                      ? "bg-white text-neutral-950"
-                      : "text-neutral-400 hover:text-white"
+                      ? "bg-white text-background"
+                      : "text-muted-foreground hover:text-white"
                   }`}
                 >
                   {label}
@@ -573,11 +577,11 @@ export default function ElectiveDashboard() {
             {/* Quick Search Button */}
             <button
               onClick={() => setCommandOpen(true)}
-              className="mt-5 ml-2 inline-flex items-center gap-2 px-3 py-2 bg-neutral-900 border border-white/10 rounded-lg text-neutral-400 hover:bg-neutral-800 hover:text-neutral-300 transition-colors text-sm"
+              className="mt-5 ml-2 inline-flex items-center gap-2 px-3 py-2 bg-card border border-white/10 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground/80 transition-colors text-sm"
             >
               <Search className="h-4 w-4" />
               <span>Search...</span>
-              <kbd className="ml-1 px-1.5 py-0.5 bg-neutral-800 rounded text-xs font-mono text-neutral-500 flex items-center gap-0.5">
+              <kbd className="ml-1 px-1.5 py-0.5 bg-secondary rounded text-xs font-mono text-muted-foreground/70 flex items-center gap-0.5">
                 <Command className="h-2.5 w-2.5" />K
               </kbd>
             </button>
@@ -618,23 +622,23 @@ export default function ElectiveDashboard() {
       </div>
 
       {/* Filters Section */}
-      <div className="sticky top-0 z-40 bg-neutral-950/95 backdrop-blur-xl border-b border-white/5 pt-2">
+      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-xl border-b border-white/5 pt-2">
         <div className="max-w-7xl mx-auto px-3 pb-2.5 sm:px-6 lg:px-8">
           <div className="flex flex-wrap gap-2">
             {/* Search */}
-            <div className="w-full sm:flex-1 sm:min-w-[200px]">
+            <div className="w-full sm:flex-1 sm:min-w-50">
               <Input
                 placeholder="Search electives..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-9 bg-neutral-900/70 border-white/10 text-white placeholder:text-neutral-500"
+                className="h-9"
               />
             </div>
 
             {/* Type and Department Filters - side by side on mobile */}
             <div className="flex w-full gap-2">
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="h-9 flex-1 bg-neutral-900/70 border-white/10 text-neutral-300 text-xs">
+                <SelectTrigger className="h-9 flex-1">
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -648,7 +652,7 @@ export default function ElectiveDashboard() {
               </Select>
 
               <Select value={deptFilter} onValueChange={setDeptFilter}>
-                <SelectTrigger className="h-9 flex-1 bg-neutral-900/70 border-white/10 text-neutral-300 text-xs">
+                <SelectTrigger className="h-9 flex-1">
                   <SelectValue placeholder="Department" />
                 </SelectTrigger>
                 <SelectContent>
@@ -668,8 +672,8 @@ export default function ElectiveDashboard() {
                 onClick={() => toggleSort("cutoff")}
                 className={`h-9 px-3 rounded-md text-xs font-medium transition-colors ${
                   sortBy === "cutoff"
-                    ? "bg-white text-neutral-900"
-                    : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
+                    ? "bg-white text-background"
+                    : "bg-secondary text-muted-foreground hover:bg-foreground/15 hover:text-foreground/80"
                 }`}
               >
                 Cutoff {sortBy === "cutoff" && (sortOrder === "asc" ? "↑" : "↓")}
@@ -678,8 +682,8 @@ export default function ElectiveDashboard() {
                 onClick={() => toggleSort("students")}
                 className={`h-9 px-3 rounded-md text-xs font-medium transition-colors ${
                   sortBy === "students"
-                    ? "bg-white text-neutral-900"
-                    : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
+                    ? "bg-white text-background"
+                    : "bg-secondary text-muted-foreground hover:bg-foreground/15 hover:text-foreground/80"
                 }`}
               >
                 Students {sortBy === "students" && (sortOrder === "asc" ? "↑" : "↓")}
@@ -688,8 +692,8 @@ export default function ElectiveDashboard() {
                 onClick={() => toggleSort("name")}
                 className={`h-9 px-3 rounded-md text-xs font-medium transition-colors ${
                   sortBy === "name"
-                    ? "bg-white text-neutral-900"
-                    : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
+                    ? "bg-white text-background"
+                    : "bg-secondary text-muted-foreground hover:bg-foreground/15 hover:text-foreground/80"
                 }`}
               >
                 Name {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
@@ -712,7 +716,7 @@ export default function ElectiveDashboard() {
                 setTypeFilter("all");
                 setDeptFilter("all");
               }}
-              className="text-sm text-neutral-500 hover:text-neutral-300 transition-colors"
+              className="text-sm text-muted-foreground/70 hover:text-foreground/80 transition-colors"
             >
               Clear Filters
             </button>
@@ -739,27 +743,27 @@ export default function ElectiveDashboard() {
 
         {filteredElectives.length === 0 && (
           <div className="text-center py-16">
-            <GraduationCap className="mx-auto h-12 w-12 text-neutral-700" />
-            <h3 className="mt-4 text-lg font-medium text-neutral-300">No electives found</h3>
-            <p className="text-neutral-500">Try adjusting your search or filters</p>
+            <GraduationCap className="mx-auto h-12 w-12 text-muted-foreground/40" />
+            <h3 className="mt-4 text-lg font-medium text-foreground/80">No electives found</h3>
+            <p className="text-muted-foreground/70">Try adjusting your search or filters</p>
           </div>
         )}
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-8 text-center text-sm text-neutral-500">
+      <footer className="border-t border-white/5 py-8 text-center text-sm text-muted-foreground/70">
         <p>
           Data based on actual {dataset.metadata.semester} semester allocations for Academic Year{" "}
           {dataset.metadata.academicYear}. Cutoffs may vary each semester.
         </p>
         <p className="mt-1">Use this as a reference, not a guarantee.</p>
         <p className="mt-4">
-          Made by <span className="text-neutral-400">Aditya Mathpal</span>,{" "}
+          Made by <span className="text-muted-foreground">Aditya Mathpal</span>,{" "}
           <a
             href="https://lverma.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-neutral-400 hover:text-white transition-colors"
+            className="text-muted-foreground hover:text-white transition-colors"
           >
             Lakshit Verma
           </a>
@@ -768,7 +772,7 @@ export default function ElectiveDashboard() {
             href="https://aadit.cc"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-neutral-400 hover:text-white transition-colors"
+            className="text-muted-foreground hover:text-white transition-colors"
           >
             Aadit Agrawal
           </a>

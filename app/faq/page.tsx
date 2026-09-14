@@ -19,19 +19,19 @@ const faqs = [
 
 export default function FAQPage() {
   return (
-    <div className="min-h-screen bg-neutral-950 text-white">
+    <div className="min-h-screen bg-background text-white">
       <div className="max-w-3xl mx-auto px-6 py-12">
         <h1 className="text-4xl font-serif mb-2">FAQ</h1>
-        <p className="text-neutral-400 mb-8">
+        <p className="text-muted-foreground mb-8">
           Frequently asked questions about the elective allocation system.
         </p>
 
         <div className="space-y-4">
           {faqs.map((faq) => (
-            <Card key={faq.id} className="bg-neutral-900/50 border-neutral-800">
-              <CardContent className="pt-6">
+            <Card key={faq.id}>
+              <CardContent className="mt-6">
                 <h2 className="text-lg font-medium mb-2">{faq.question}</h2>
-                <p className="text-neutral-400">{faq.answer}</p>
+                <p className="text-muted-foreground">{faq.answer}</p>
               </CardContent>
             </Card>
           ))}

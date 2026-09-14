@@ -42,16 +42,19 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${instrumentSans.variable} ${ibmPlexMono.variable} dark`}
     >
       <body className="font-sans antialiased">
-        <header className="border-b border-white/5 bg-neutral-950 z-50">
+        <header className="border-b border-white/5 bg-background z-50">
           <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
             <Link href="/" className="text-xl font-serif text-white">
               Elective Cutoffs
             </Link>
             <div className="flex gap-6">
-              <Link href="/" className="text-neutral-400 hover:text-white transition-colors">
+              <Link href="/" className="text-muted-foreground hover:text-white transition-colors">
                 Dashboard
               </Link>
-              <Link href="/faq" className="text-neutral-400 hover:text-white transition-colors">
+              <Link
+                href="/faq"
+                className="text-muted-foreground hover:text-white transition-colors"
+              >
                 FAQ
               </Link>
             </div>

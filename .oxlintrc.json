@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "react", "nextjs", "jsx-a11y", "import"],
+  "jsPlugins": ["@shadcn/lint"],
   "categories": {
     "correctness": "error",
     "suspicious": "warn",
@@ -33,7 +34,18 @@
     "jsx-a11y/prefer-tag-over-role": "off",
     "jsx-a11y/img-redundant-alt": "warn",
     "import/no-unassigned-import": "off",
-    "react/no-array-index-key": "warn"
+    "react/no-array-index-key": "warn",
+    "shadcn/no-restyle": [
+      "error",
+      {
+        "allow": ["layout"]
+      }
+    ],
+    "shadcn/no-raw-colors": "error",
+    "shadcn/no-arbitrary-values": "error",
+    "shadcn/no-unknown-classes": "error",
+    "shadcn/no-inline-styles": "error",
+    "shadcn/require-static-classes": "error"
   },
   "overrides": [
     {
@@ -52,7 +64,10 @@
         "jsx-a11y/anchor-is-valid": "off",
         "jsx-a11y/click-events-have-key-events": "off",
         "jsx-a11y/interactive-supports-focus": "off",
-        "react-hooks/exhaustive-deps": "off"
+        "react-hooks/exhaustive-deps": "off",
+        "shadcn/no-restyle": "off",
+        "shadcn/no-arbitrary-values": "off",
+        "shadcn/require-static-classes": "off"
       }
     }
   ],
