@@ -22,26 +22,18 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return <div data-slot="card-header" className={cn(classNames.card164, className)} {...props} />;
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="card-title" className={cn(classNames.card165, className)} {...props} />;
-}
-
 function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div data-slot="card-description" className={cn(classNames.card166, className)} {...props} />
   );
 }
 
-function CardAction({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="card-action" className={cn(classNames.card167, className)} {...props} />;
-}
-
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return <div data-slot="card-content" className={cn(classNames.card168, className)} {...props} />;
 }
 
-function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="card-footer" className={cn(classNames.card169, className)} {...props} />;
+function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="card-title" className={cn(classNames.card165, className)} {...props} />;
 }
 
-export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent };
+export { CardTitle, Card, CardHeader, CardDescription, CardContent };

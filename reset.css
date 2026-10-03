@@ -676,20 +676,7 @@
   --border: #e4e4e7;
   --input: #e4e4e7;
   --ring: #9f9fa9;
-  --chart-1: #62eafc;
-  --chart-2: #32d3ee;
-  --chart-3: #00b5d2;
-  --chart-4: #0f91b2;
-  --chart-5: #18748f;
   --radius: 0.625rem;
-  --sidebar: #fafafa;
-  --sidebar-foreground: #09090b;
-  --sidebar-primary: #0f91b2;
-  --sidebar-primary-foreground: #eafdfe;
-  --sidebar-accent: #0f91b2;
-  --sidebar-accent-foreground: #eafdfe;
-  --sidebar-border: #e4e4e7;
-  --sidebar-ring: #9f9fa9;
 }
 
 @supports (color: lab(0% 0 0)) {
@@ -712,19 +699,6 @@
     --border: lab(90.6853% 0.399232 -1.45452);
     --input: lab(90.6853% 0.399232 -1.45452);
     --ring: lab(65.6464% 1.53497 -5.42429);
-    --chart-1: lab(85.9167% -34.8569 -20.3673);
-    --chart-2: lab(77.7181% -34.8201 -25.4859);
-    --chart-3: lab(67.1669% -32.6628 -27.3969);
-    --chart-4: lab(55.2408% -23.8119 -26.9094);
-    --chart-5: lab(44.6943% -19.1466 -22.4569);
-    --sidebar: lab(98.26% 0 0);
-    --sidebar-foreground: lab(2.51107% 0.242703 -0.886115);
-    --sidebar-primary: lab(55.2408% -23.8119 -26.9094);
-    --sidebar-primary-foreground: lab(97.8757% -6.28248 -2.77383);
-    --sidebar-accent: lab(55.2408% -23.8119 -26.9094);
-    --sidebar-accent-foreground: lab(97.8757% -6.28248 -2.77383);
-    --sidebar-border: lab(90.6853% 0.399232 -1.45452);
-    --sidebar-ring: lab(65.6464% 1.53497 -5.42429);
   }
 }
 
@@ -747,19 +721,6 @@
   --border: #ffffff1a;
   --input: #ffffff26;
   --ring: #71717b;
-  --chart-1: #62eafc;
-  --chart-2: #32d3ee;
-  --chart-3: #00b5d2;
-  --chart-4: #0f91b2;
-  --chart-5: #18748f;
-  --sidebar: #18181b;
-  --sidebar-foreground: #fafafa;
-  --sidebar-primary: #32d3ee;
-  --sidebar-primary-foreground: #0d3242;
-  --sidebar-accent: #00b5d2;
-  --sidebar-accent-foreground: #0d3242;
-  --sidebar-border: #ffffff1a;
-  --sidebar-ring: #71717b;
 }
 
 @supports (color: lab(0% 0 0)) {
@@ -782,19 +743,6 @@
     --border: lab(100% 0 0 / 0.1);
     --input: lab(100% 0 0 / 0.15);
     --ring: lab(47.8878% 1.65477 -5.77283);
-    --chart-1: lab(85.9167% -34.8569 -20.3673);
-    --chart-2: lab(77.7181% -34.8201 -25.4859);
-    --chart-3: lab(67.1669% -32.6628 -27.3969);
-    --chart-4: lab(55.2408% -23.8119 -26.9094);
-    --chart-5: lab(44.6943% -19.1466 -22.4569);
-    --sidebar: lab(8.30603% 0.618205 -2.16572);
-    --sidebar-foreground: lab(98.26% 0 0);
-    --sidebar-primary: lab(77.7181% -34.8201 -25.4859);
-    --sidebar-primary-foreground: lab(18.9139% -8.81116 -13.9746);
-    --sidebar-accent: lab(67.1669% -32.6628 -27.3969);
-    --sidebar-accent-foreground: lab(18.9139% -8.81116 -13.9746);
-    --sidebar-border: lab(100% 0 0 / 0.1);
-    --sidebar-ring: lab(47.8878% 1.65477 -5.77283);
   }
 }
 

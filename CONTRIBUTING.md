@@ -114,23 +114,9 @@ docs: update README with deployment instructions
 
 ## Adding New Electives
 
-When adding new elective courses:
+Edit the sanitized course-level aggregate in `data/sixth-semester.json` or `data/seventh-semester.json`. Preserve the existing row schema and keep student-level records in `.private-data/`, which is gitignored.
 
-1. Add the course to `data/elective_cutoffs.csv` with the format:
-
-   ```
-   Elective Type,Course Name,Lowest CGPA (Cutoff),Highest CGPA,Number of Students
-   ```
-
-2. Update `lib/electives.ts`:
-   - Add a new entry to the `electiveData` array
-   - Use the `parseCourseName()` helper function
-   - Follow the existing pattern for the entry format
-
-3. Test the changes:
-   - Verify the course appears in the correct category
-   - Check filtering and sorting work correctly
-   - Ensure the dashboard statistics update properly
+Run `bun run encode-data` to regenerate the compact JSON consumed by the dashboard, then `bun run bench:verify` to check source/compact parity and query behavior. Commit the aggregate and regenerated compact files together. Verify filtering, semester selection, and statistics in the dashboard.
 
 ## Testing
 
