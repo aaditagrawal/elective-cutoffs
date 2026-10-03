@@ -84,15 +84,6 @@ export function refGetStats(electives: Elective[]) {
   };
 }
 
-/** Original: a freshly allocated object on every call, once per card per render. */
-export function refGetDifficultyLevel(cutoff: number): { level: string; color: string } {
-  if (cutoff >= 8) return { level: "Very Hard", color: "text-red-400" };
-  if (cutoff >= 7) return { level: "Hard", color: "text-orange-400" };
-  if (cutoff >= 6) return { level: "Medium", color: "text-yellow-400" };
-  if (cutoff >= 5) return { level: "Easy", color: "text-green-400" };
-  return { level: "Very Easy", color: "text-emerald-400" };
-}
-
 const REF_VALID_COURSE_CODES = new Set([
   "AAE 4311",
   "AAE 4313",

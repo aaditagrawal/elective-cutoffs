@@ -85,6 +85,9 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      - name: Verify elective data and query regressions
+        run: bun run bench:verify
+
   build:
     name: Build
     runs-on: ubuntu-latest

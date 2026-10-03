@@ -67,7 +67,6 @@ elective-cutoffs/
 │   └── globals.css        # Global styles
 ├── components/
 │   ├── elective-dashboard.tsx  # Main dashboard component
-│   ├── example.tsx              # Component examples
 │   └── ui/                      # shadcn/ui components
 ├── .private-data/               # Gitignored source workbooks and student-level records
 ├── data/                        # Public course-level aggregate datasets
@@ -78,7 +77,7 @@ elective-cutoffs/
 ├── package.json
 ├── next.config.ts
 ├── tsconfig.json
-└── tailwind.config.ts
+└── ui.stylex.js             # Shared StyleX styles
 ```
 
 ## Data

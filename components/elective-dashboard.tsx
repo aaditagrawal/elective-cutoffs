@@ -57,6 +57,37 @@ function CommandSearchImpl({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousFocus = document.activeElement;
+    const containFocus = (event: FocusEvent) => {
+      if (event.target instanceof Node && !modalRef.current?.contains(event.target))
+        inputRef.current?.focus();
+    };
+    const containTab = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const controls = modalRef.current?.querySelectorAll<HTMLElement>("button, a[href], input");
+      if (!controls?.length) return;
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("focusin", containFocus);
+    document.addEventListener("keydown", containTab);
+    return () => {
+      document.removeEventListener("focusin", containFocus);
+      document.removeEventListener("keydown", containTab);
+      if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus();
+    };
+  }, [isOpen]);
 
   // Recomputed only when the query or dataset changes. Without the memo this
   // re-ran on every render of this component — including every arrow-key press,
@@ -127,7 +158,7 @@ function CommandSearchImpl({
   if (!isOpen) return null;
 
   return (
-    <div className={classNames.electiveDashboard24} role="presentation">
+    <div ref={modalRef} className={classNames.electiveDashboard24} role="presentation">
       {/* Backdrop */}
       <button
         type="button"
@@ -172,60 +203,60 @@ function CommandSearchImpl({
                 const difficulty = getDifficultyLevel(elective.lowestCGPA);
                 const courseUrl = getCoursePageUrl(elective.code);
                 return (
-                  <button
-                    key={`${elective.code}-${elective.type}`}
-                    data-index={idx}
-                    onClick={() => {
-                      onSelect(elective);
-                      onClose();
-                    }}
-                    className={`${classNames.electiveDashboard37} ${
-                      idx === selectedIndex
-                        ? classNames.electiveDashboard35
-                        : classNames.electiveDashboard36
-                    }`}
-                  >
-                    <div className={classNames.electiveDashboard38}>
-                      <GraduationCap className={classNames.electiveDashboard39} />
-                    </div>
-                    <div className={classNames.electiveDashboard40}>
-                      <div className={classNames.electiveDashboard41}>
-                        <span className={classNames.electiveDashboard42}>{elective.code}</span>
-                        {courseUrl ? (
-                          <ExternalLink className={classNames.electiveDashboard43} />
-                        ) : (
-                          <Info className={classNames.electiveDashboard44} />
-                        )}
-                        <span className={classNames.electiveDashboard45}>{elective.type}</span>
-                      </div>
-                      {courseUrl ? (
-                        <a
-                          href={courseUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className={classNames.electiveDashboard46}
-                        >
-                          {elective.name}
-                        </a>
-                      ) : (
-                        <div className={classNames.electiveDashboard47}>{elective.name}</div>
-                      )}
-                      <div className={classNames.electiveDashboard48}>
-                        {elective.department} • Min CGPA:{" "}
-                        <span
-                          className={`${classNames.electiveDashboard49} ${difficultyClassNames[difficulty.color]}`}
-                        >
-                          {elective.lowestCGPA.toFixed(2)}
-                        </span>
-                      </div>
-                    </div>
-                    <div
-                      className={`${classNames.electiveDashboard50} ${difficultyClassNames[difficulty.color]}`}
+                  <div key={`${elective.code}-${elective.type}`}>
+                    <button
+                      data-index={idx}
+                      onClick={() => {
+                        onSelect(elective);
+                        onClose();
+                      }}
+                      className={`${classNames.electiveDashboard37} ${
+                        idx === selectedIndex
+                          ? classNames.electiveDashboard35
+                          : classNames.electiveDashboard36
+                      }`}
                     >
-                      {difficulty.level}
-                    </div>
-                  </button>
+                      <div className={classNames.electiveDashboard38}>
+                        <GraduationCap className={classNames.electiveDashboard39} />
+                      </div>
+                      <div className={classNames.electiveDashboard40}>
+                        <div className={classNames.electiveDashboard41}>
+                          <span className={classNames.electiveDashboard42}>{elective.code}</span>
+                          {courseUrl ? (
+                            <ExternalLink className={classNames.electiveDashboard43} />
+                          ) : (
+                            <Info className={classNames.electiveDashboard44} />
+                          )}
+                          <span className={classNames.electiveDashboard45}>{elective.type}</span>
+                        </div>
+                        <div className={classNames.electiveDashboard47}>{elective.name}</div>
+                        <div className={classNames.electiveDashboard48}>
+                          {elective.department} • Min CGPA:{" "}
+                          <span
+                            className={`${classNames.electiveDashboard49} ${difficultyClassNames[difficulty.color]}`}
+                          >
+                            {elective.lowestCGPA.toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                      <div
+                        className={`${classNames.electiveDashboard50} ${difficultyClassNames[difficulty.color]}`}
+                      >
+                        {difficulty.level}
+                      </div>
+                    </button>
+                    {courseUrl && (
+                      <a
+                        href={courseUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={classNames.electiveDashboard46}
+                        aria-label={`Course details for ${elective.name}`}
+                      >
+                        Course details
+                      </a>
+                    )}
+                  </div>
                 );
               })
             )}
