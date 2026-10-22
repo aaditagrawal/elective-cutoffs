@@ -24,7 +24,7 @@ A web application for browsing and filtering elective course cutoffs for MIT Man
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) (recommended) or Node.js 18+
+- [Bun](https://bun.sh/) and Node.js 24.22.1, pinned in `.node-version`
 - A modern web browser
 
 ### Installation
