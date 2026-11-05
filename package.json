@@ -15,13 +15,12 @@
     "bench:render": "bun run bench/render.ts",
     "bench:payload": "bun run bench/payload.ts",
     "bench:verify": "bun run bench/verify.ts",
+    "bench:ui": "bun build bench/ui.tsx --target=node --packages=external --outfile=node_modules/.cache/ui-bench.mjs >&2 && NODE_ENV=production node node_modules/.cache/ui-bench.mjs",
+    "test:ui": "bun test tests",
     "typecheck": "tsrs --noEmit",
     "test:security": "node scripts/security-braces.mjs"
   },
   "dependencies": {
-    "@base-ui/react": "^1.9.0",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
     "lucide-react": "^1.60.0",
     "next": "16.4.2",
     "radix-ui": "^1.8.1",
@@ -47,11 +46,11 @@
     "sharp",
     "unrs-resolver"
   ],
+  "patchedDependencies": {
+    "braces@3.0.3": "patches/braces@3.0.3.patch"
+  },
   "trustedDependencies": [
     "sharp",
     "unrs-resolver"
-  ],
-  "patchedDependencies": {
-    "braces@3.0.3": "patches/braces@3.0.3.patch"
-  }
+  ]
 }
