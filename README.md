@@ -17,7 +17,7 @@ A web application for browsing and filtering elective course cutoffs for MIT Man
 - **Framework**: Next.js 16
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **UI Components**: shadcn/ui (built on Radix UI and Base UI)
+- **UI Components**: shadcn/ui (built on Radix UI)
 - **Package Manager**: Bun
 
 ## Getting Started
@@ -67,7 +67,6 @@ elective-cutoffs/
 │   └── globals.css        # Global styles
 ├── components/
 │   ├── elective-dashboard.tsx  # Main dashboard component
-│   ├── example.tsx              # Component examples
 │   └── ui/                      # shadcn/ui components
 ├── .private-data/               # Gitignored source workbooks and student-level records
 ├── data/                        # Public course-level aggregate datasets
