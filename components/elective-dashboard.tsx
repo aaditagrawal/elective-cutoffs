@@ -1,10 +1,22 @@
 "use client";
 
-import { classNames, difficultyClassNames } from "@/ui.stylex";
+import { classNames } from "@/ui.stylex";
+import { ProgressiveBlur } from "@/components/progressive-blur";
+import type { DashboardChrome } from "@/components/dashboard-chrome";
+import { useHighlightScroll } from "@/components/highlight-scroll";
 
-import { useState, useEffect, useRef, useCallback, useMemo, useDeferredValue, memo } from "react";
+import {
+  useEffect,
+  useRef,
+  useCallback,
+  useState,
+  useDeferredValue,
+  useReducer,
+  memo,
+  useLayoutEffect,
+  type ElementType,
+} from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -13,283 +25,31 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import type { SemesterId } from "@/lib/electives";
 import {
-  semesterDatasets,
-  filterElectives,
-  getElectiveTypes,
-  getDepartments,
-  getStats,
-  getDifficultyLevel,
-  getCoursePageUrl,
-  searchTopK,
-  type SemesterId,
-  type Elective,
-} from "@/lib/electives";
+  browseReducer,
+  calendarSemester,
+  electiveElementId,
+  highlightScrollKey,
+  initialBrowseState,
+  resultsFreshness,
+  semesterForInstant,
+  showsServerList,
+  type BrowseSortField,
+  type SemesterOwner,
+} from "@/lib/ui-state";
 import {
   Search,
-  GraduationCap,
   TrendingUp,
   TrendingDown,
   Building2,
-  ExternalLink,
-  Info,
   BookOpen,
-  X,
   Command,
+  Loader2,
 } from "lucide-react";
 
-/** How many results the command palette shows. */
-const PALETTE_RESULTS = 8;
+type BrowseModule = typeof import("./browse-view");
 
-// Command Search Modal
-function CommandSearchImpl({
-  isOpen,
-  onClose,
-  onSelect,
-  electives,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onSelect: (elective: Elective) => void;
-  electives: Elective[];
-}) {
-  const [query, setQuery] = useState("");
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const previousFocus = document.activeElement;
-    const containFocus = (event: FocusEvent) => {
-      if (event.target instanceof Node && !modalRef.current?.contains(event.target))
-        inputRef.current?.focus();
-    };
-    const containTab = (event: KeyboardEvent) => {
-      if (event.key !== "Tab") return;
-      const controls = modalRef.current?.querySelectorAll<HTMLElement>("button, a[href], input");
-      if (!controls?.length) return;
-      const first = controls[0];
-      const last = controls[controls.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("focusin", containFocus);
-    document.addEventListener("keydown", containTab);
-    return () => {
-      document.removeEventListener("focusin", containFocus);
-      document.removeEventListener("keydown", containTab);
-      if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus();
-    };
-  }, [isOpen]);
-
-  // Recomputed only when the query or dataset changes. Without the memo this
-  // re-ran on every render of this component — including every arrow-key press,
-  // which only moves the selection highlight and cannot change the results.
-  const results = useMemo(() => searchTopK(electives, query, PALETTE_RESULTS), [electives, query]);
-
-  useEffect(() => {
-    if (isOpen) {
-      inputRef.current?.focus();
-      setQuery("");
-      setSelectedIndex(0);
-    }
-  }, [isOpen]);
-
-  // Global escape key handler
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
-
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [query]);
-
-  // Scroll selected item into view
-  useEffect(() => {
-    if (listRef.current) {
-      const selectedEl = listRef.current.querySelector(`[data-index="${selectedIndex}"]`);
-      selectedEl?.scrollIntoView({ block: "nearest" });
-    }
-  }, [selectedIndex]);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      switch (e.key) {
-        case "ArrowDown":
-          e.preventDefault();
-          setSelectedIndex((prev) => Math.min(prev + 1, results.length - 1));
-          break;
-        case "ArrowUp":
-          e.preventDefault();
-          setSelectedIndex((prev) => Math.max(prev - 1, 0));
-          break;
-        case "Enter":
-          e.preventDefault();
-          if (results[selectedIndex]) {
-            onSelect(results[selectedIndex]);
-            onClose();
-          }
-          break;
-        case "Escape":
-          onClose();
-          break;
-      }
-    },
-    [results, selectedIndex, onSelect, onClose],
-  );
-
-  if (!isOpen) return null;
-
-  return (
-    <div ref={modalRef} className={classNames.electiveDashboard24} role="presentation">
-      {/* Backdrop */}
-      <button
-        type="button"
-        aria-label="Close search"
-        className={classNames.electiveDashboard25}
-        onClick={onClose}
-      />
-
-      {/* Modal */}
-      <div
-        className={classNames.electiveDashboard26}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Search electives"
-      >
-        <div className={classNames.electiveDashboard27}>
-          {/* Search Input */}
-          <div className={classNames.electiveDashboard28}>
-            <Search className={classNames.electiveDashboard29} />
-            <input
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Search electives..."
-              className={classNames.electiveDashboard30}
-            />
-            <button onClick={onClose} className={classNames.electiveDashboard31}>
-              <X className={classNames.electiveDashboard32} />
-            </button>
-          </div>
-
-          {/* Results */}
-          <div ref={listRef} className={classNames.electiveDashboard33}>
-            {results.length === 0 ? (
-              <div className={classNames.electiveDashboard34}>
-                No electives found for &ldquo;{query}&rdquo;
-              </div>
-            ) : (
-              results.map((elective, idx) => {
-                const difficulty = getDifficultyLevel(elective.lowestCGPA);
-                const courseUrl = getCoursePageUrl(elective.code);
-                return (
-                  <div key={`${elective.code}-${elective.type}`}>
-                    <button
-                      data-index={idx}
-                      onClick={() => {
-                        onSelect(elective);
-                        onClose();
-                      }}
-                      className={`${classNames.electiveDashboard37} ${
-                        idx === selectedIndex
-                          ? classNames.electiveDashboard35
-                          : classNames.electiveDashboard36
-                      }`}
-                    >
-                      <div className={classNames.electiveDashboard38}>
-                        <GraduationCap className={classNames.electiveDashboard39} />
-                      </div>
-                      <div className={classNames.electiveDashboard40}>
-                        <div className={classNames.electiveDashboard41}>
-                          <span className={classNames.electiveDashboard42}>{elective.code}</span>
-                          {courseUrl ? (
-                            <ExternalLink className={classNames.electiveDashboard43} />
-                          ) : (
-                            <Info className={classNames.electiveDashboard44} />
-                          )}
-                          <span className={classNames.electiveDashboard45}>{elective.type}</span>
-                        </div>
-                        <div className={classNames.electiveDashboard47}>{elective.name}</div>
-                        <div className={classNames.electiveDashboard48}>
-                          {elective.department} • Min CGPA:{" "}
-                          <span
-                            className={`${classNames.electiveDashboard49} ${difficultyClassNames[difficulty.color]}`}
-                          >
-                            {elective.lowestCGPA.toFixed(2)}
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        className={`${classNames.electiveDashboard50} ${difficultyClassNames[difficulty.color]}`}
-                      >
-                        {difficulty.level}
-                      </div>
-                    </button>
-                    {courseUrl && (
-                      <a
-                        href={courseUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={classNames.electiveDashboard46}
-                        aria-label={`Course details for ${elective.name}`}
-                      >
-                        Course details
-                      </a>
-                    )}
-                  </div>
-                );
-              })
-            )}
-          </div>
-
-          {/* Footer */}
-          <div className={classNames.electiveDashboard51}>
-            <span className={classNames.electiveDashboard52}>
-              <kbd className={classNames.electiveDashboard53}>↑</kbd>
-              <kbd className={classNames.electiveDashboard53}>↓</kbd>
-              Navigate
-            </span>
-            <span className={classNames.electiveDashboard52}>
-              <kbd className={classNames.electiveDashboard53}>↵</kbd>
-              Select
-            </span>
-            <span className={classNames.electiveDashboard52}>
-              <kbd className={classNames.electiveDashboard53}>esc</kbd>
-              Close
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Memoized: the dashboard re-renders on every keystroke, but the palette's props
-// (isOpen, the two callbacks, the dataset) change only when it is actually opened
-// or the semester is switched.
-const CommandSearch = memo(CommandSearchImpl);
-
-// Stats Card Component
 function StatCardImpl({
   title,
   value,
@@ -299,7 +59,7 @@ function StatCardImpl({
   title: string;
   value: string | number;
   subtitle?: string;
-  icon: React.ElementType;
+  icon: ElementType;
 }) {
   return (
     <Card className={classNames.electiveDashboard54}>
@@ -309,255 +69,141 @@ function StatCardImpl({
       </CardHeader>
       <CardContent>
         <div className={classNames.electiveDashboard57}>{value}</div>
-        {subtitle && <p className={classNames.electiveDashboard58}>{subtitle}</p>}
+        {subtitle ? <p className={classNames.electiveDashboard58}>{subtitle}</p> : null}
       </CardContent>
     </Card>
   );
 }
 
-// Memoized: stat values depend only on the dataset, so these should not re-render
-// when the search box or a filter changes.
 const StatCard = memo(StatCardImpl);
 
-// Elective Card Component
-function ElectiveCardImpl({
-  elective,
-  isHighlighted,
-}: {
-  elective: Elective;
-  isHighlighted?: boolean;
-}) {
-  const difficulty = getDifficultyLevel(elective.lowestCGPA);
-  const courseUrl = getCoursePageUrl(elective.code);
-
-  return (
-    <Card
-      id={`elective-${elective.code}-${elective.type}`}
-      className={`${classNames.electiveDashboard60} ${
-        isHighlighted ? classNames.electiveDashboard59 : ""
-      }`}
-    >
-      <CardHeader className={classNames.electiveDashboard61}>
-        <div className={classNames.electiveDashboard62}>
-          <Badge variant="secondary" className={classNames.electiveDashboard63}>
-            {elective.type}
-          </Badge>
-          {courseUrl ? (
-            <a
-              href={courseUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={classNames.electiveDashboard64}
-            >
-              <Badge variant="outline" className={classNames.electiveDashboard65}>
-                {elective.code}
-                <ExternalLink className={classNames.electiveDashboard66} />
-              </Badge>
-            </a>
-          ) : (
-            <Badge variant="outline" className={classNames.electiveDashboard67}>
-              {elective.code}
-              <Info className={classNames.electiveDashboard66} />
-            </Badge>
-          )}
-        </div>
-        {courseUrl ? (
-          <a
-            href={courseUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={classNames.electiveDashboard68}
-          >
-            <CardTitle className={classNames.electiveDashboard69}>{elective.name}</CardTitle>
-          </a>
-        ) : (
-          <CardTitle className={classNames.electiveDashboard70}>{elective.name}</CardTitle>
-        )}
-      </CardHeader>
-      <CardContent>
-        <div className={classNames.electiveDashboard71}>
-          <div className={classNames.electiveDashboard72}>
-            <div className={classNames.electiveDashboard73}>Min CGPA</div>
-            <div
-              className={`${classNames.electiveDashboard74} ${difficultyClassNames[difficulty.color]}`}
-            >
-              {elective.lowestCGPA.toFixed(2)}
-            </div>
-          </div>
-          <div className={classNames.electiveDashboard72}>
-            <div className={classNames.electiveDashboard73}>Max CGPA</div>
-            <div className={classNames.electiveDashboard75}>{elective.highestCGPA.toFixed(2)}</div>
-          </div>
-          <div className={classNames.electiveDashboard72}>
-            <div className={classNames.electiveDashboard73}>Students</div>
-            <div className={classNames.electiveDashboard75}>{elective.students}</div>
-          </div>
-        </div>
-        <div className={classNames.electiveDashboard76}>
-          <div className={classNames.electiveDashboard77}>
-            <span className={classNames.electiveDashboard78}>Allocation Difficulty</span>
-            <span
-              className={`${classNames.electiveDashboard79} ${difficultyClassNames[difficulty.color]}`}
-            >
-              {difficulty.level}
-            </span>
-          </div>
-          {/* CGPA Range Bar */}
-          <div className={classNames.electiveDashboard80}>
-            <div
-              className={classNames.electiveDashboard81}
-              style={{
-                marginLeft: `${(elective.lowestCGPA / 10) * 100}%`,
-                width: `${((elective.highestCGPA - elective.lowestCGPA) / 10) * 100}%`,
-              }}
-            />
-          </div>
-          <div className={classNames.electiveDashboard82}>
-            <span>0</span>
-            <span>5</span>
-            <span>10</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
+function loadBrowse(): Promise<BrowseModule> {
+  return import("./browse-view");
 }
 
-/**
- * Memoized, and the reason the whole grid stops re-rendering on every keystroke.
- *
- * `elective` is a stable object straight out of the dataset and `isHighlighted`
- * is a boolean, so the default shallow comparison is exactly right: a card only
- * re-renders when it is the one being highlighted. This relies on
- * `getDifficultyLevel` returning frozen singletons rather than a fresh object
- * per call, which the query-engine change established.
- */
-const ElectiveCard = memo(ElectiveCardImpl);
-
-export default function ElectiveDashboard() {
-  const [semester, setSemester] = useState<SemesterId>("sixth");
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [deptFilter, setDeptFilter] = useState("all");
-  const [sortBy, setSortBy] = useState<"name" | "cutoff" | "students">("cutoff");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [commandOpen, setCommandOpen] = useState(false);
-  const [highlightedElective, setHighlightedElective] = useState<string | null>(null);
-  // Which highlight id we have already scrolled to, so the effect below
-  // scrolls once per selection rather than on every grid update.
-  const scrolledForRef = useRef<string | null>(null);
+export default function ElectiveDashboard({ initialChrome }: { initialChrome: DashboardChrome }) {
+  const [state, dispatch] = useReducer(browseReducer, initialBrowseState);
+  const { semester, search, typeFilter, deptFilter, sortField, sortOrder, highlight, commandOpen } =
+    state;
+  const semesterOwnerRef = useRef<SemesterOwner>("fallback");
+  const [browse, setBrowse] = useState<BrowseModule | null>(null);
 
   useEffect(() => {
-    // Resolve on page load, not during Next.js's static build. Use the academic
-    // calendar's timezone so the default changes at midnight in India.
-    const month = Number(
-      new Intl.DateTimeFormat("en-US", { month: "numeric", timeZone: "Asia/Kolkata" }).format(
-        new Date(),
-      ),
+    const next = calendarSemester(
+      semesterOwnerRef.current,
+      initialBrowseState.semester,
+      semesterForInstant(new Date()),
     );
-    setSemester(month >= 9 || month <= 2 ? "sixth" : "seventh");
+    if (next !== null) dispatch({ type: "apply-calendar", semester: next });
   }, []);
 
-  const dataset = semesterDatasets[semester];
-  const electiveData = dataset.electives;
-  const electiveTypes = useMemo(() => getElectiveTypes(electiveData), [electiveData]);
-  const stats = useMemo(() => getStats(electiveData), [electiveData]);
-  const departments = useMemo(() => getDepartments(electiveData), [electiveData]);
-
-  // The input stays on `search` so typing is never held up; the grid renders
-  // from the deferred value, letting React keep the keystroke responsive and
-  // drop intermediate list renders when typing outpaces rendering.
-  const deferredSearch = useDeferredValue(search);
-
-  const filteredElectives = useMemo(() => {
-    return filterElectives(electiveData, typeFilter, deptFilter, deferredSearch, sortBy, sortOrder);
-  }, [electiveData, typeFilter, deptFilter, deferredSearch, sortBy, sortOrder]);
-
-  // Keyboard shortcut for Ctrl+K (toggle)
+  // The list HTML is already on the page. Pull the query engine in after first
+  // paint so a filter, a semester change, or the command palette does not wait
+  // on a cold download.
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setCommandOpen((prev) => !prev);
+    let cancel = false;
+    const start = () => {
+      void loadBrowse().then((mod) => {
+        if (!cancel) setBrowse(() => mod);
+      });
+    };
+    const idle = window.requestIdleCallback;
+    if (idle) {
+      const id = idle(start);
+      return () => {
+        cancel = true;
+        window.cancelIdleCallback(id);
+      };
+    }
+    const id = window.setTimeout(start, 300);
+    return () => {
+      cancel = true;
+      window.clearTimeout(id);
+    };
+  }, []);
+
+  const deferredSearch = useDeferredValue(search);
+  const freshness = resultsFreshness(search, deferredSearch);
+  const serverList = showsServerList(state);
+  const waiting = !serverList && browse === null;
+
+  useEffect(() => {
+    if (browse !== null || (serverList && !commandOpen)) return;
+    void loadBrowse().then((mod) => setBrowse(() => mod));
+  }, [browse, commandOpen, serverList]);
+  const chrome = !serverList && browse ? browse.chromeFor(semester) : initialChrome;
+
+  const clearHighlight = useCallback(() => dispatch({ type: "clear-highlight" }), []);
+  const highlightKey = highlight === null ? null : highlightScrollKey(highlight);
+  const highlightElementId =
+    highlight === null ? null : electiveElementId(highlight.code, highlight.electiveType);
+  useHighlightScroll(
+    highlightKey,
+    highlightElementId,
+    serverList && highlight !== null,
+    serverList ? 1 : 0,
+    clearHighlight,
+  );
+
+  useEffect(() => {
+    if (!serverList || highlightElementId === null) return;
+    const element = document.getElementById(highlightElementId);
+    if (!element) return;
+    const tokens = classNames.electiveDashboard59.split(" ").filter((token) => token !== "");
+    element.classList.add(...tokens);
+    return () => element.classList.remove(...tokens);
+  }, [serverList, highlightElementId]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        event.preventDefault();
+        dispatch({ type: "toggle-command" });
       }
     };
-
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const handleSelectElective = useCallback((elective: Elective) => {
-    // Clear filters so the selected elective is in the grid
-    setSearch("");
-    setTypeFilter("all");
-    setDeptFilter("all");
-
-    // Allow re-selecting the same elective to scroll to it again.
-    scrolledForRef.current = null;
-    setHighlightedElective(`elective-${elective.code}-${elective.type}`);
-  }, []);
-
-  /**
-   * Scroll to the highlighted card once the grid has actually rendered it.
-   *
-   * This used to be a fixed 100ms `setTimeout` inside the selection handler,
-   * which is a race: the grid renders from `deferredSearch`, so after the
-   * handler clears `search` React may still paint one frame with the old
-   * query — and on a busy or slow browser more than one. If the card is not
-   * in the DOM when the timer fires, the scroll silently does nothing.
-   *
-   * Keying the effect on `filteredElectives` removes the guess. If the card
-   * isn't there yet, the effect simply re-runs when the deferred grid catches
-   * up, and the ref keeps it to one scroll per selection.
-   */
-  useEffect(() => {
-    if (!highlightedElective) return;
-
-    if (scrolledForRef.current !== highlightedElective) {
-      const element = document.getElementById(highlightedElective);
-      if (!element) return; // not rendered yet — re-runs when the grid updates
-      scrolledForRef.current = highlightedElective;
-      element.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-
-    const timer = setTimeout(() => setHighlightedElective(null), 2000);
-    return () => clearTimeout(timer);
-  }, [highlightedElective, filteredElectives]);
-
-  // Stable identity so the memoized palette isn't invalidated on every render.
-  const handleCloseCommand = useCallback(() => setCommandOpen(false), []);
-
+  const handleCloseCommand = useCallback(() => dispatch({ type: "close-command" }), []);
   const handleSemesterChange = useCallback((nextSemester: SemesterId) => {
-    setSemester(nextSemester);
-    setSearch("");
-    setTypeFilter("all");
-    setDeptFilter("all");
-    setHighlightedElective(null);
+    semesterOwnerRef.current = "user";
+    dispatch({ type: "choose-semester", semester: nextSemester });
   }, []);
-
-  // Left un-memoized on purpose: it depends on `sortBy`, so a `useCallback`
-  // would be invalidated exactly when it is used, and the sort buttons are
-  // plain DOM elements that gain nothing from a stable callback identity.
-  const toggleSort = (newSortBy: typeof sortBy) => {
-    if (sortBy === newSortBy) {
-      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
-    } else {
-      setSortBy(newSortBy);
-      setSortOrder("asc");
-    }
+  const clearFilters = useCallback(() => dispatch({ type: "clear-filters" }), []);
+  const ensureBrowse = () => {
+    if (browse === null) void loadBrowse().then((mod) => setBrowse(() => mod));
   };
 
-  return (
-    <div className={classNames.electiveDashboard83}>
-      {/* Command Search Modal */}
-      <CommandSearch
-        isOpen={commandOpen}
-        onClose={handleCloseCommand}
-        onSelect={handleSelectElective}
-        electives={electiveData}
-      />
+  const toggleSort = (field: BrowseSortField) => {
+    dispatch({ type: "toggle-sort", field });
+  };
 
-      {/* Hero Section */}
+  const filtersActive = search !== "" || typeFilter !== "all" || deptFilter !== "all";
+  const LiveResults = browse?.LiveResults;
+  const CommandOverlay = browse?.CommandOverlay;
+  const showLive = !serverList && LiveResults !== undefined;
+
+  useLayoutEffect(() => {
+    document.documentElement.dataset.results = showLive ? "live" : "server";
+  }, [showLive]);
+
+  return (
+    <>
+      {commandOpen && CommandOverlay ? (
+        <CommandOverlay
+          semester={semester}
+          onClose={handleCloseCommand}
+          onSelect={(elective) => {
+            dispatch({
+              type: "select-elective",
+              code: elective.code,
+              electiveType: elective.type,
+            });
+          }}
+        />
+      ) : null}
+
       <div className={classNames.electiveDashboard84}>
         <div className={classNames.electiveDashboard85} />
         <div className={classNames.electiveDashboard86}>
@@ -568,11 +214,8 @@ export default function ElectiveDashboard() {
                 ? "Explore VI semester CGPA cutoffs for Open Electives and Program Electives I–II."
                 : "Explore VII semester CGPA cutoffs for Open Elective III and Program Electives III–VII."}
             </p>
-            <p className={classNames.electiveDashboard90}>
-              Academic Year {dataset.metadata.academicYear}
-            </p>
+            <p className={classNames.electiveDashboard90}>Academic Year {chrome.academicYear}</p>
 
-            {/* Semester Toggle */}
             <div className={classNames.electiveDashboard91}>
               {(
                 [
@@ -582,6 +225,7 @@ export default function ElectiveDashboard() {
               ).map(([value, label]) => (
                 <button
                   key={value}
+                  onPointerEnter={ensureBrowse}
                   onClick={() => handleSemesterChange(value)}
                   aria-pressed={semester === value}
                   className={`${classNames.electiveDashboard94} ${
@@ -595,8 +239,11 @@ export default function ElectiveDashboard() {
               ))}
             </div>
 
-            {/* Quick Search Button */}
-            <button onClick={() => setCommandOpen(true)} className={classNames.electiveDashboard95}>
+            <button
+              onPointerEnter={ensureBrowse}
+              onClick={() => dispatch({ type: "open-command" })}
+              className={classNames.electiveDashboard95}
+            >
               <Search className={classNames.electiveDashboard96} />
               <span>Search...</span>
               <kbd className={classNames.electiveDashboard97}>
@@ -605,33 +252,32 @@ export default function ElectiveDashboard() {
             </button>
           </div>
 
-          {/* Stats Grid */}
           <div className={classNames.electiveDashboard99}>
             <StatCard
               title="Total Electives"
-              value={stats.totalElectives}
+              value={waiting ? "…" : chrome.totalElectives}
               subtitle={
                 semester === "sixth"
-                  ? `${stats.oeCount} OE • ${stats.programElectiveCount} PE I–II`
-                  : `${stats.oeCount} OE III • ${stats.programElectiveCount} PE III–VII`
+                  ? `${chrome.oeCount} OE • ${chrome.programElectiveCount} PE I–II`
+                  : `${chrome.oeCount} OE III • ${chrome.programElectiveCount} PE III–VII`
               }
               icon={BookOpen}
             />
             <StatCard
               title="Departments"
-              value={stats.departments}
+              value={waiting ? "…" : chrome.departmentCount}
               subtitle="Offering electives"
               icon={Building2}
             />
             <StatCard
               title="Lowest Cutoff"
-              value={stats.lowestCutoff.toFixed(2)}
+              value={waiting ? "…" : chrome.lowestCutoff.toFixed(2)}
               subtitle="Easiest to get"
               icon={TrendingDown}
             />
             <StatCard
               title="Highest Cutoff"
-              value={stats.highestCutoff.toFixed(2)}
+              value={waiting ? "…" : chrome.highestCutoff.toFixed(2)}
               subtitle="Most competitive"
               icon={TrendingUp}
             />
@@ -639,43 +285,45 @@ export default function ElectiveDashboard() {
         </div>
       </div>
 
-      {/* Filters Section */}
-      <div className={classNames.electiveDashboard100}>
+      <div className={classNames.electiveDashboard100} onPointerEnter={ensureBrowse}>
+        <ProgressiveBlur feather="long" />
         <div className={classNames.electiveDashboard101}>
           <div className={classNames.electiveDashboard102}>
-            {/* Search */}
             <div className={classNames.electiveDashboard103}>
               <Input
                 placeholder="Search electives..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(event) => dispatch({ type: "set-search", query: event.target.value })}
                 className={classNames.electiveDashboard104}
               />
             </div>
-
-            {/* Type and Department Filters - side by side on mobile */}
             <div className={classNames.electiveDashboard105}>
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <Select
+                value={typeFilter}
+                onValueChange={(value) => dispatch({ type: "set-type", value })}
+              >
                 <SelectTrigger className={classNames.electiveDashboard106}>
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
-                  {electiveTypes.map((type) => (
+                  {chrome.types.map((type) => (
                     <SelectItem key={type} value={type}>
                       {type}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-
-              <Select value={deptFilter} onValueChange={setDeptFilter}>
+              <Select
+                value={deptFilter}
+                onValueChange={(value) => dispatch({ type: "set-department", value })}
+              >
                 <SelectTrigger className={classNames.electiveDashboard106}>
                   <SelectValue placeholder="Department" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Depts</SelectItem>
-                  {departments.map((dept) => (
+                  {chrome.departments.map((dept) => (
                     <SelectItem key={dept} value={dept}>
                       {dept}
                     </SelectItem>
@@ -683,119 +331,63 @@ export default function ElectiveDashboard() {
                 </SelectContent>
               </Select>
             </div>
-
-            {/* Sort Buttons */}
             <div className={classNames.electiveDashboard107}>
               <button
                 onClick={() => toggleSort("cutoff")}
                 className={`${classNames.electiveDashboard110} ${
-                  sortBy === "cutoff"
+                  sortField === "cutoff"
                     ? classNames.electiveDashboard108
                     : classNames.electiveDashboard109
                 }`}
               >
-                Cutoff {sortBy === "cutoff" && (sortOrder === "asc" ? "↑" : "↓")}
+                Cutoff {sortField === "cutoff" && (sortOrder === "asc" ? "↑" : "↓")}
               </button>
               <button
                 onClick={() => toggleSort("students")}
                 className={`${classNames.electiveDashboard110} ${
-                  sortBy === "students"
+                  sortField === "students"
                     ? classNames.electiveDashboard108
                     : classNames.electiveDashboard109
                 }`}
               >
-                Students {sortBy === "students" && (sortOrder === "asc" ? "↑" : "↓")}
+                Students {sortField === "students" && (sortOrder === "asc" ? "↑" : "↓")}
               </button>
               <button
                 onClick={() => toggleSort("name")}
                 className={`${classNames.electiveDashboard110} ${
-                  sortBy === "name"
+                  sortField === "name"
                     ? classNames.electiveDashboard108
                     : classNames.electiveDashboard109
                 }`}
               >
-                Name {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
+                Name {sortField === "name" && (sortOrder === "asc" ? "↑" : "↓")}
               </button>
+              {waiting ? (
+                <Loader2
+                  className={`${classNames.electiveDashboard32} cutoff-spin`}
+                  aria-hidden="true"
+                />
+              ) : null}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Results */}
-      <div className={classNames.electiveDashboard111}>
-        <div className={classNames.electiveDashboard112}>
-          <h2 className={classNames.electiveDashboard113}>
-            {filteredElectives.length} Elective{filteredElectives.length !== 1 ? "s" : ""} Found
-          </h2>
-          {search || typeFilter !== "all" || deptFilter !== "all" ? (
-            <button
-              onClick={() => {
-                setSearch("");
-                setTypeFilter("all");
-                setDeptFilter("all");
-              }}
-              className={classNames.electiveDashboard114}
-            >
-              Clear Filters
-            </button>
-          ) : null}
-        </div>
-
-        {/* Electives Grid */}
-        <div className={classNames.electiveDashboard115}>
-          {/*
-           * The key deliberately excludes the array index. With it, every
-           * card's key changed whenever filtering or sorting moved it, so
-           * React unmounted and remounted the whole grid instead of
-           * reordering it — which also defeats the memo above.
-           * `bench/verify.ts` asserts (code, type) is unique per dataset.
-           */}
-          {filteredElectives.map((elective) => (
-            <ElectiveCard
-              key={`${elective.code}-${elective.type}`}
-              elective={elective}
-              isHighlighted={highlightedElective === `elective-${elective.code}-${elective.type}`}
-            />
-          ))}
-        </div>
-
-        {filteredElectives.length === 0 && (
-          <div className={classNames.electiveDashboard116}>
-            <GraduationCap className={classNames.electiveDashboard117} />
-            <h3 className={classNames.electiveDashboard118}>No electives found</h3>
-            <p className={classNames.electiveDashboard78}>Try adjusting your search or filters</p>
-          </div>
-        )}
-      </div>
-
-      {/* Footer */}
-      <footer className={classNames.electiveDashboard119}>
-        <p>
-          Data based on actual {dataset.metadata.semester} semester allocations for Academic Year{" "}
-          {dataset.metadata.academicYear}. Cutoffs may vary each semester.
-        </p>
-        <p className={classNames.electiveDashboard120}>Use this as a reference, not a guarantee.</p>
-        <p className={classNames.electiveDashboard121}>
-          Made by <span className={classNames.home8}>Aditya Mathpal</span>,{" "}
-          <a
-            href="https://lverma.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={classNames.layout14}
-          >
-            Lakshit Verma
-          </a>
-          , and{" "}
-          <a
-            href="https://aadit.cc"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={classNames.layout14}
-          >
-            Aadit Agrawal
-          </a>
-        </p>
-      </footer>
-    </div>
+      {showLive && LiveResults ? (
+        <LiveResults
+          semester={semester}
+          search={deferredSearch}
+          typeFilter={typeFilter}
+          deptFilter={deptFilter}
+          sortField={sortField}
+          sortOrder={sortOrder}
+          highlight={highlight}
+          pending={freshness === "pending"}
+          filtersActive={filtersActive}
+          onClearFilters={clearFilters}
+          onClearHighlight={clearHighlight}
+        />
+      ) : null}
+    </>
   );
 }
