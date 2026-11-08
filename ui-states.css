@@ -895,9 +895,10 @@
 
 .cutoff-select232:where([data-state="open"]),
 .cutoff-select232:where([data-open]:not([data-open="false"])) {
-  animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
-    var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
-    var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+  animation: enter var(--tw-animation-duration, var(--tw-duration, 0.15s))
+    var(--tw-ease, cubic-bezier(0.2, 0, 0, 1)) var(--tw-animation-delay, 0s)
+    var(--tw-animation-iteration-count, 1) var(--tw-animation-direction, normal)
+    var(--tw-animation-fill-mode, none);
 }
 
 .cutoff-select232:where([data-state="open"]),
@@ -912,9 +913,10 @@
 
 .cutoff-select232:where([data-state="closed"]),
 .cutoff-select232:where([data-closed]:not([data-closed="false"])) {
-  animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s)) var(--tw-ease, ease)
-    var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1)
-    var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+  animation: exit var(--tw-animation-duration, var(--tw-duration, 0.15s))
+    var(--tw-ease, cubic-bezier(0.2, 0, 0, 1)) var(--tw-animation-delay, 0s)
+    var(--tw-animation-iteration-count, 1) var(--tw-animation-direction, normal)
+    var(--tw-animation-fill-mode, none);
 }
 
 .cutoff-select232:where([data-state="closed"]),

@@ -2,7 +2,7 @@
 
 import { classNames, difficultyClassNames } from "@/ui.stylex";
 
-import { useState, useEffect, useRef, useCallback, useMemo, useDeferredValue, memo } from "react";
+import { useEffect, useRef, useCallback, useMemo, useDeferredValue, useReducer, memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -22,9 +22,26 @@ import {
   getDifficultyLevel,
   getCoursePageUrl,
   searchTopK,
-  type SemesterId,
   type Elective,
+  type SemesterId,
 } from "@/lib/electives";
+import {
+  HIGHLIGHT_VISIBLE_MS,
+  browseReducer,
+  calendarSemester,
+  electiveElementId,
+  filtersAreActive,
+  highlightScrollKey,
+  initialBrowseState,
+  initialPaletteState,
+  nextHighlightScroll,
+  paletteReducer,
+  resultsFreshness,
+  semesterForInstant,
+  type BrowseSortField,
+  type HighlightScroll,
+  type SemesterOwner,
+} from "@/lib/ui-state";
 import {
   Search,
   GraduationCap,
@@ -36,32 +53,36 @@ import {
   BookOpen,
   X,
   Command,
+  Loader2,
 } from "lucide-react";
 
 /** How many results the command palette shows. */
 const PALETTE_RESULTS = 8;
 
-// Command Search Modal
+// Command Search Modal.
+//
+// Mounted only while the palette is open, so "closed" is the absence of this
+// component rather than a boolean beside a leftover query and selection. Those
+// two used to be reset in effects after open, which painted one frame of the
+// previous results and then rendered again.
 function CommandSearchImpl({
-  isOpen,
   onClose,
   onSelect,
   electives,
 }: {
-  isOpen: boolean;
   onClose: () => void;
   onSelect: (elective: Elective) => void;
   electives: Elective[];
 }) {
-  const [query, setQuery] = useState("");
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [palette, dispatchPalette] = useReducer(paletteReducer, initialPaletteState);
+  const { query, selectedIndex } = palette;
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isOpen) return;
     const previousFocus = document.activeElement;
+    inputRef.current?.focus();
     const containFocus = (event: FocusEvent) => {
       if (event.target instanceof Node && !modalRef.current?.contains(event.target))
         inputRef.current?.focus();
@@ -87,39 +108,24 @@ function CommandSearchImpl({
       document.removeEventListener("keydown", containTab);
       if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus();
     };
-  }, [isOpen]);
+  }, []);
 
   // Recomputed only when the query or dataset changes. Without the memo this
   // re-ran on every render of this component — including every arrow-key press,
   // which only moves the selection highlight and cannot change the results.
   const results = useMemo(() => searchTopK(electives, query, PALETTE_RESULTS), [electives, query]);
 
-  useEffect(() => {
-    if (isOpen) {
-      inputRef.current?.focus();
-      setQuery("");
-      setSelectedIndex(0);
-    }
-  }, [isOpen]);
-
   // Global escape key handler
   useEffect(() => {
-    if (!isOpen) return;
-
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-      }
+      if (e.key !== "Escape") return;
+      e.preventDefault();
+      onClose();
     };
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
-
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [query]);
+  }, [onClose]);
 
   // Scroll selected item into view
   useEffect(() => {
@@ -134,11 +140,11 @@ function CommandSearchImpl({
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
-          setSelectedIndex((prev) => Math.min(prev + 1, results.length - 1));
+          dispatchPalette({ type: "move", direction: "next", count: results.length });
           break;
         case "ArrowUp":
           e.preventDefault();
-          setSelectedIndex((prev) => Math.max(prev - 1, 0));
+          dispatchPalette({ type: "move", direction: "previous", count: results.length });
           break;
         case "Enter":
           e.preventDefault();
@@ -154,8 +160,6 @@ function CommandSearchImpl({
     },
     [results, selectedIndex, onSelect, onClose],
   );
-
-  if (!isOpen) return null;
 
   return (
     <div ref={modalRef} className={classNames.electiveDashboard24} role="presentation">
@@ -182,7 +186,7 @@ function CommandSearchImpl({
               ref={inputRef}
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => dispatchPalette({ type: "query", query: e.target.value })}
               onKeyDown={handleKeyDown}
               placeholder="Search electives..."
               className={classNames.electiveDashboard30}
@@ -284,9 +288,9 @@ function CommandSearchImpl({
   );
 }
 
-// Memoized: the dashboard re-renders on every keystroke, but the palette's props
-// (isOpen, the two callbacks, the dataset) change only when it is actually opened
-// or the semester is switched.
+// Memoized: while the palette is open the dashboard still re-renders (the
+// highlight dwell, for example). The props here change only when the semester
+// dataset or the callbacks change.
 const CommandSearch = memo(CommandSearchImpl);
 
 // Stats Card Component
@@ -332,7 +336,7 @@ function ElectiveCardImpl({
 
   return (
     <Card
-      id={`elective-${elective.code}-${elective.type}`}
+      id={electiveElementId(elective.code, elective.type)}
       className={`${classNames.electiveDashboard60} ${
         isHighlighted ? classNames.electiveDashboard59 : ""
       }`}
@@ -435,27 +439,28 @@ function ElectiveCardImpl({
 const ElectiveCard = memo(ElectiveCardImpl);
 
 export default function ElectiveDashboard() {
-  const [semester, setSemester] = useState<SemesterId>("sixth");
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [deptFilter, setDeptFilter] = useState("all");
-  const [sortBy, setSortBy] = useState<"name" | "cutoff" | "students">("cutoff");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [commandOpen, setCommandOpen] = useState(false);
-  const [highlightedElective, setHighlightedElective] = useState<string | null>(null);
-  // Which highlight id we have already scrolled to, so the effect below
-  // scrolls once per selection rather than on every grid update.
-  const scrolledForRef = useRef<string | null>(null);
+  const [state, dispatch] = useReducer(browseReducer, initialBrowseState);
+  const { semester, search, typeFilter, deptFilter, sortField, sortOrder, highlight, commandOpen } =
+    state;
+  // "fallback" until the user picks a semester. A ref, not state: recording the
+  // hand-off in React state would re-render the grid when nothing visible changed.
+  const semesterOwnerRef = useRef<SemesterOwner>("fallback");
+  const highlightScrollRef = useRef<HighlightScroll>({ phase: "idle" });
+  // Absolute time the ring should come down. List updates reschedule the timer
+  // against this deadline instead of granting another full dwell.
+  const dismissAtRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Resolve on page load, not during Next.js's static build. Use the academic
-    // calendar's timezone so the default changes at midnight in India.
-    const month = Number(
-      new Intl.DateTimeFormat("en-US", { month: "numeric", timeZone: "Asia/Kolkata" }).format(
-        new Date(),
-      ),
+    // Resolve on page load, not during Next.js's static build. The reducer
+    // bails out when the calendar semester is already the SSR fallback, so
+    // November (VI) does not render the grid twice. A click that landed first
+    // flips the owner ref and this dispatch is skipped.
+    const next = calendarSemester(
+      semesterOwnerRef.current,
+      initialBrowseState.semester,
+      semesterForInstant(new Date()),
     );
-    setSemester(month >= 9 || month <= 2 ? "sixth" : "seventh");
+    if (next !== null) dispatch({ type: "apply-calendar", semester: next });
   }, []);
 
   const dataset = semesterDatasets[semester];
@@ -468,17 +473,25 @@ export default function ElectiveDashboard() {
   // from the deferred value, letting React keep the keystroke responsive and
   // drop intermediate list renders when typing outpaces rendering.
   const deferredSearch = useDeferredValue(search);
+  const freshness = resultsFreshness(search, deferredSearch);
 
   const filteredElectives = useMemo(() => {
-    return filterElectives(electiveData, typeFilter, deptFilter, deferredSearch, sortBy, sortOrder);
-  }, [electiveData, typeFilter, deptFilter, deferredSearch, sortBy, sortOrder]);
+    return filterElectives(
+      electiveData,
+      typeFilter,
+      deptFilter,
+      deferredSearch,
+      sortField,
+      sortOrder,
+    );
+  }, [electiveData, typeFilter, deptFilter, deferredSearch, sortField, sortOrder]);
 
   // Keyboard shortcut for Ctrl+K (toggle)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        setCommandOpen((prev) => !prev);
+        dispatch({ type: "toggle-command" });
       }
     };
 
@@ -487,75 +500,100 @@ export default function ElectiveDashboard() {
   }, []);
 
   const handleSelectElective = useCallback((elective: Elective) => {
-    // Clear filters so the selected elective is in the grid
-    setSearch("");
-    setTypeFilter("all");
-    setDeptFilter("all");
-
-    // Allow re-selecting the same elective to scroll to it again.
-    scrolledForRef.current = null;
-    setHighlightedElective(`elective-${elective.code}-${elective.type}`);
+    dispatch({
+      type: "select-elective",
+      code: elective.code,
+      electiveType: elective.type,
+    });
   }, []);
+
+  const clearHighlight = useCallback(() => {
+    dispatch({ type: "clear-highlight" });
+  }, []);
+
+  const highlightKey = highlight === null ? null : highlightScrollKey(highlight);
+  const highlightElementId =
+    highlight === null ? null : electiveElementId(highlight.code, highlight.electiveType);
 
   /**
-   * Scroll to the highlighted card once the grid has actually rendered it.
+   * Scroll to the highlighted card once the grid has actually rendered it,
+   * then hold the ring until `dismissAtRef`.
    *
-   * This used to be a fixed 100ms `setTimeout` inside the selection handler,
-   * which is a race: the grid renders from `deferredSearch`, so after the
-   * handler clears `search` React may still paint one frame with the old
-   * query — and on a busy or slow browser more than one. If the card is not
-   * in the DOM when the timer fires, the scroll silently does nothing.
-   *
-   * Keying the effect on `filteredElectives` removes the guess. If the card
-   * isn't there yet, the effect simply re-runs when the deferred grid catches
-   * up, and the ref keeps it to one scroll per selection.
+   * Phases live in `highlightScrollRef` (`idle` → `waiting` → `shown`):
+   * - `waiting` means the id is armed but the deferred list has not painted
+   *   the card yet. No dismiss timer runs, so a slow list cannot expire the
+   *   highlight before the card exists.
+   * - `shown` scrolls once. `filteredElectives` is a dependency because that
+   *   is what puts the card in the DOM, but the deadline stays put — the old
+   *   effect restarted a fresh 2s timeout on every list commit.
    */
   useEffect(() => {
-    if (!highlightedElective) return;
+    // The card is rendered from `filteredElectives`, which lags the input via
+    // `useDeferredValue`. Treat it as missing until that list actually contains
+    // it — a leftover DOM node from the previous result set must not count.
+    let element: HTMLElement | null = null;
+    if (highlightElementId !== null) {
+      for (let i = 0; i < filteredElectives.length; i++) {
+        const elective = filteredElectives[i];
+        if (electiveElementId(elective.code, elective.type) === highlightElementId) {
+          element = document.getElementById(highlightElementId);
+          break;
+        }
+      }
+    }
+    const previous = highlightScrollRef.current;
+    const next = nextHighlightScroll(previous, highlightKey, element !== null);
+    highlightScrollRef.current = next;
 
-    if (scrolledForRef.current !== highlightedElective) {
-      const element = document.getElementById(highlightedElective);
-      if (!element) return; // not rendered yet — re-runs when the grid updates
-      scrolledForRef.current = highlightedElective;
-      element.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (next.phase !== "shown") {
+      dismissAtRef.current = null;
+      return;
     }
 
-    const timer = setTimeout(() => setHighlightedElective(null), 2000);
-    return () => clearTimeout(timer);
-  }, [highlightedElective, filteredElectives]);
+    const firstSight = previous !== next;
+    if (firstSight) {
+      if (element === null) return;
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      element.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      dismissAtRef.current = Date.now() + HIGHLIGHT_VISIBLE_MS;
+    }
+
+    const due = dismissAtRef.current;
+    if (due === null) return;
+    const timer = window.setTimeout(
+      () => {
+        dismissAtRef.current = null;
+        clearHighlight();
+      },
+      Math.max(0, due - Date.now()),
+    );
+    return () => window.clearTimeout(timer);
+  }, [highlightKey, highlightElementId, filteredElectives, clearHighlight]);
 
   // Stable identity so the memoized palette isn't invalidated on every render.
-  const handleCloseCommand = useCallback(() => setCommandOpen(false), []);
+  const handleCloseCommand = useCallback(() => dispatch({ type: "close-command" }), []);
 
   const handleSemesterChange = useCallback((nextSemester: SemesterId) => {
-    setSemester(nextSemester);
-    setSearch("");
-    setTypeFilter("all");
-    setDeptFilter("all");
-    setHighlightedElective(null);
+    semesterOwnerRef.current = "user";
+    dispatch({ type: "choose-semester", semester: nextSemester });
   }, []);
 
-  // Left un-memoized on purpose: it depends on `sortBy`, so a `useCallback`
-  // would be invalidated exactly when it is used, and the sort buttons are
-  // plain DOM elements that gain nothing from a stable callback identity.
-  const toggleSort = (newSortBy: typeof sortBy) => {
-    if (sortBy === newSortBy) {
-      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
-    } else {
-      setSortBy(newSortBy);
-      setSortOrder("asc");
-    }
+  // The sort buttons are plain DOM nodes, so a stable callback would not
+  // skip any child render. The reducer owns the field/order pairing.
+  const toggleSort = (field: BrowseSortField) => {
+    dispatch({ type: "toggle-sort", field });
   };
 
   return (
     <div className={classNames.electiveDashboard83}>
-      {/* Command Search Modal */}
-      <CommandSearch
-        isOpen={commandOpen}
-        onClose={handleCloseCommand}
-        onSelect={handleSelectElective}
-        electives={electiveData}
-      />
+      {/* Command Search Modal. Unmounted while closed, so it cannot keep a stale query. */}
+      {commandOpen ? (
+        <CommandSearch
+          onClose={handleCloseCommand}
+          onSelect={handleSelectElective}
+          electives={electiveData}
+        />
+      ) : null}
 
       {/* Hero Section */}
       <div className={classNames.electiveDashboard84}>
@@ -596,7 +634,10 @@ export default function ElectiveDashboard() {
             </div>
 
             {/* Quick Search Button */}
-            <button onClick={() => setCommandOpen(true)} className={classNames.electiveDashboard95}>
+            <button
+              onClick={() => dispatch({ type: "open-command" })}
+              className={classNames.electiveDashboard95}
+            >
               <Search className={classNames.electiveDashboard96} />
               <span>Search...</span>
               <kbd className={classNames.electiveDashboard97}>
@@ -648,14 +689,17 @@ export default function ElectiveDashboard() {
               <Input
                 placeholder="Search electives..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => dispatch({ type: "set-search", query: e.target.value })}
                 className={classNames.electiveDashboard104}
               />
             </div>
 
             {/* Type and Department Filters - side by side on mobile */}
             <div className={classNames.electiveDashboard105}>
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <Select
+                value={typeFilter}
+                onValueChange={(value) => dispatch({ type: "set-type", value })}
+              >
                 <SelectTrigger className={classNames.electiveDashboard106}>
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
@@ -669,7 +713,10 @@ export default function ElectiveDashboard() {
                 </SelectContent>
               </Select>
 
-              <Select value={deptFilter} onValueChange={setDeptFilter}>
+              <Select
+                value={deptFilter}
+                onValueChange={(value) => dispatch({ type: "set-department", value })}
+              >
                 <SelectTrigger className={classNames.electiveDashboard106}>
                   <SelectValue placeholder="Department" />
                 </SelectTrigger>
@@ -689,32 +736,32 @@ export default function ElectiveDashboard() {
               <button
                 onClick={() => toggleSort("cutoff")}
                 className={`${classNames.electiveDashboard110} ${
-                  sortBy === "cutoff"
+                  sortField === "cutoff"
                     ? classNames.electiveDashboard108
                     : classNames.electiveDashboard109
                 }`}
               >
-                Cutoff {sortBy === "cutoff" && (sortOrder === "asc" ? "↑" : "↓")}
+                Cutoff {sortField === "cutoff" && (sortOrder === "asc" ? "↑" : "↓")}
               </button>
               <button
                 onClick={() => toggleSort("students")}
                 className={`${classNames.electiveDashboard110} ${
-                  sortBy === "students"
+                  sortField === "students"
                     ? classNames.electiveDashboard108
                     : classNames.electiveDashboard109
                 }`}
               >
-                Students {sortBy === "students" && (sortOrder === "asc" ? "↑" : "↓")}
+                Students {sortField === "students" && (sortOrder === "asc" ? "↑" : "↓")}
               </button>
               <button
                 onClick={() => toggleSort("name")}
                 className={`${classNames.electiveDashboard110} ${
-                  sortBy === "name"
+                  sortField === "name"
                     ? classNames.electiveDashboard108
                     : classNames.electiveDashboard109
                 }`}
               >
-                Name {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
+                Name {sortField === "name" && (sortOrder === "asc" ? "↑" : "↓")}
               </button>
             </div>
           </div>
@@ -724,16 +771,20 @@ export default function ElectiveDashboard() {
       {/* Results */}
       <div className={classNames.electiveDashboard111}>
         <div className={classNames.electiveDashboard112}>
-          <h2 className={classNames.electiveDashboard113}>
-            {filteredElectives.length} Elective{filteredElectives.length !== 1 ? "s" : ""} Found
-          </h2>
-          {search || typeFilter !== "all" || deptFilter !== "all" ? (
+          <div className={classNames.electiveDashboard41}>
+            <h2 className={classNames.electiveDashboard113}>
+              {filteredElectives.length} Elective{filteredElectives.length !== 1 ? "s" : ""} Found
+            </h2>
+            {freshness === "pending" ? (
+              <Loader2
+                className={`${classNames.electiveDashboard32} cutoff-spin`}
+                aria-hidden="true"
+              />
+            ) : null}
+          </div>
+          {filtersAreActive(state) ? (
             <button
-              onClick={() => {
-                setSearch("");
-                setTypeFilter("all");
-                setDeptFilter("all");
-              }}
+              onClick={() => dispatch({ type: "clear-filters" })}
               className={classNames.electiveDashboard114}
             >
               Clear Filters
@@ -742,7 +793,7 @@ export default function ElectiveDashboard() {
         </div>
 
         {/* Electives Grid */}
-        <div className={classNames.electiveDashboard115}>
+        <div className={classNames.electiveDashboard115} aria-busy={freshness === "pending"}>
           {/*
            * The key deliberately excludes the array index. With it, every
            * card's key changed whenever filtering or sorting moved it, so
@@ -754,7 +805,11 @@ export default function ElectiveDashboard() {
             <ElectiveCard
               key={`${elective.code}-${elective.type}`}
               elective={elective}
-              isHighlighted={highlightedElective === `elective-${elective.code}-${elective.type}`}
+              isHighlighted={
+                highlight !== null &&
+                highlight.code === elective.code &&
+                highlight.electiveType === elective.type
+              }
             />
           ))}
         </div>

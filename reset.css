@@ -159,7 +159,10 @@
     --blur-xl: 24px;
     --aspect-video: 16 / 9;
     --default-transition-duration: 0.15s;
-    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    /* Ease-out with a steep start. The previous curve (0.4, 0, 0.2, 1) eases
+       in, so hover and press felt late. This one moves immediately and settles. */
+    --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+    --tw-ease: cubic-bezier(0.2, 0, 0, 1);
     --default-font-family: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
     --default-mono-font-family: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, monospace;
   }
@@ -655,6 +658,10 @@
     background-image: none;
     animation: none;
   }
+
+  .cutoff-spin {
+    animation: none;
+  }
 }
 
 :root {
@@ -1087,4 +1094,15 @@
   to {
     height: 0;
   }
+}
+
+/* Half a second, not the usual full second — a 1s spinner reads as stalled. */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cutoff-spin {
+  animation: spin 0.5s linear infinite;
 }

@@ -394,7 +394,9 @@ export const styles = stylex.create({
       "var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)",
     "--tw-ring-color": "#ffffff4d",
   },
-  // Original utility group: group relative overflow-hidden border-white/5 bg-neutral-900/50 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-neutral-900/80 h-full
+  // Hover only changes border and background. `transition: all` at 300ms also
+  // interpolated layout properties on every card. 200ms ease-out stays under
+  // the 300ms ceiling and starts moving on the first frame.
   electiveDashboard60: {
     position: "relative",
     height: "100%",
@@ -404,10 +406,10 @@ export const styles = stylex.create({
     "--tw-backdrop-blur": "blur(var(--blur-sm))",
     backdropFilter:
       "var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, )",
-    transitionProperty: "all",
+    transitionProperty: "border-color, background-color",
     transitionTimingFunction: "var(--tw-ease, var(--default-transition-timing-function))",
-    transitionDuration: ".3s",
-    "--tw-duration": ".3s",
+    transitionDuration: ".2s",
+    "--tw-duration": ".2s",
   },
   // Original utility group: pb-3
   electiveDashboard61: {
