@@ -1,6 +1,7 @@
 "use client";
 
 import { classNames, difficultyClassNames } from "@/ui.stylex";
+import { ProgressiveBlur } from "@/components/progressive-blur";
 
 import { useEffect, useRef, useCallback, useMemo, useDeferredValue, useReducer, memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -682,6 +683,7 @@ export default function ElectiveDashboard() {
 
       {/* Filters Section */}
       <div className={classNames.electiveDashboard100}>
+        <ProgressiveBlur feather="long" />
         <div className={classNames.electiveDashboard101}>
           <div className={classNames.electiveDashboard102}>
             {/* Search */}

@@ -158,6 +158,7 @@
     --blur-sm: 8px;
     --blur-xl: 24px;
     --aspect-video: 16 / 9;
+    --app-header-height: 3.75rem;
     --default-transition-duration: 0.15s;
     /* Ease-out with a steep start. The previous curve (0.4, 0, 0.2, 1) eases
        in, so hover and press felt late. This one moves immediately and settles. */

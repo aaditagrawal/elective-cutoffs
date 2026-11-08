@@ -1,6 +1,7 @@
 import { classNames } from "@/ui.stylex";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ProgressiveBlur } from "@/components/progressive-blur";
 import { Instrument_Serif, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -44,6 +45,7 @@ export default function RootLayout({
     >
       <body className={classNames.layout9}>
         <header className={classNames.layout10}>
+          <ProgressiveBlur feather="short" />
           <nav className={classNames.layout11}>
             <Link href="/" className={classNames.layout12}>
               Elective Cutoffs

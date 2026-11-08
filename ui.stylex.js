@@ -55,17 +55,19 @@ export const styles = stylex.create({
     fontFamily: "var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif",
     WebkitFontSmoothing: "antialiased",
     MozOsxFontSmoothing: "grayscale",
-  },
-  // Original utility group: border-b border-white/5 bg-neutral-950 z-50
-  layout10: {
-    zIndex: "50",
-    borderBottomStyle: "var(--tw-border-style)",
-    borderBottomWidth: "1px",
-    borderColor: "#ffffff0d",
     backgroundColor: "var(--color-neutral-950)",
+  },
+  // Sticky so page content can blur underneath as it scrolls.
+  layout10: {
+    position: "sticky",
+    top: "0",
+    zIndex: "50",
+    backgroundColor: "transparent",
   },
   // Original utility group: max-w-7xl mx-auto flex items-center justify-between px-6 py-4
   layout11: {
+    position: "relative",
+    zIndex: "1",
     marginInline: "auto",
     display: "flex",
     maxWidth: "var(--container-7xl)",
@@ -750,22 +752,19 @@ export const styles = stylex.create({
     gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
     gap: "calc(var(--spacing) * 4)",
   },
-  // Original utility group: sticky top-0 z-40 bg-neutral-950/95 backdrop-blur-xl border-b border-white/5 pt-2
+  // Sticks under the header. The blur lives in sibling layers so this shell
+  // stays transparent — an opaque background here would hide the backdrop.
   electiveDashboard100: {
     position: "sticky",
-    top: "0",
+    top: "var(--app-header-height)",
     zIndex: "40",
-    borderBottomStyle: "var(--tw-border-style)",
-    borderBottomWidth: "1px",
-    borderColor: "#ffffff0d",
-    backgroundColor: "#0a0a0af2",
+    backgroundColor: "transparent",
     paddingTop: "calc(var(--spacing) * 2)",
-    "--tw-backdrop-blur": "blur(var(--blur-xl))",
-    backdropFilter:
-      "var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, )",
   },
   // Original utility group: max-w-7xl mx-auto px-3 pb-2.5 sm:px-6 lg:px-8
   electiveDashboard101: {
+    position: "relative",
+    zIndex: "1",
     marginInline: "auto",
     maxWidth: "var(--container-7xl)",
     paddingInline: "calc(var(--spacing) * 3)",
