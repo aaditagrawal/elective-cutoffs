@@ -98,6 +98,22 @@ export function filtersAreActive(state: BrowseState): boolean {
   return state.search !== "" || state.typeFilter !== "all" || state.deptFilter !== "all";
 }
 
+/**
+ * The static page already rendered this exact list. While the state still
+ * matches it, the client leaves that HTML in place and does not download the
+ * query engine or the other semester.
+ */
+export function showsServerList(state: BrowseState): boolean {
+  return (
+    state.semester === initialBrowseState.semester &&
+    state.search === initialBrowseState.search &&
+    state.typeFilter === initialBrowseState.typeFilter &&
+    state.deptFilter === initialBrowseState.deptFilter &&
+    state.sortField === initialBrowseState.sortField &&
+    state.sortOrder === initialBrowseState.sortOrder
+  );
+}
+
 /** The list is either caught up with the input or waiting on the deferred query. */
 export type ResultsFreshness = "current" | "pending";
 

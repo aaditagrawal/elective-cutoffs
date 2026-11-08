@@ -2,6 +2,7 @@ import { classNames } from "@/ui.stylex";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ProgressiveBlur } from "@/components/progressive-blur";
+import { ScrollFrost } from "@/components/scroll-frost";
 import { Instrument_Serif, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -21,6 +22,9 @@ const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+  // Course codes are not the first paint. Leave the preload slot for the
+  // title and body faces.
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -44,6 +48,7 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${instrumentSans.variable} ${ibmPlexMono.variable} dark`}
     >
       <body className={classNames.layout9}>
+        <ScrollFrost />
         <header className={classNames.layout10}>
           <ProgressiveBlur feather="short" />
           <nav className={classNames.layout11}>

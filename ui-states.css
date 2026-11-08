@@ -126,7 +126,7 @@
 
 @supports (color: color-mix(in lab, red, red)) {
   .cutoff-electiveDashboard60 {
-    background-color: color-mix(in oklab, var(--color-neutral-900) 50%, transparent);
+    background-color: #171717;
   }
 }
 
@@ -1076,6 +1076,25 @@
  * down, compound into a blur that is strongest at the top and gone at the
  * bottom. The parent must stay transparent or its background is all they blur.
  */
+/*
+ * Offscreen cards stay in the document (search, highlight, find-in-page) but
+ * the browser skips their layout and paint until they approach the viewport.
+ */
+.cutoff-electiveDashboard60 {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 15rem;
+}
+
+/* The static list stays in the document until a filter replaces it. */
+html[data-results="live"] #cutoff-server-results {
+  display: none;
+}
+
+html[data-scrolling] .cutoff-progressive-blur > div:not(.cutoff-top-wash) {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
 .cutoff-progressive-blur {
   position: absolute;
   z-index: 0;

@@ -404,10 +404,7 @@ export const styles = stylex.create({
     height: "100%",
     overflow: "hidden",
     borderColor: "#ffffff0d",
-    backgroundColor: "#17171780",
-    "--tw-backdrop-blur": "blur(var(--blur-sm))",
-    backdropFilter:
-      "var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, )",
+    backgroundColor: "#171717",
     transitionProperty: "border-color, background-color",
     transitionTimingFunction: "var(--tw-ease, var(--default-transition-timing-function))",
     transitionDuration: ".2s",
