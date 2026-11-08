@@ -435,7 +435,7 @@ function ElectiveCardImpl({
 const ElectiveCard = memo(ElectiveCardImpl);
 
 export default function ElectiveDashboard() {
-  const [semester, setSemester] = useState<SemesterId>("seventh");
+  const [semester, setSemester] = useState<SemesterId>("sixth");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [deptFilter, setDeptFilter] = useState("all");
@@ -446,6 +446,17 @@ export default function ElectiveDashboard() {
   // Which highlight id we have already scrolled to, so the effect below
   // scrolls once per selection rather than on every grid update.
   const scrolledForRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    // Resolve on page load, not during Next.js's static build. Use the academic
+    // calendar's timezone so the default changes at midnight in India.
+    const month = Number(
+      new Intl.DateTimeFormat("en-US", { month: "numeric", timeZone: "Asia/Kolkata" }).format(
+        new Date(),
+      ),
+    );
+    setSemester(month >= 9 || month <= 2 ? "sixth" : "seventh");
+  }, []);
 
   const dataset = semesterDatasets[semester];
   const electiveData = dataset.electives;
