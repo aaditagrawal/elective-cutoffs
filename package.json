@@ -15,6 +15,7 @@
     "bench:render": "bun run bench/render.ts",
     "bench:payload": "bun run bench/payload.ts",
     "bench:verify": "bun run bench/verify.ts",
+    "bench:hillclimb": "bun run bench/hillclimb.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

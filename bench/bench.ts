@@ -180,14 +180,15 @@ for (const semester of SEMESTERS) {
   );
 
   // --- The one-time cost that buys all of the above ------------------------
-  // A fresh array object is a fresh WeakMap key, so this forces a full rebuild:
-  // permutations, haystacks, character bitmaps and stats.
+  // A fresh array object is a fresh WeakMap key, so this rebuilds the metadata
+  // index and stats. Sort permutations and character bitmaps are now lazy;
+  // bench/hillclimb.ts measures cold opening-list and first-search costs too.
   const build = measure(`${tag} index build`, () => {
     const copy = electives.slice();
     const s = getStats(copy);
     return (s.totalStudents + s.totalElectives) | 0;
   });
-  oneTime.push({ case: `${tag} cold index build (amortized over the session)`, ns: build.nsPerOp });
+  oneTime.push({ case: `${tag} cold metadata index and stats`, ns: build.nsPerOp });
 
   // For scale: what the old code paid on *every* keystroke, for comparison
   // against the one-time build above.

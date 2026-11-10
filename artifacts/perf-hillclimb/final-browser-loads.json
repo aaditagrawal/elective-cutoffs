@@ -1,0 +1,435 @@
+[
+  {
+    "port": 4318,
+    "round": 0,
+    "value": {
+      "html": 1181961,
+      "htmlTransfer": 37149,
+      "ttfb": 17.399999976158142,
+      "dom": 66.79999995231628,
+      "lcp": [
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 256,
+          "duration": 0,
+          "navigationId": 5569,
+          "paintTime": 106.39999997615814,
+          "presentationTime": 256,
+          "size": 21687,
+          "renderTime": 256,
+          "loadTime": 0,
+          "id": "",
+          "url": ""
+        }
+      ],
+      "longtasks": [],
+      "scripts": 649427,
+      "rsc": [
+        {
+          "url": "http://localhost:4318/?_rsc=5CB68i4pnAekjehf",
+          "bytes": 392
+        },
+        {
+          "url": "http://localhost:4318/faq?_rsc=5CB68i4pnAekjehf",
+          "bytes": 438
+        },
+        {
+          "url": "http://localhost:4318/?_rsc=8nTjltbQWvg6NcbE",
+          "bytes": 596147
+        },
+        {
+          "url": "http://localhost:4318/faq?_rsc=dzIsfw4qQTAENwrl",
+          "bytes": 4950
+        }
+      ],
+      "cards": 139
+    }
+  },
+  {
+    "port": 4319,
+    "round": 0,
+    "value": {
+      "html": 574954,
+      "htmlTransfer": 25263,
+      "ttfb": 9.899999976158142,
+      "dom": 65.30000007152557,
+      "lcp": [
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 228,
+          "duration": 0,
+          "navigationId": 1785,
+          "paintTime": 61.5,
+          "presentationTime": 228,
+          "size": 21687,
+          "renderTime": 228,
+          "loadTime": 0,
+          "id": "",
+          "url": ""
+        }
+      ],
+      "longtasks": [],
+      "scripts": 650345,
+      "rsc": [
+        {
+          "url": "http://localhost:4319/faq?_rsc=5CB68i4pnAekjehf",
+          "bytes": 438
+        },
+        {
+          "url": "http://localhost:4319/faq?_rsc=dzIsfw4qQTAENwrl",
+          "bytes": 4984
+        }
+      ],
+      "cards": 139
+    }
+  },
+  {
+    "port": 4319,
+    "round": 1,
+    "value": {
+      "html": 574954,
+      "htmlTransfer": 25263,
+      "ttfb": 9.700000047683716,
+      "dom": 58.200000047683716,
+      "fcp": 160,
+      "lcp": [
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 160,
+          "duration": 0,
+          "navigationId": 2392,
+          "paintTime": 55.300000071525574,
+          "presentationTime": 160,
+          "size": 21687,
+          "renderTime": 160,
+          "loadTime": 0,
+          "id": "",
+          "url": ""
+        }
+      ],
+      "longtasks": [],
+      "scripts": 650345,
+      "rsc": [
+        {
+          "url": "http://localhost:4319/faq?_rsc=5CB68i4pnAekjehf",
+          "bytes": 438
+        },
+        {
+          "url": "http://localhost:4319/faq?_rsc=dzIsfw4qQTAENwrl",
+          "bytes": 4984
+        }
+      ],
+      "cards": 139
+    }
+  },
+  {
+    "port": 4318,
+    "round": 1,
+    "value": {
+      "html": 1181961,
+      "htmlTransfer": 37149,
+      "ttfb": 14.799999952316284,
+      "dom": 95.89999997615814,
+      "lcp": [
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 236,
+          "duration": 0,
+          "navigationId": 3358,
+          "paintTime": 73.39999997615814,
+          "presentationTime": 236,
+          "size": 21687,
+          "renderTime": 236,
+          "loadTime": 0,
+          "id": "",
+          "url": ""
+        }
+      ],
+      "longtasks": [],
+      "scripts": 649427,
+      "rsc": [
+        {
+          "url": "http://localhost:4318/?_rsc=5CB68i4pnAekjehf",
+          "bytes": 392
+        },
+        {
+          "url": "http://localhost:4318/faq?_rsc=5CB68i4pnAekjehf",
+          "bytes": 438
+        },
+        {
+          "url": "http://localhost:4318/?_rsc=8nTjltbQWvg6NcbE",
+          "bytes": 596147
+        },
+        {
+          "url": "http://localhost:4318/faq?_rsc=dzIsfw4qQTAENwrl",
+          "bytes": 4950
+        }
+      ],
+      "cards": 139
+    }
+  },
+  {
+    "port": 4318,
+    "round": 2,
+    "value": {
+      "html": 1181961,
+      "htmlTransfer": 37149,
+      "ttfb": 15.100000023841858,
+      "dom": 97.70000004768372,
+      "lcp": [
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 228,
+          "duration": 0,
+          "navigationId": 3001,
+          "paintTime": 69.79999995231628,
+          "presentationTime": 228,
+          "size": 21687,
+          "renderTime": 228,
+          "loadTime": 0,
+          "id": "",
+          "url": ""
+        }
+      ],
+      "longtasks": [],
+      "scripts": 649427,
+      "rsc": [
+        {
+          "url": "http://localhost:4318/?_rsc=5CB68i4pnAekjehf",
+          "bytes": 392
+        },
+        {
+          "url": "http://localhost:4318/faq?_rsc=5CB68i4pnAekjehf",
+          "bytes": 438
+        },
+        {
+          "url": "http://localhost:4318/?_rsc=8nTjltbQWvg6NcbE",
+          "bytes": 596147
+        },
+        {
+          "url": "http://localhost:4318/faq?_rsc=dzIsfw4qQTAENwrl",
+          "bytes": 4950
+        }
+      ],
+      "cards": 139
+    }
+  },
+  {
+    "port": 4319,
+    "round": 2,
+    "value": {
+      "html": 574954,
+      "htmlTransfer": 25263,
+      "ttfb": 9.700000047683716,
+      "dom": 53.700000047683716,
+      "fcp": 148,
+      "lcp": [
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 148,
+          "duration": 0,
+          "navigationId": 8673,
+          "paintTime": 43.5,
+          "presentationTime": 148,
+          "size": 21687,
+          "renderTime": 148,
+          "loadTime": 0,
+          "id": "",
+          "url": ""
+        }
+      ],
+      "longtasks": [],
+      "scripts": 648696,
+      "rsc": [
+        {
+          "url": "http://localhost:4319/faq?_rsc=5CB68i4pnAekjehf",
+          "bytes": 438
+        },
+        {
+          "url": "http://localhost:4319/faq?_rsc=dzIsfw4qQTAENwrl",
+          "bytes": 4984
+        }
+      ],
+      "cards": 139
+    }
+  },
+  {
+    "port": 4319,
+    "round": 3,
+    "value": {
+      "html": 574954,
+      "htmlTransfer": 25263,
+      "ttfb": 8.599999904632568,
+      "dom": 34.699999928474426,
+      "lcp": [
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 224,
+          "duration": 0,
+          "navigationId": 6494,
+          "paintTime": 53.09999990463257,
+          "presentationTime": 224,
+          "size": 21687,
+          "renderTime": 224,
+          "loadTime": 0,
+          "id": "",
+          "url": ""
+        }
+      ],
+      "longtasks": [],
+      "scripts": 650345,
+      "rsc": [
+        {
+          "url": "http://localhost:4319/faq?_rsc=5CB68i4pnAekjehf",
+          "bytes": 438
+        },
+        {
+          "url": "http://localhost:4319/faq?_rsc=dzIsfw4qQTAENwrl",
+          "bytes": 4984
+        }
+      ],
+      "cards": 139
+    }
+  },
+  {
+    "port": 4318,
+    "round": 3,
+    "value": {
+      "html": 1181961,
+      "htmlTransfer": 37149,
+      "ttfb": 11.400000095367432,
+      "dom": 69.80000007152557,
+      "lcp": [
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 232,
+          "duration": 0,
+          "navigationId": 6375,
+          "paintTime": 55.10000002384186,
+          "presentationTime": 232,
+          "size": 21687,
+          "renderTime": 232,
+          "loadTime": 0,
+          "id": "",
+          "url": ""
+        }
+      ],
+      "longtasks": [],
+      "scripts": 604876,
+      "rsc": [
+        {
+          "url": "http://localhost:4318/?_rsc=5CB68i4pnAekjehf",
+          "bytes": 392
+        },
+        {
+          "url": "http://localhost:4318/faq?_rsc=5CB68i4pnAekjehf",
+          "bytes": 438
+        },
+        {
+          "url": "http://localhost:4318/?_rsc=8nTjltbQWvg6NcbE",
+          "bytes": 596147
+        },
+        {
+          "url": "http://localhost:4318/faq?_rsc=dzIsfw4qQTAENwrl",
+          "bytes": 4950
+        }
+      ],
+      "cards": 139
+    }
+  },
+  {
+    "port": 4318,
+    "round": 4,
+    "value": {
+      "html": 1181961,
+      "htmlTransfer": 37149,
+      "ttfb": 11.600000023841858,
+      "dom": 75.10000002384186,
+      "lcp": [
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 232,
+          "duration": 0,
+          "navigationId": 4818,
+          "paintTime": 58.89999997615814,
+          "presentationTime": 232,
+          "size": 21687,
+          "renderTime": 232,
+          "loadTime": 0,
+          "id": "",
+          "url": ""
+        }
+      ],
+      "longtasks": [],
+      "scripts": 649427,
+      "rsc": [
+        {
+          "url": "http://localhost:4318/?_rsc=5CB68i4pnAekjehf",
+          "bytes": 392
+        },
+        {
+          "url": "http://localhost:4318/faq?_rsc=5CB68i4pnAekjehf",
+          "bytes": 438
+        },
+        {
+          "url": "http://localhost:4318/?_rsc=8nTjltbQWvg6NcbE",
+          "bytes": 596147
+        },
+        {
+          "url": "http://localhost:4318/faq?_rsc=dzIsfw4qQTAENwrl",
+          "bytes": 4950
+        }
+      ],
+      "cards": 139
+    }
+  },
+  {
+    "port": 4319,
+    "round": 4,
+    "value": {
+      "html": 574954,
+      "htmlTransfer": 25263,
+      "ttfb": 8.5,
+      "dom": 54.39999997615814,
+      "fcp": 156,
+      "lcp": [
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 156,
+          "duration": 0,
+          "navigationId": 7922,
+          "paintTime": 45.299999952316284,
+          "presentationTime": 156,
+          "size": 21687,
+          "renderTime": 156,
+          "loadTime": 0,
+          "id": "",
+          "url": ""
+        }
+      ],
+      "longtasks": [],
+      "scripts": 650345,
+      "rsc": [
+        {
+          "url": "http://localhost:4319/faq?_rsc=5CB68i4pnAekjehf",
+          "bytes": 438
+        },
+        {
+          "url": "http://localhost:4319/faq?_rsc=dzIsfw4qQTAENwrl",
+          "bytes": 4984
+        }
+      ],
+      "cards": 139
+    }
+  }
+]

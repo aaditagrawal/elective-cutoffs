@@ -1,0 +1,418 @@
+[
+  {
+    "port": 4318,
+    "result": {
+      "toolIcon": {
+        "_tag": "website",
+        "pageUrl": "http://localhost:4318/?interaction=2"
+      },
+      "value": {
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+        "samples": [
+          {
+            "repeat": 0,
+            "query": "machine",
+            "ms": 17.700000047683716,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "data",
+            "ms": 8.799999952316284,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "zzzzzz",
+            "ms": 8.100000023841858,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "a",
+            "ms": 18.799999952316284,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "",
+            "ms": 9.399999976158142,
+            "heading": "139 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "machine",
+            "ms": 34.200000047683716,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "data",
+            "ms": 11.399999976158142,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "zzzzzz",
+            "ms": 7.800000071525574,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "a",
+            "ms": 24.700000047683716,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "",
+            "ms": 5.800000071525574,
+            "heading": "139 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "machine",
+            "ms": 29.100000023841858,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "data",
+            "ms": 10.099999904632568,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "zzzzzz",
+            "ms": 6.299999952316284,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "a",
+            "ms": 17.799999952316284,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "",
+            "ms": 6.100000023841858,
+            "heading": "139 Electives Found"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "port": 4319,
+    "result": {
+      "toolIcon": {
+        "_tag": "website",
+        "pageUrl": "http://localhost:4319/?interaction=2"
+      },
+      "value": {
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+        "samples": [
+          {
+            "repeat": 0,
+            "query": "machine",
+            "ms": 23.300000071525574,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "data",
+            "ms": 14.5,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "zzzzzz",
+            "ms": 11.699999928474426,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "a",
+            "ms": 20.100000023841858,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "",
+            "ms": 6.899999976158142,
+            "heading": "139 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "machine",
+            "ms": 34.89999997615814,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "data",
+            "ms": 11.399999976158142,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "zzzzzz",
+            "ms": 6.700000047683716,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "a",
+            "ms": 15.200000047683716,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "",
+            "ms": 6,
+            "heading": "139 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "machine",
+            "ms": 31.600000023841858,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "data",
+            "ms": 10.100000023841858,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "zzzzzz",
+            "ms": 7.699999928474426,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "a",
+            "ms": 11.399999976158142,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "",
+            "ms": 5.400000095367432,
+            "heading": "139 Electives Found"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "port": 4319,
+    "result": {
+      "toolIcon": {
+        "_tag": "website",
+        "pageUrl": "http://localhost:4319/?interaction=2"
+      },
+      "value": {
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+        "samples": [
+          {
+            "repeat": 0,
+            "query": "machine",
+            "ms": 12.199999928474426,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "data",
+            "ms": 9.100000023841858,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "zzzzzz",
+            "ms": 8.300000071525574,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "a",
+            "ms": 15.399999976158142,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "",
+            "ms": 5.299999952316284,
+            "heading": "139 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "machine",
+            "ms": 27.799999952316284,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "data",
+            "ms": 7.800000071525574,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "zzzzzz",
+            "ms": 6,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "a",
+            "ms": 16,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "",
+            "ms": 6.5,
+            "heading": "139 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "machine",
+            "ms": 28,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "data",
+            "ms": 6.700000047683716,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "zzzzzz",
+            "ms": 5.700000047683716,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "a",
+            "ms": 12,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "",
+            "ms": 5.399999976158142,
+            "heading": "139 Electives Found"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "port": 4318,
+    "result": {
+      "toolIcon": {
+        "_tag": "website",
+        "pageUrl": "http://localhost:4318/?interaction=2"
+      },
+      "value": {
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+        "samples": [
+          {
+            "repeat": 0,
+            "query": "machine",
+            "ms": 14.699999928474426,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "data",
+            "ms": 8.600000023841858,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "zzzzzz",
+            "ms": 9,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "a",
+            "ms": 18.300000071525574,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 0,
+            "query": "",
+            "ms": 5.299999952316284,
+            "heading": "139 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "machine",
+            "ms": 26.899999976158142,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "data",
+            "ms": 8.100000023841858,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "zzzzzz",
+            "ms": 6.200000047683716,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "a",
+            "ms": 19,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 1,
+            "query": "",
+            "ms": 5.100000023841858,
+            "heading": "139 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "machine",
+            "ms": 27.700000047683716,
+            "heading": "4 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "data",
+            "ms": 7.799999952316284,
+            "heading": "5 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "zzzzzz",
+            "ms": 5.799999952316284,
+            "heading": "0 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "a",
+            "ms": 13.5,
+            "heading": "114 Electives Found"
+          },
+          {
+            "repeat": 2,
+            "query": "",
+            "ms": 5.100000023841858,
+            "heading": "139 Electives Found"
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,237 @@
+{
+  "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+  "nav": [
+    {
+      "name": "http://localhost:4318/",
+      "entryType": "navigation",
+      "startTime": 0,
+      "duration": 192.60000002384186,
+      "navigationId": 6416,
+      "initiatorType": "navigation",
+      "deliveryType": "",
+      "nextHopProtocol": "http/1.1",
+      "renderBlockingStatus": "non-blocking",
+      "contentType": "text/html",
+      "contentEncoding": "gzip",
+      "workerStart": 0,
+      "workerRouterEvaluationStart": 0,
+      "workerCacheLookupStart": 0,
+      "workerMatchedSourceType": "",
+      "workerFinalSourceType": "",
+      "redirectStart": 0,
+      "redirectEnd": 0,
+      "fetchStart": 0,
+      "domainLookupStart": 1.2000000476837158,
+      "domainLookupEnd": 1.3000000715255737,
+      "connectStart": 1.3000000715255737,
+      "secureConnectionStart": 0,
+      "connectEnd": 1.399999976158142,
+      "requestStart": 1.5,
+      "responseStart": 58.800000071525574,
+      "firstInterimResponseStart": 0,
+      "finalResponseHeadersStart": 58.800000071525574,
+      "responseEnd": 61.800000071525574,
+      "transferSize": 37449,
+      "encodedBodySize": 37149,
+      "decodedBodySize": 1181961,
+      "responseStatus": 200,
+      "serverTiming": [],
+      "unloadEventStart": 0,
+      "unloadEventEnd": 0,
+      "domInteractive": 149.5,
+      "domContentLoadedEventStart": 149.5,
+      "domContentLoadedEventEnd": 149.5,
+      "domComplete": 192.39999997615814,
+      "loadEventStart": 192.60000002384186,
+      "loadEventEnd": 192.60000002384186,
+      "type": "navigate",
+      "redirectCount": 0,
+      "activationStart": 0,
+      "criticalCHRestart": 0,
+      "notRestoredReasons": null,
+      "confidence": {
+        "randomizedTriggerRate": 0.4994798,
+        "value": "low"
+      }
+    }
+  ],
+  "paint": [
+    {
+      "name": "first-paint",
+      "entryType": "paint",
+      "startTime": 240,
+      "duration": 0,
+      "navigationId": 6416,
+      "paintTime": 124.20000004768372,
+      "presentationTime": 240
+    },
+    {
+      "name": "first-contentful-paint",
+      "entryType": "paint",
+      "startTime": 240,
+      "duration": 0,
+      "navigationId": 6416,
+      "paintTime": 124.20000004768372,
+      "presentationTime": 240
+    }
+  ],
+  "resources": [
+    {
+      "name": "http://localhost:4318/_next/static/media/4cf231d25563e07b-s.p.2874ccu1_u7jf.woff2",
+      "encoded": 29904,
+      "decoded": 29904,
+      "duration": 6.5,
+      "transfer": 30204
+    },
+    {
+      "name": "http://localhost:4318/_next/static/media/d902bc2bfdd0a4cb-s.p.1g73gv09-xcb6.woff2",
+      "encoded": 15040,
+      "decoded": 15040,
+      "duration": 7.5,
+      "transfer": 15340
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/1vfcbbt0cqt40.css",
+      "encoded": 11010,
+      "decoded": 54622,
+      "duration": 10.200000047683716,
+      "transfer": 11310
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/1x6obpmlu1_c2.js",
+      "encoded": 1975,
+      "decoded": 5361,
+      "duration": 12.5,
+      "transfer": 2275
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/2kzd2bib-2ux6.js",
+      "encoded": 8655,
+      "decoded": 32585,
+      "duration": 13.699999928474426,
+      "transfer": 8955
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/3i7bb4yv5vlj-.js",
+      "encoded": 45447,
+      "decoded": 164509,
+      "duration": 17.799999952316284,
+      "transfer": 45747
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/3wbm-994r45kr.js",
+      "encoded": 71969,
+      "decoded": 229820,
+      "duration": 21,
+      "transfer": 72269
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/turbopack-3-ry682tkyiqk.js",
+      "encoded": 3940,
+      "decoded": 10030,
+      "duration": 14,
+      "transfer": 4240
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/3ru4njydgl7zq.js",
+      "encoded": 2874,
+      "decoded": 7090,
+      "duration": 17.899999976158142,
+      "transfer": 3174
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/1emc0xprbs4y_.js",
+      "encoded": 6474,
+      "decoded": 21965,
+      "duration": 16.299999952316284,
+      "transfer": 6774
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/3x7sbm60fsc7e.js",
+      "encoded": 7476,
+      "decoded": 33606,
+      "duration": 18.90000009536743,
+      "transfer": 7776
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/25gwwocnml3u_.js",
+      "encoded": 32842,
+      "decoded": 98261,
+      "duration": 20.200000047683716,
+      "transfer": 33142
+    },
+    {
+      "name": "http://localhost:4318/_next/static/media/d6c1ff7e86974212-s.40sczeszzbjw1.woff2",
+      "encoded": 10052,
+      "decoded": 10052,
+      "duration": 36,
+      "transfer": 10352
+    },
+    {
+      "name": "http://localhost:4318/_next/static/media/916cd8a3bde3edf8-s.0oace-s_gkfks.woff2",
+      "encoded": 10060,
+      "decoded": 10060,
+      "duration": 18.59999990463257,
+      "transfer": 10360
+    },
+    {
+      "name": "http://localhost:4318/?_rsc=5CB68i4pnAekjehf",
+      "encoded": 264,
+      "decoded": 392,
+      "duration": 12.899999976158142,
+      "transfer": 564
+    },
+    {
+      "name": "http://localhost:4318/faq?_rsc=5CB68i4pnAekjehf",
+      "encoded": 281,
+      "decoded": 438,
+      "duration": 23.399999976158142,
+      "transfer": 581
+    },
+    {
+      "name": "http://localhost:4318/?_rsc=8nTjltbQWvg6NcbE",
+      "encoded": 19726,
+      "decoded": 596147,
+      "duration": 7.900000095367432,
+      "transfer": 20026
+    },
+    {
+      "name": "http://localhost:4318/faq?_rsc=dzIsfw4qQTAENwrl",
+      "encoded": 1931,
+      "decoded": 4950,
+      "duration": 3.399999976158142,
+      "transfer": 2231
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/420vlidr88at_.js",
+      "encoded": 780,
+      "decoded": 1649,
+      "duration": 2.1999999284744263,
+      "transfer": 1080
+    },
+    {
+      "name": "http://localhost:4318/_next/static/chunks/1xtabihjh5d6s.js",
+      "encoded": 14853,
+      "decoded": 44551,
+      "duration": 2.899999976158142,
+      "transfer": 15153
+    }
+  ],
+  "elements": 4610,
+  "cards": 139,
+  "inputs": [
+    {
+      "p": "Search electives..."
+    }
+  ],
+  "buttons": [
+    "6th Semester",
+    "7th Semester",
+    "Search...K",
+    "All Types",
+    "All Depts",
+    "Cutoff ↑",
+    "Students ",
+    "Name "
+  ]
+}

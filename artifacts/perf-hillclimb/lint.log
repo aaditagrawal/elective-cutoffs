@@ -1,0 +1,9 @@
+$ oxlint .
+scripts/encode-data.ts:111:3: warning eslint(no-console): Unexpected console statement. help: Delete this console statement.
+lib/electives.ts:375:45: warning typescript(no-non-null-assertion): Forbidden non-null assertion.
+lib/electives.ts:553:18: warning typescript(no-non-null-assertion): Forbidden non-null assertion.
+lib/electives.ts:567:53: warning typescript(no-non-null-assertion): Forbidden non-null assertion. help: Consider using the optional chain operator `?.` instead. `x!.y` is equivalent to `x.y` at runtime and will throw if `x` is `null` or `undefined`, but `x?.y` will return `undefined`.
+lib/electives.ts:569:20: warning typescript(no-non-null-assertion): Forbidden non-null assertion.
+lib/electives.ts:799:18: warning typescript(no-non-null-assertion): Forbidden non-null assertion.
+lib/electives.ts:813:35: warning typescript(no-non-null-assertion): Forbidden non-null assertion. help: Consider using the optional chain operator `?.` instead. `x!.y` is equivalent to `x.y` at runtime and will throw if `x` is `null` or `undefined`, but `x?.y` will return `undefined`.
+lib/electives.ts:813:60: warning typescript(no-non-null-assertion): Forbidden non-null assertion. help: Consider using the optional chain operator `?.` instead. `x!.y` is equivalent to `x.y` at runtime and will throw if `x` is `null` or `undefined`, but `x?.y` will return `undefined`.

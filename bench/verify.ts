@@ -382,6 +382,33 @@ for (const semester of SEMESTERS) {
   }
 }
 
+// Sorting results belong to the caller. Reordering or truncating one returned
+// array must not corrupt another retained result or the next unfiltered query.
+for (const semester of SEMESTERS) {
+  const electives = semesterDatasets[semester].electives;
+  for (const sortBy of SORT_BYS) {
+    for (const sortOrder of SORT_ORDERS) {
+      const expected = refFilterElectives(electives, "all", "all", "", sortBy, sortOrder);
+      const retained = filterElectives(electives, "all", "all", "", sortBy, sortOrder);
+      const mutable = filterElectives(electives, "all", "all", "", sortBy, sortOrder);
+      mutable.reverse();
+      mutable.length = 0;
+      const next = filterElectives(electives, "all", "all", "", sortBy, sortOrder);
+      checked++;
+      if (
+        retained === next ||
+        retained === mutable ||
+        next === mutable ||
+        retained.length !== expected.length ||
+        next.length !== expected.length ||
+        expected.some((elective, i) => retained[i] !== elective || next[i] !== elective)
+      ) {
+        fail(`caller mutation corrupted ${semester} ${sortBy} ${sortOrder}`);
+      }
+    }
+  }
+}
+
 if (failures.length > 0) {
   console.error(`\n❌ ${failures.length} mismatch class(es) after ${checked} scenarios:\n`);
   for (const f of failures) console.error("  • " + f);
