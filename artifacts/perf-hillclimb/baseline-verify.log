@@ -1,0 +1,2 @@
+$ bun run bench/verify.ts
+✅ optimized engine matches reference on all 106,681 scenarios

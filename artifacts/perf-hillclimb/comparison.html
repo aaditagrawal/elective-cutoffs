@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Elective Cutoffs performance comparison</title>
+  <style>
+    body {
+      margin: 0;
+      color: var(--foreground);
+      font: 14px var(--font-sans, sans-serif);
+    }
+    figure {
+      margin: 0;
+    }
+    figcaption {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .legend {
+      display: flex;
+      gap: 20px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+    .key {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 6px;
+      border-radius: 2px;
+    }
+    .before {
+      background: var(--muted-foreground);
+      opacity: 0.5;
+    }
+    .after {
+      background: var(--chart-2);
+    }
+    .metric {
+      margin-bottom: 20px;
+    }
+    .label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .value {
+      color: var(--muted-foreground);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .bar {
+      height: 7px;
+      margin-top: 4px;
+      border-radius: 2px;
+    }
+    .note {
+      color: var(--muted-foreground);
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 8px 0 0;
+    }
+    @media (max-width: 450px) {
+      .label {
+        display: block;
+      }
+      .value {
+        margin-top: 4px;
+        text-align: left;
+        font-size: 12px;
+      }
+    }
+  </style>
+  <figure aria-label="Before and after performance, each baseline bar normalized to 100 percent">
+    <figcaption>Local production comparison</figcaption>
+    <div class="legend">
+      <span><i class="key before"></i>Baseline</span
+      ><span><i class="key after"></i>Final · lower is better</span>
+    </div>
+    <div class="metric">
+      <div class="label">
+        <span>HTML before compression</span><span class="value">1.18 MB → 575 KB</span>
+      </div>
+      <div class="bar before" style="width: 100%"></div>
+      <div class="bar after" style="width: 48.64%"></div>
+    </div>
+    <div class="metric">
+      <div class="label">
+        <span>HTML over local HTTP</span><span class="value">37.1 KB → 25.3 KB</span>
+      </div>
+      <div class="bar before" style="width: 100%"></div>
+      <div class="bar after" style="width: 68%"></div>
+    </div>
+    <div class="metric">
+      <div class="label">
+        <span>Cold statistics · VI</span><span class="value">143.05 µs → 26.73 µs</span>
+      </div>
+      <div class="bar before" style="width: 100%"></div>
+      <div class="bar after" style="width: 18.69%"></div>
+    </div>
+    <div class="metric">
+      <div class="label">
+        <span>Cold opening list · VI</span><span class="value">149.27 µs → 43.03 µs</span>
+      </div>
+      <div class="bar before" style="width: 100%"></div>
+      <div class="bar after" style="width: 28.83%"></div>
+    </div>
+    <div class="metric">
+      <div class="label">
+        <span>Warm sort cycle · VI</span><span class="value">5.05 µs → 2.76 µs</span>
+      </div>
+      <div class="bar before" style="width: 100%"></div>
+      <div class="bar after" style="width: 54.65%"></div>
+    </div>
+    <div class="metric">
+      <div class="label">
+        <span>Browser DOM-ready</span><span class="value">75.1 ms → 54.4 ms</span>
+      </div>
+      <div class="bar before" style="width: 100%"></div>
+      <div class="bar after" style="width: 72.44%"></div>
+    </div>
+    <p class="note">
+      Each baseline is 100%. CPU medians use seven samples per side; browser medians use five
+      alternating pairs with warm local assets. These are lab results. Warm typing and palette
+      throughput remain near parity.
+    </p>
+  </figure>
+</html>

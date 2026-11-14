@@ -217,6 +217,8 @@ interface Ordering {
   perm: Int32Array;
   /** rank[i] = position of elective i within `perm`. Built on first use. */
   rank: Int32Array | null;
+  /** Full unfiltered order. Callers receive a copy, so they can mutate it safely. */
+  rows: Elective[] | null;
 }
 
 interface ElectiveIndex {
@@ -238,16 +240,17 @@ interface ElectiveIndex {
   /** `name.toLowerCase() + SEP + code.toLowerCase() + SEP + department.toLowerCase()` */
   haystack: string[];
 
-  /** [ascending, descending] permutations per sort key. */
-  byName: [Ordering, Ordering];
-  byCutoff: [Ordering, Ordering];
-  byStudents: [Ordering, Ordering];
+  /** [ascending, descending] permutations, built when that sort key is first used. */
+  byName: [Ordering, Ordering] | null;
+  byCutoff: [Ordering, Ordering] | null;
+  byStudents: [Ordering, Ordering] | null;
 
   /** charCode -> bitmap of electives whose haystack contains that character. */
   charBitmap: Map<number, Uint32Array>;
   /** charCode -> how many electives contain it, for rarest-first pruning. */
   charFreq: Map<number, number>;
   words: number;
+  searchReady: boolean;
 
   /**
    * Single-entry cache enabling incremental narrowing as the user types.
@@ -312,7 +315,7 @@ function descendingFrom(asc: Int32Array, tied: (a: number, b: number) => boolean
 }
 
 function makeOrdering(perm: Int32Array): Ordering {
-  return { perm, rank: null };
+  return { perm, rank: null, rows: null };
 }
 
 function rankOf(ordering: Ordering): Int32Array {
@@ -334,16 +337,13 @@ function buildIndex(electives: Elective[]): ElectiveIndex {
   const deptSeen = new Set<string>();
   const typeCode = new Int32Array(n);
   const haystack = new Array<string>(n);
-  const cutoffKey = new Float64Array(n);
-  const studentsKey = new Float64Array(n);
-  const names = new Array<string>(n);
 
   let totalStudents = 0;
   let lowestCutoff = Infinity;
   let highestCutoff = -Infinity;
 
-  // One pass: dictionary-code the types, collect departments, build haystacks
-  // and sort keys, and accumulate every statistic that `getStats` previously
+  // One pass: dictionary-code the types, collect departments, build haystacks,
+  // and accumulate every statistic that `getStats` previously
   // recomputed with four extra passes and two array spreads.
   for (let i = 0; i < n; i++) {
     const e = electives[i];
@@ -358,13 +358,10 @@ function buildIndex(electives: Elective[]): ElectiveIndex {
 
     deptSeen.add(e.department);
 
-    names[i] = e.name;
     haystack[i] =
       e.name.toLowerCase() + SEP + e.code.toLowerCase() + SEP + e.department.toLowerCase();
 
     const low = e.lowestCGPA;
-    cutoffKey[i] = low;
-    studentsKey[i] = e.students;
     totalStudents += e.students;
     if (low < lowestCutoff) lowestCutoff = low;
     if (low > highestCutoff) highestCutoff = low;
@@ -379,48 +376,7 @@ function buildIndex(electives: Elective[]): ElectiveIndex {
   const deptCode = new Int32Array(n);
   for (let i = 0; i < n; i++) deptCode[i] = deptId.get(electives[i].department)!;
 
-  // --- Sort orders, computed once -------------------------------------------
-  const nameAsc = stablePermutation(n, (a, b) => collator.compare(names[a], names[b]));
-  const cutoffAsc = stablePermutation(n, (a, b) => cutoffKey[a] - cutoffKey[b]);
-  const studentsAsc = stablePermutation(n, (a, b) => studentsKey[a] - studentsKey[b]);
-
-  const byName: [Ordering, Ordering] = [
-    makeOrdering(nameAsc),
-    makeOrdering(descendingFrom(nameAsc, (a, b) => collator.compare(names[a], names[b]) === 0)),
-  ];
-  const byCutoff: [Ordering, Ordering] = [
-    makeOrdering(cutoffAsc),
-    makeOrdering(descendingFrom(cutoffAsc, (a, b) => cutoffKey[a] === cutoffKey[b])),
-  ];
-  const byStudents: [Ordering, Ordering] = [
-    makeOrdering(studentsAsc),
-    makeOrdering(descendingFrom(studentsAsc, (a, b) => studentsKey[a] === studentsKey[b])),
-  ];
-
-  // --- Character bitmaps for candidate pruning ------------------------------
   const words = (n + 31) >>> 5;
-  const charBitmap = new Map<number, Uint32Array>();
-  for (let i = 0; i < n; i++) {
-    const h = haystack[i];
-    const w = i >>> 5;
-    const bit = 1 << (i & 31);
-    for (let p = 0; p < h.length; p++) {
-      const c = h.charCodeAt(p);
-      let bm = charBitmap.get(c);
-      if (bm === undefined) {
-        bm = new Uint32Array(words);
-        charBitmap.set(c, bm);
-      }
-      bm[w] |= bit;
-    }
-  }
-  const charFreq = new Map<number, number>();
-  for (const [c, bm] of charBitmap) {
-    let count = 0;
-    for (let w = 0; w < words; w++) count += popcount(bm[w]);
-    charFreq.set(c, count);
-  }
-
   const typeCounts = types.map((type) => ({ type, count: 0 }));
   for (let i = 0; i < n; i++) typeCounts[typeCode[i]].count++;
 
@@ -453,12 +409,13 @@ function buildIndex(electives: Elective[]): ElectiveIndex {
     typeId,
     deptId,
     haystack,
-    byName,
-    byCutoff,
-    byStudents,
-    charBitmap,
-    charFreq,
+    byName: null,
+    byCutoff: null,
+    byStudents: null,
+    charBitmap: new Map(),
+    charFreq: new Map(),
     words,
+    searchReady: false,
     lastQuery: "",
     hits: new Int32Array(n),
     spare: new Int32Array(n),
@@ -468,6 +425,34 @@ function buildIndex(electives: Elective[]): ElectiveIndex {
     picked: new Int32Array(n),
     scratchBitmap: new Uint32Array(words),
   };
+}
+
+function ensureSearchIndex(index: ElectiveIndex): void {
+  // Stats, semester changes and unsearched lists don't need character bitmaps.
+  // Build these only for the first search and share them with the palette.
+  if (index.searchReady) return;
+  const { n, haystack, charBitmap, charFreq, words } = index;
+  for (let i = 0; i < n; i++) {
+    const h = haystack[i];
+    const w = i >>> 5;
+    const bit = 1 << (i & 31);
+    for (let p = 0; p < h.length; p++) {
+      const c = h.charCodeAt(p);
+      let bm = charBitmap.get(c);
+      if (bm === undefined) {
+        bm = new Uint32Array(words);
+        charBitmap.set(c, bm);
+      }
+      bm[w] |= bit;
+    }
+  }
+  for (const [c, bm] of charBitmap) {
+    let count = 0;
+    for (let w = 0; w < words; w++) count += popcount(bm[w]);
+    charFreq.set(c, count);
+  }
+
+  index.searchReady = true;
 }
 
 function getIndex(electives: Elective[]): ElectiveIndex {
@@ -557,6 +542,7 @@ function searchHits(index: ElectiveIndex, query: string): number {
   // bitmaps. Anything matching the query must contain every character of it, so
   // this never prunes a real match; survivors still need an `indexOf` to confirm
   // the characters actually appear contiguously and in order.
+  ensureSearchIndex(index);
   const { charBitmap, charFreq, words } = index;
   let rarest: Uint32Array | null = null;
   let rarestFreq = Infinity;
@@ -619,6 +605,43 @@ function stampMask(index: ElectiveIndex, hitCount: number): number {
   return stamp;
 }
 
+function makeOrders(
+  n: number,
+  compare: (a: number, b: number) => number,
+  tied: (a: number, b: number) => boolean,
+): [Ordering, Ordering] {
+  const asc = stablePermutation(n, compare);
+  return [makeOrdering(asc), makeOrdering(descendingFrom(asc, tied))];
+}
+
+function buildOrders(
+  index: ElectiveIndex,
+  sortBy: "cutoff" | "students" | "name",
+): [Ordering, Ordering] {
+  const { electives, n } = index;
+  switch (sortBy) {
+    case "cutoff":
+      return makeOrders(
+        n,
+        (a, b) => electives[a].lowestCGPA - electives[b].lowestCGPA,
+        (a, b) => electives[a].lowestCGPA === electives[b].lowestCGPA,
+      );
+    case "students":
+      return makeOrders(
+        n,
+        (a, b) => electives[a].students - electives[b].students,
+        (a, b) => electives[a].students === electives[b].students,
+      );
+    case "name":
+    default:
+      return makeOrders(
+        n,
+        (a, b) => collator.compare(electives[a].name, electives[b].name),
+        (a, b) => collator.compare(electives[a].name, electives[b].name) === 0,
+      );
+  }
+}
+
 function orderingFor(
   index: ElectiveIndex,
   sortBy: SortBy | undefined,
@@ -628,12 +651,12 @@ function orderingFor(
   switch (sortBy) {
     case "cutoff":
     case "difficulty":
-      return index.byCutoff[dir];
+      return (index.byCutoff ??= buildOrders(index, "cutoff"))[dir];
     case "students":
-      return index.byStudents[dir];
+      return (index.byStudents ??= buildOrders(index, "students"))[dir];
     case "name":
     default:
-      return index.byName[dir];
+      return (index.byName ??= buildOrders(index, "name"))[dir];
   }
 }
 
@@ -689,6 +712,14 @@ export function filterElectives(
   if (hitCount === 0) return [];
 
   const ordering = orderingFor(index, sortBy, sortOrder);
+  if (hitCount < 0 && wantType < 0 && wantDept < 0) {
+    if (ordering.rows === null) {
+      const rows = new Array<Elective>(n);
+      for (let p = 0; p < n; p++) rows[p] = electives[ordering.perm[p]];
+      ordering.rows = rows;
+    }
+    return ordering.rows.slice();
+  }
   const out: Elective[] = [];
 
   // No search: walk the precomputed order once, keeping whatever passes the two
@@ -783,6 +814,7 @@ export function searchTopK(electives: Elective[], query: string, k: number): Ele
     return out;
   }
 
+  ensureSearchIndex(index);
   const { charBitmap, charFreq, words } = index;
   let rarest: Uint32Array | null = null;
   let rarestFreq = Infinity;
@@ -826,116 +858,8 @@ export function searchTopK(electives: Elective[], query: string, k: number): Ele
 /*  Presentation helpers                                                      */
 /* -------------------------------------------------------------------------- */
 
-export interface DifficultyLevel {
-  readonly level: string;
-  readonly color: string;
-}
-
-// Frozen singletons rather than a fresh object per call: this is read once per
-// card per render, and a stable identity keeps memoized components from
-// re-rendering merely because they were handed a new object.
-const VERY_HARD: DifficultyLevel = Object.freeze({ level: "Very Hard", color: "text-red-400" });
-const HARD: DifficultyLevel = Object.freeze({ level: "Hard", color: "text-orange-400" });
-const MEDIUM: DifficultyLevel = Object.freeze({ level: "Medium", color: "text-yellow-400" });
-const EASY: DifficultyLevel = Object.freeze({ level: "Easy", color: "text-green-400" });
-const VERY_EASY: DifficultyLevel = Object.freeze({ level: "Very Easy", color: "text-emerald-400" });
-
-export function getDifficultyLevel(cutoff: number): DifficultyLevel {
-  if (cutoff >= 8) return VERY_HARD;
-  if (cutoff >= 7) return HARD;
-  if (cutoff >= 6) return MEDIUM;
-  if (cutoff >= 5) return EASY;
-  return VERY_EASY;
-}
-
-const VALID_COURSE_CODES = [
-  "AAE 4311",
-  "AAE 4313",
-  "AAE 4401",
-  "AAE 4403",
-  "AAE 4405",
-  "AAE 4406",
-  "AAE 4413",
-  "AAE 4414",
-  "AAE 4417",
-  "AAE 4418",
-  "AAE 4421",
-  "AAE 4422",
-  "BIO 4402",
-  "BIO 4403",
-  "BIO 4405",
-  "BIO 4407",
-  "BME 4315",
-  "BME 4402",
-  "BME 4404",
-  "BME 4405",
-  "BME 4406",
-  "CHE 4311",
-  "CHE 4312",
-  "CHE 4401",
-  "CHE 4402",
-  "CHE 4406",
-  "CHE 4407",
-  "CHE 4409",
-  "CHE 4410",
-  "CHM 4312",
-  "CIE 4313",
-  "CIE 4314",
-  "CIE 4316",
-  "CIE 4401",
-  "CIE 4402",
-  "CIE 4409",
-  "CIE 4410",
-  "CIE 4417",
-  "CIE 4418",
-  "DSE 4401",
-  "DSE 4402",
-  "DSE 4405",
-  "DSE 4406",
-  "ECE 4311",
-  "ECE 4406",
-  "ECE 4409",
-  "ECE 4411",
-  "ECE 4416",
-  "ECE 4421",
-  "ECE 4424",
-  "ELE 4312",
-  "ELE 4409",
-  "ELE 4415",
-  "ELE 4416",
-  "HUM 4322",
-  "HUM 4323",
-  "HUM 4329",
-  "HUM 4401",
-  "HUM 4402",
-  "HUM 4408",
-  "HUM 4409",
-  "HUM 4411",
-  "HUM 4420",
-  "HUM 4424",
-  "ICE 4316",
-  "ICE 4402",
-  "ICT 4401",
-  "ICT 4402",
-  "ICT 4414",
-  "MAT 4405",
-  "MAT 4407",
-  "MIE 4401",
-  "MIE 4402",
-  "MIE 4408",
-  "MIE 4409",
-  "MIE 4421",
-];
-
-// A code's URL never changes, so build it once instead of running
-// `encodeURIComponent` and a template interpolation on every render of every card.
-const COURSE_PAGE_URLS = new Map<string, string>(
-  VALID_COURSE_CODES.map((code) => [
-    code,
-    `https://courses.coolstuff.work/course/${encodeURIComponent(code)}`,
-  ]),
-);
-
-export function getCoursePageUrl(code: string): string | null {
-  return COURSE_PAGE_URLS.get(code) ?? null;
-}
+export {
+  getCoursePageUrl,
+  getDifficultyLevel,
+  type DifficultyLevel,
+} from "./elective-presentation";

@@ -1,0 +1,14 @@
+{
+  "before": {
+    "html": 1181961,
+    "gzip": 44795,
+    "brotli": 20560,
+    "serverCards": 139
+  },
+  "after": {
+    "html": 574954,
+    "gzip": 29542,
+    "brotli": 15037,
+    "serverCards": 139
+  }
+}

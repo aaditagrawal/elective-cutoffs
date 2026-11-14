@@ -1,0 +1,28 @@
+{
+  "desktop": {
+    "typeFilter": {
+      "type": "OE",
+      "count": 37
+    },
+    "seventh": {
+      "count": 258
+    },
+    "department": {
+      "value": "AAE",
+      "count": 21
+    },
+    "palette": {
+      "shortcut": "Ctrl+K",
+      "focused": "INPUT",
+      "initialResults": 8
+    },
+    "selection": {
+      "code": "IIE 4311",
+      "type": "OE III",
+      "scrollY": 19340,
+      "top": 343.5,
+      "viewport": 800
+    }
+  },
+  "consoleErrors": 0
+}

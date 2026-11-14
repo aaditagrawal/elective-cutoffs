@@ -52,11 +52,11 @@ export default function RootLayout({
         <header className={classNames.layout10}>
           <ProgressiveBlur feather="short" />
           <nav className={classNames.layout11}>
-            <Link href="/" className={classNames.layout12}>
+            <Link href="/" prefetch={false} className={classNames.layout12}>
               Elective Cutoffs
             </Link>
             <div className={classNames.layout13}>
-              <Link href="/" className={classNames.layout14}>
+              <Link href="/" prefetch={false} className={classNames.layout14}>
                 Dashboard
               </Link>
               <Link href="/faq" className={classNames.layout14}>

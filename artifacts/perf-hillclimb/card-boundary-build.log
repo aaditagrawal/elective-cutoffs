@@ -1,0 +1,33 @@
+$ next build --turbopack
+▲ Next.js 16.4.3 (Turbopack)
+✓ Running next.config.ts took 30ms
+- Experiments (use with caution):
+  · optimizePackageImports
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 691ms
+  Running TypeScript ...
+  Finished TypeScript in 615ms ...
+  Collecting page data using 5 workers ...
+  Generating static pages using 5 workers (0/4) ...
+  Generating static pages using 5 workers (1/4) 
+  Generating static pages using 5 workers (2/4) 
+  Generating static pages using 5 workers (3/4) 
+✓ Generating static pages using 5 workers (4/4) in 374ms
+Turbopack build encountered 1 warning:
+./next.config.ts
+Warning: Identified a likely manual configuration of babel-loader for paths matching *.stylex.js
+Next.js includes a built-in version of this loader that is configured automatically. You may not need to configure this.
+You can silence this warning by setting experimental.turbopackUseBuiltinBabel in next.config.ts to true (to silence this warning) or false (to disable the default built-in loader)
+
+
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+└ ○ /faq
+
+
+○  (Static)  prerendered as static content
+
